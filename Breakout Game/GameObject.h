@@ -8,7 +8,7 @@
 class ResourceManager
 {
 private:
-	std::string defaultTexture = "Assets/default.png";
+	std::string defaultTexture = "Assets/0.png";
 public:
 	std::map<std::string, sf::Texture*> textures;
 
@@ -19,9 +19,9 @@ public:
 		std::string path = "\Assets/";
 		for (const auto& file : std::filesystem::directory_iterator(path))
 		{
-			texturePath = path + file.path().string();
-			if (texturePath == defaultTexture)
-				continue;
+			texturePath = file.path().string();
+			//if (texturePath == defaultTexture)
+			//	continue;
 
 			sf::Texture* temp = new sf::Texture();
 			name = file.path().filename().string();
@@ -29,19 +29,19 @@ public:
 
 			if (!temp->loadFromFile(texturePath))
 			{
-				printf("Error loading texture: %s", texturePath.c_str());
+				printf("Error loading texture: %s\n", texturePath.c_str());
 
 				temp->loadFromFile(defaultTexture);
 			}
 
 			textures[name] = temp;
+			printf("Added %s at textures[%s].\n", texturePath.c_str(), name.c_str());
 		}
 
 	}
 	sf::Texture getTexture(std::string textureID)
 	{
-		sf::Texture* temp = this->textures[textureID];
-		return *temp;
+		return *textures[textureID];
 	}
 	~ResourceManager()
 	{
@@ -56,16 +56,19 @@ public:
 class Tile
 {
 public:
-	Tile(ResourceManager rm, sf::Vector2f pos = sf::Vector2f(0,0), sf::Vector2f scale = sf::Vector2f(0, 0), std::string textureID = "default")
+	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0,0), sf::Vector2f scale = sf::Vector2f(1.0f, 1.0f), std::string textureID = "0")
 	{
+		this->textureID = textureID;
+		texture = rm.getTexture(textureID);
+		sprite.setTexture(texture);
 		sprite.setPosition(pos);
 		sprite.setScale(scale);
-
-		sprite.setTexture(rm.getTexture(textureID));
+		
 	}
 
 	sf::Sprite sprite;
-
+	sf::Texture texture;
+	std::string textureID;
 	sf::Vector2f getDiagonolPos()
 	{
 		return sprite.getPosition() + (sprite.getPosition() * sprite.getScale().x);
