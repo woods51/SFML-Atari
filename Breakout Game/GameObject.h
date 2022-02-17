@@ -44,34 +44,50 @@ public:
 	{
 		return textures[textureID];
 	}
-	~ResourceManager()
-	{
-		/*for (auto iter = textures.begin(); iter != textures.end(); iter++)
-		{
-			//delete(iter.second);
-		}*/
-	}
+	//~ResourceManager();
 };
 
 
 class Tile
 {
 public:
-	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0,0), sf::Vector2f scale = sf::Vector2f(1.0f, 1.0f), std::string textureID = "0")
+	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0,0), sf::Vector2f scale = sf::Vector2f(1.0f, 1.0f), std::string textureID = "0") : textureID(textureID)
 	{
-		this->textureID = textureID;
 		texture = rm.getTexture(textureID);
 		sprite.setTexture(texture);
 		sprite.setPosition(pos);
 		sprite.setScale(scale);
-		
 	}
 
 	sf::Sprite sprite;
 	sf::Texture texture;
 	std::string textureID;
-	sf::Vector2f getDiagonolPos()
+
+	sf::Vector2f getDiagonalPos()
 	{
-		return sprite.getPosition() + (sprite.getPosition() * sprite.getScale().x);
+		return sprite.getPosition() + (16.0f * sprite.getScale());
+	}
+
+	bool ballCollision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_diagonal)
+	{
+		sf::Vector2f pos = this->sprite.getPosition();
+		sf::Vector2f diagonal_pos = this->getDiagonalPos();
+
+		sf::Vector2f p1(obj_pos.x, obj_pos.y);
+		sf::Vector2f p2(obj_pos_diagonal.x, obj_pos.y);
+		sf::Vector2f p3(obj_pos.x, obj_pos_diagonal.y);
+		sf::Vector2f p4(obj_pos_diagonal.x, obj_pos_diagonal.y);
+
+		//std::vector<sf::Vector2f> points {p1, p2, p3, p4};
+
+		for (auto p : { p1, p2, p3, p4 })
+		{
+			if ((p.x >= pos.x && p.x <= diagonal_pos.x) &&
+				(p.y >= pos.y && p.y <= diagonal_pos.y))
+				return true;
+
+			continue;
+		}
+		return false;
 	}
 };
