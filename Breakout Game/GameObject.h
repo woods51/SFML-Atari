@@ -10,7 +10,7 @@ class ResourceManager
 private:
 	std::string defaultTexture = "Assets/0.png";
 public:
-	std::map<std::string, sf::Texture*> textures;
+	std::map<std::string, sf::Texture> textures;
 
 	ResourceManager()
 	{
@@ -23,17 +23,18 @@ public:
 			//if (texturePath == defaultTexture)
 			//	continue;
 
-			sf::Texture* temp = new sf::Texture();
+			sf::Texture temp;
 			name = file.path().filename().string();
 			name = name.substr(0, name.length() - 4);
 
-			if (!temp->loadFromFile(texturePath))
+			if (!temp.loadFromFile(texturePath))
 			{
 				printf("Error loading texture: %s\n", texturePath.c_str());
 
-				temp->loadFromFile(defaultTexture);
+				temp.loadFromFile(defaultTexture);
 			}
-
+			
+			// Texture is copied to map
 			textures[name] = temp;
 			printf("Added %s at textures[%s].\n", texturePath.c_str(), name.c_str());
 		}
@@ -41,14 +42,14 @@ public:
 	}
 	sf::Texture getTexture(std::string textureID)
 	{
-		return *textures[textureID];
+		return textures[textureID];
 	}
 	~ResourceManager()
 	{
-		for (auto iter = textures.begin(); iter != textures.end(); iter++)
+		/*for (auto iter = textures.begin(); iter != textures.end(); iter++)
 		{
-			delete(iter->second);
-		}
+			//delete(iter.second);
+		}*/
 	}
 };
 

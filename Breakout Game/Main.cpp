@@ -24,20 +24,28 @@ int main()
 		}*/
 	
 	ResourceManager rm;
-	std::vector<Tile*> tiles;
+	std::vector<std::unique_ptr<Tile>> tiles;
 	float posx = 0;
 	float posy = 0;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		Tile* temp = new Tile(rm, sf::Vector2f(posx, posy), sf::Vector2f(2.5f, 2.5f), (std::string)"1");
-		tiles.push_back(temp);
+		
+		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, posy), sf::Vector2f(2.5f, 2.5f), (std::string)"1"));
 		posx += 40.0f;
 	}
-	for (auto tile : tiles)
+	posx = 0;
+	posy = 40.0f;
+	for (int i = 0; i < 5; i++)
+	{
+		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, posy), sf::Vector2f(2.5f, 2.5f), (std::string)"2"));
+		posx += 40.0f;
+	}
+
+	/*for (auto tile : tiles)
 	{
 		std::cout << tile->sprite.getPosition().x << " " << tile->sprite.getPosition().y << std::endl;
 		std::cout << tile->textureID << std::endl << std::endl;
-	}
+	}*/
 
 	while (window.isOpen())
 	{
@@ -45,12 +53,6 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				for (auto t : tiles)
-				{
-					Tile* temp = t;
-					delete t;
-				}
-
 				window.close();
 			}
 		}
@@ -63,7 +65,7 @@ int main()
 
 		// inside the main loop, between window.clear() and window.display()
 
-		for (auto t : tiles)
+		for (const auto& t : tiles)
 		{
 			sf::Sprite temp = t->sprite;
 			window.draw(temp);
@@ -73,6 +75,5 @@ int main()
 		// end the current frame
 		// *** copies local buffer to window 
 		window.display();
-		std::system("pause");
 	}
 }
