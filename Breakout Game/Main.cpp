@@ -25,34 +25,25 @@ int main()
 	
 	ResourceManager rm;
 	std::vector<std::unique_ptr<Tile>> tiles;
+	float y1 = 0;
+	float y2 = 40.0f;
+	float y3 = 80.0f;
 	float posx = 0;
-	float posy = 0;
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 20; i++)
 	{
-		
-		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, posy), sf::Vector2f(2.5f, 2.5f), (std::string)"1"));
+		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, y1), "1"));
+		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, y2), "2"));
+		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, y3), "1"));
 		posx += 40.0f;
 	}
-	posx = 0;
-	posy = 40.0f;
-	for (int i = 0; i < 5; i++)
-	{
-		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, posy), sf::Vector2f(2.5f, 2.5f), (std::string)"2"));
-		posx += 40.0f;
-	}
-	posx = 0;
-	posy = 80.0f;
-	for (int i = 0; i < 5; i++)
-	{
-		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, posy), sf::Vector2f(2.5f, 2.5f), (std::string)"1"));
-		posx += 40.0f;
-	}
-	Tile ball(rm, sf::Vector2f(50.0f, 50.0f), sf::Vector2f(2.5f, 2.5f), "0");
+	Tile ball(rm, sf::Vector2f(300.0f, 250.0f), "0");
 	/*for (auto tile : tiles)
 	{
 		std::cout << tile->sprite.getPosition().x << " " << tile->sprite.getPosition().y << std::endl;
 		std::cout << tile->textureID << std::endl << std::endl;
 	}*/
+
+	Tile paddle(rm, sf::Vector2f(700.0f, 550.0f), "paddle", sf::Vector2f(16.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
 
 	while (window.isOpen())
 	{
@@ -70,8 +61,12 @@ int main()
 
 		window.clear(sf::Color::Black);
 
-		// inside the main loop, between window.clear() and window.display()
+		// code
 
+		update(tiles, ball, paddle);
+
+
+		
 		for (const auto& t : tiles)
 		{
 			sf::Sprite temp = t->sprite;
@@ -79,18 +74,20 @@ int main()
 		}
 		sf::Sprite temp = ball.sprite;
 		window.draw(temp);
-
+		temp = paddle.sprite;
+		window.draw(temp);
+		/*
 		for (const auto& t : tiles)
 		{
 			std::cout << t->sprite.getPosition().x << " " << t->sprite.getPosition().y <<
-				(t->ballCollision(ball.sprite.getPosition(), ball.getDiagonalPos()) ? "true" : "false") << std::endl;
+				(t->Collision(ball.sprite.getPosition(), ball.getDiagonalPos()) ? "true" : "false") << std::endl;
 		}
-		printf("%f,%f\n%f,%f\n", ball.sprite.getPosition().x, ball.sprite.getPosition().y, ball.getDiagonalPos().x, ball.getDiagonalPos().y);
+		printf("%f,%f\n%f,%f\n", ball.sprite.getPosition().x, ball.sprite.getPosition().y, ball.getDiagonalPos().x, ball.getDiagonalPos().y);*/
 
 		// end the current frame
 		// *** copies local buffer to window
 		window.display();
-		std::system("pause");
-		window.close();
+		//std::system("pause");
+		//window.close();
 	}
 }
