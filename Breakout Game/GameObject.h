@@ -42,6 +42,9 @@ public:
 	}
 	sf::Texture getTexture(std::string textureID)
 	{
+		if (textures.find(textureID) == textures.end())
+			return textures["0"];
+
 		return textures[textureID];
 	}
 	//~ResourceManager();
@@ -104,6 +107,17 @@ public:
 	}
 };
 
+void generateTileRow(std::vector<std::unique_ptr<Tile>>& tileMap, ResourceManager& rm, float pos_y,
+	std::string textureID, int iter = 20)
+{
+	float pos_x = 0;
+	for (int i = 0; i < iter; i++)
+	{
+		tileMap.push_back(std::make_unique<Tile>(rm, sf::Vector2f(pos_x, pos_y), textureID));
+		pos_x += 40.0f;
+	}
+}
+
 void update(std::vector<std::unique_ptr<Tile>>& tileMap, Tile& ball, Tile& paddle)
 {
 	float speed = 1.0f;
@@ -111,11 +125,11 @@ void update(std::vector<std::unique_ptr<Tile>>& tileMap, Tile& ball, Tile& paddl
 
 	// Player Input & Paddle Movment //
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		paddle.sprite.move(sf::Vector2f(-speed, 0));
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
 		paddle.sprite.move(sf::Vector2f(speed, 0));
 	}

@@ -7,35 +7,19 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
 	sf::Event event;
-
-	/*
-		std::string buffer;
-		std::string path = "\Assets/";
-		for (const auto& file : std::filesystem::directory_iterator(path))
-		{
-			std::cout << file.path().filename().string() << std::endl;
-			buffer = file.path().string();
-			std::cout << buffer << std::endl;
-
-			std::string name = file.path().filename().string();
-			name = name.substr(0, name.length() - 4);
-			printf("name: %s\n", name.c_str());
-
-		}*/
 	
+	sf::err().rdbuf(NULL);
+
 	ResourceManager rm;
 	std::vector<std::unique_ptr<Tile>> tiles;
-	float y1 = 0;
-	float y2 = 40.0f;
-	float y3 = 80.0f;
-	float posx = 0;
-	for (int i = 0; i < 20; i++)
+
+	float posy = 0;
+	for (auto i : { "1", "2", "1" })
 	{
-		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, y1), "1"));
-		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, y2), "2"));
-		tiles.push_back(std::make_unique<Tile>(rm, sf::Vector2f(posx, y3), "1"));
-		posx += 40.0f;
+		generateTileRow(tiles, rm, posy, i);
+		posy += 40.0f;
 	}
+
 	Tile ball(rm, sf::Vector2f(300.0f, 250.0f), "0");
 	/*for (auto tile : tiles)
 	{
@@ -64,8 +48,6 @@ int main()
 		// code
 
 		update(tiles, ball, paddle);
-
-
 		
 		for (const auto& t : tiles)
 		{
