@@ -20,7 +20,7 @@ int main()
 		posy += 40.0f;
 	}
 
-	Tile ball(rm, sf::Vector2f(300.0f, 250.0f), "0");
+	Ball ball(rm, sf::Vector2f(300.0f, 250.0f), "0");
 	/*for (auto tile : tiles)
 	{
 		std::cout << tile->sprite.getPosition().x << " " << tile->sprite.getPosition().y << std::endl;
@@ -58,6 +58,8 @@ int main()
 		window.draw(temp);
 		temp = paddle.sprite;
 		window.draw(temp);
+
+		std::cout << ball.sprite.getPosition().x << " " << ball.sprite.getPosition().y << std::endl;
 		/*
 		for (const auto& t : tiles)
 		{

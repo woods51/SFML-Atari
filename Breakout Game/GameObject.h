@@ -54,8 +54,9 @@ public:
 class Tile
 {
 public:
-	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0,0), std::string textureID = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f)) : textureID(textureID)
+	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0,0), std::string textureID = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
 	{
+		this->textureID = textureID;
 		texture = rm.getTexture(textureID);
 		sprite.setTexture(texture);
 		sprite.setPosition(pos);
@@ -66,10 +67,7 @@ public:
 	sf::Sprite sprite;
 	sf::Texture texture;
 	std::string textureID;
-	sf::Vector2f lastPos = sprite.getPosition();
-
-	//Ball / Paddle ?
-	sf::Vector2f velocity = sf::Vector2f(1.0f, 1.0f);
+	float speed = 1.0f;
 
 	sf::Vector2f getDiagonalPos()
 	{
@@ -96,6 +94,20 @@ public:
 		}
 		return false;
 	}
+	
+};
+class Ball : public Tile
+{
+public:
+	Ball(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), std::string textureID = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
+		: Tile(rm, pos, textureID, size, scale)
+	{
+
+	}
+
+	sf::Vector2f velocity = sf::Vector2f(0.25f, 0.25f);
+	sf::Vector2f lastPos = sprite.getPosition();
+
 	void setLastPos()
 	{
 		lastPos = sprite.getPosition();
@@ -118,20 +130,19 @@ void generateTileRow(std::vector<std::unique_ptr<Tile>>& tileMap, ResourceManage
 	}
 }
 
-void update(std::vector<std::unique_ptr<Tile>>& tileMap, Tile& ball, Tile& paddle)
+void update(std::vector<std::unique_ptr<Tile>>& tileMap, Ball& ball, Tile& paddle)
 {
-	float speed = 1.0f;
-	paddle.setLastPos();
+	ball.setLastPos();
 
 	// Player Input & Paddle Movment //
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
-		paddle.sprite.move(sf::Vector2f(-speed, 0));
+		paddle.sprite.move(sf::Vector2f(-paddle.speed, 0));
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
-		paddle.sprite.move(sf::Vector2f(speed, 0));
+		paddle.sprite.move(sf::Vector2f(paddle.speed, 0));
 	}
 
 	if (paddle.sprite.getPosition().x < 0)
@@ -161,21 +172,25 @@ void update(std::vector<std::unique_ptr<Tile>>& tileMap, Tile& ball, Tile& paddl
 		}
 	}
 
-	if (ball.sprite.getPosition().x < 0)
+	if (ball.sprite.getPosition().x <= 0)
 	{
-
+		ball.sprite.setPosition(0, ball.sprite.getPosition().y);
+		ball.velocity = sf::Vector2f(+ball.velocity.x, ball.velocity.y);
 	}
-	if (ball.getDiagonalPos().x > 800)
+	if (ball.getDiagonalPos().x >= 800)
 	{
-		
+		ball.sprite.setPosition(800, ball.sprite.getPosition().y);
+		ball.velocity = sf::Vector2f(-ball.velocity.x, ball.velocity.y);
 	}
-	if (ball.sprite.getPosition().y < 0)
+	if (ball.sprite.getPosition().y <= 0)
 	{
-		
+		ball.sprite.setPosition(ball.sprite.getPosition().x, 0);
+		ball.velocity = sf::Vector2f(ball.velocity.x, +ball.velocity.y);
 	}
-	if (ball.getDiagonalPos().y > 600)
+	if (ball.getDiagonalPos().y >= 600)
 	{
-		
+		ball.sprite.setPosition(ball.sprite.getPosition().x, 600);
+		ball.velocity = sf::Vector2f(ball.velocity.x, -ball.velocity.y);
 	}
 
 }
