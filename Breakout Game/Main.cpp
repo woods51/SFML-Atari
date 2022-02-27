@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "GameObject.h"
 #include <iostream>
+#include <Windows.h>
 
 int main()
 {
@@ -59,7 +60,9 @@ int main()
 		temp = paddle.sprite;
 		window.draw(temp);
 
-		std::cout << ball.sprite.getPosition().x << " " << ball.sprite.getPosition().y << std::endl;
+		//std::cout << "Ball p: " << ball.sprite.getPosition().x << " " << ball.sprite.getPosition().y << std::endl;
+		//std::cout << "Ball p: " << ball.getDiagonalPos().x << " " << ball.getDiagonalPos().y << std::endl;
+		//std::cout << "Ball v: " << ball.velocity.x << " " << ball.velocity.y << std::endl;
 		/*
 		for (const auto& t : tiles)
 		{
@@ -71,6 +74,7 @@ int main()
 		// end the current frame
 		// *** copies local buffer to window
 		window.display();
+		//Sleep(25);
 		//std::system("pause");
 		//window.close();
 	}

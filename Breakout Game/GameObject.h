@@ -61,8 +61,10 @@ public:
 		sprite.setTexture(texture);
 		sprite.setPosition(pos);
 		sprite.setScale(scale);
+		this->scale = scale;
 		this->size = size;
 	}
+	sf::Vector2f scale;
 	sf::Vector2f size;
 	sf::Sprite sprite;
 	sf::Texture texture;
@@ -105,7 +107,7 @@ public:
 
 	}
 
-	sf::Vector2f velocity = sf::Vector2f(0.25f, 0.25f);
+	sf::Vector2f velocity = sf::Vector2f(3.0f, 3.0f);
 	sf::Vector2f lastPos = sprite.getPosition();
 
 	void setLastPos()
@@ -116,6 +118,7 @@ public:
 	{
 		setLastPos();
 		sprite.setPosition(sprite.getPosition().x + velocity.x, sprite.getPosition().y + velocity.y);
+		//std::cout << "New Ball p: " << this->sprite.getPosition().x << " " << this->sprite.getPosition().y << std::endl;
 	}
 };
 
@@ -132,8 +135,6 @@ void generateTileRow(std::vector<std::unique_ptr<Tile>>& tileMap, ResourceManage
 
 void update(std::vector<std::unique_ptr<Tile>>& tileMap, Ball& ball, Tile& paddle)
 {
-	ball.setLastPos();
-
 	// Player Input & Paddle Movment //
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -164,32 +165,32 @@ void update(std::vector<std::unique_ptr<Tile>>& tileMap, Ball& ball, Tile& paddl
 
 	// Ball Physics :) //
 	ball.updatePos();
-	for (auto const &tile : tileMap)
+	/*for (auto const& tile : tileMap)
 	{
 		if (tile->Collision(ball.sprite.getPosition(), ball.getDiagonalPos()))
 		{
 
 		}
-	}
-
+	}*/
+	float offset = ball.scale.x * ball.size.x;
 	if (ball.sprite.getPosition().x <= 0)
 	{
 		ball.sprite.setPosition(0, ball.sprite.getPosition().y);
-		ball.velocity = sf::Vector2f(+ball.velocity.x, ball.velocity.y);
+		ball.velocity = sf::Vector2f(-ball.velocity.x, ball.velocity.y);
 	}
 	if (ball.getDiagonalPos().x >= 800)
 	{
-		ball.sprite.setPosition(800, ball.sprite.getPosition().y);
+		ball.sprite.setPosition(800 - offset, ball.sprite.getPosition().y);
 		ball.velocity = sf::Vector2f(-ball.velocity.x, ball.velocity.y);
 	}
 	if (ball.sprite.getPosition().y <= 0)
 	{
 		ball.sprite.setPosition(ball.sprite.getPosition().x, 0);
-		ball.velocity = sf::Vector2f(ball.velocity.x, +ball.velocity.y);
+		ball.velocity = sf::Vector2f(ball.velocity.x, -ball.velocity.y);
 	}
 	if (ball.getDiagonalPos().y >= 600)
 	{
-		ball.sprite.setPosition(ball.sprite.getPosition().x, 600);
+		ball.sprite.setPosition(ball.sprite.getPosition().x, 600 - offset);
 		ball.velocity = sf::Vector2f(ball.velocity.x, -ball.velocity.y);
 	}
 
