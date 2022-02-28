@@ -22,14 +22,14 @@ int main()
 		posy += 40.0f;
 	}
 
-	Ball ball(rm, sf::Vector2f(300.0f, 250.0f));
+	Ball ball(rm, sf::Vector2f(300.0f, 250.0f), "ball", sf::Vector2f(16.0f, 16.0f), sf::Vector2f(2.0f, 2.0f));
 	/*for (auto tile : tiles)
 	{
 		std::cout << tile->sprite.getPosition().x << " " << tile->sprite.getPosition().y << std::endl;
 		std::cout << tile->textureID << std::endl << std::endl;
 	}*/
 
-	Paddle paddle(rm, sf::Vector2f(700.0f, 550.0f), "paddle", sf::Vector2f(16.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
+	Paddle paddle(rm, sf::Vector2f(700.0f, 550.0f), "paddle_2", sf::Vector2f(32.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
 
 	while (window.isOpen())
 	{
