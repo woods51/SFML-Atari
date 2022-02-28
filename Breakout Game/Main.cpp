@@ -28,7 +28,7 @@ int main()
 		std::cout << tile->textureID << std::endl << std::endl;
 	}*/
 
-	Tile paddle(rm, sf::Vector2f(700.0f, 550.0f), "paddle", sf::Vector2f(16.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
+	Paddle paddle(rm, sf::Vector2f(700.0f, 550.0f), "paddle", sf::Vector2f(16.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
 
 	while (window.isOpen())
 	{
@@ -59,17 +59,6 @@ int main()
 		window.draw(temp);
 		temp = paddle.sprite;
 		window.draw(temp);
-
-		//std::cout << "Ball p: " << ball.sprite.getPosition().x << " " << ball.sprite.getPosition().y << std::endl;
-		//std::cout << "Ball p: " << ball.getDiagonalPos().x << " " << ball.getDiagonalPos().y << std::endl;
-		//std::cout << "Ball v: " << ball.velocity.x << " " << ball.velocity.y << std::endl;
-		/*
-		for (const auto& t : tiles)
-		{
-			std::cout << t->sprite.getPosition().x << " " << t->sprite.getPosition().y <<
-				(t->Collision(ball.sprite.getPosition(), ball.getDiagonalPos()) ? "true" : "false") << std::endl;
-		}
-		printf("%f,%f\n%f,%f\n", ball.sprite.getPosition().x, ball.sprite.getPosition().y, ball.getDiagonalPos().x, ball.getDiagonalPos().y);*/
 
 		// end the current frame
 		// *** copies local buffer to window
