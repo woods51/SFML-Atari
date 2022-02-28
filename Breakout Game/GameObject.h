@@ -2,57 +2,11 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <string>
-#include <filesystem>
 #include <map>
+#include "ResourceManager.h"
 
 #define WIDTH 800
 #define HEIGHT 600
-
-class ResourceManager
-{
-private:
-	std::string defaultTexture = "Assets/0.png";
-public:
-	std::map<std::string, sf::Texture> textures;
-
-	ResourceManager()
-	{
-		std::string name;
-		std::string texturePath;
-		std::string path = "\Assets/";
-		for (const auto& file : std::filesystem::directory_iterator(path))
-		{
-			texturePath = file.path().string();
-			//if (texturePath == defaultTexture)
-			//	continue;
-
-			sf::Texture temp;
-			name = file.path().filename().string();
-			name = name.substr(0, name.length() - 4);
-
-			if (!temp.loadFromFile(texturePath))
-			{
-				printf("Error loading texture: %s\n", texturePath.c_str());
-
-				temp.loadFromFile(defaultTexture);
-			}
-			
-			// Texture is copied to map
-			textures[name] = temp;
-			printf("Added %s at textures[%s].\n", texturePath.c_str(), name.c_str());
-		}
-
-	}
-	sf::Texture getTexture(std::string textureID)
-	{
-		if (textures.find(textureID) == textures.end())
-			return textures["0"];
-
-		return textures[textureID];
-	}
-	//~ResourceManager();
-};
-
 
 class Tile
 {
@@ -110,29 +64,37 @@ enum class Direction
 class Ball : public Tile
 {
 public:
-	Ball(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), std::string textureID = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
+	Ball(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), std::string textureID = "ball", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
 		: Tile(rm, pos, textureID, size, scale)
 	{
 		currentDir = Direction::Idle;
+		defaultPos = pos;
 	}
-
-	sf::Vector2f velocity = sf::Vector2f(0.25f, 0.25f);
-	sf::Vector2f lastPos = sprite.getPosition();
+	sf::Vector2f defaultVel = sf::Vector2f(0.1f, 0.1f);
+	sf::Vector2f velocity = defaultVel;
+	//sf::Vector2f lastPos = sprite.getPosition();
+	sf::Vector2f defaultPos;
 	Direction currentDir;
 
-	void setLastPos()
+	/*void setLastPos()
 	{
 		lastPos = sprite.getPosition();
-	}
+	}*/
 	void updatePos()
 	{
-		setLastPos();
+		//setLastPos();
 		sprite.setPosition(sprite.getPosition().x + velocity.x, sprite.getPosition().y + velocity.y);
 		//std::cout << "New Ball p: " << this->sprite.getPosition().x << " " << this->sprite.getPosition().y << std::endl;
 		if (velocity.x < 0)
 			currentDir = Direction::Left;
 		else
 			currentDir = Direction::Right;
+	}
+	void reset()
+	{
+		sprite.setPosition(defaultPos);
+		velocity = defaultVel;
+		updatePos();
 	}
 };
 class Paddle : public Tile
@@ -249,8 +211,9 @@ void update(std::vector<std::unique_ptr<Tile>>& tileMap, Ball& ball, Paddle& pad
 	}
 	if (ball.getDiagonalPos().y >= HEIGHT)
 	{
-		ball.sprite.setPosition(ball.sprite.getPosition().x, HEIGHT - offset);
-		ball.velocity = sf::Vector2f(ball.velocity.x, -ball.velocity.y);
+		ball.reset();
+		//ball.sprite.setPosition(ball.sprite.getPosition().x, HEIGHT - offset);
+		//ball.velocity = sf::Vector2f(ball.velocity.x, -ball.velocity.y);
 	}
 
 }

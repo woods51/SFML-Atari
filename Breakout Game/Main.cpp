@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 #include "GameObject.h"
+#include "ResourceManager.h"
 #include <iostream>
 #include <Windows.h>
 
@@ -21,7 +22,7 @@ int main()
 		posy += 40.0f;
 	}
 
-	Ball ball(rm, sf::Vector2f(300.0f, 250.0f), "0");
+	Ball ball(rm, sf::Vector2f(300.0f, 250.0f));
 	/*for (auto tile : tiles)
 	{
 		std::cout << tile->sprite.getPosition().x << " " << tile->sprite.getPosition().y << std::endl;
