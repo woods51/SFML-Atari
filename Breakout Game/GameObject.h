@@ -175,11 +175,24 @@ void update(std::vector<std::unique_ptr<Tile>>& tileMap, Ball& ball, Paddle& pad
 		}
 	}
 	float scalar = 1.1f;
+	// Ball collides with paddle
 	if ((temp = paddle.Collision(ball.sprite.getPosition(), ball.getDiagonalPos())) != sf::Vector2f(0, 0))
 	{
+		// Ball collides with side of Paddle
+		// check if either temp vector compnenet is in between the y's side points of the paddle
+		// temp = sf::Vector2f( pos.x , pos.y )
+		/*if (temp.y >= paddle.sprite.getPosition().y && temp.y <= paddle.getDiagonalPos().y)
+		{
+			ball.velocity = sf::Vector2f(-ball.velocity.x * scalar, ball.velocity.y);
+		}*/
+
+
+		//
+		// Assuming Paddle Hits Top of Paddle
+		//
 		// Ball and Paddle moving in same direction
 		if (ball.currentDir == paddle.currentDir)
-			ball.velocity = ball.velocity = sf::Vector2f(ball.velocity.x, -ball.velocity.y * scalar);
+			ball.velocity = sf::Vector2f(ball.velocity.x, -ball.velocity.y * scalar);
 
 		// Ball and Paddle moving in opposite directions
 		else if (paddle.currentDir != Direction::Idle)
