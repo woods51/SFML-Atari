@@ -38,39 +38,20 @@ void PlayState::update(sf::Time dt)
 			tile->isActive = false;
 		}
 	}
+
 	// Ball collides with paddle
 	contact = paddle->collision(ball->sprite.getPosition(), ball->getDiagonalPos());
 	if (contact != Surface::None)
 	{
 		ball->handlePaddle(contact, paddle->currentDir);
 	}
+	
+	ball->move(dt);
 
-	// Window Border collision detection and handling w/ Ball
-	float offset = ball->scale.x * ball->size.x;
-	if (ball->sprite.getPosition().x <= 0)
-	{
-		ball->sprite.setPosition(0, ball->sprite.getPosition().y);
-		ball->velocity.x = -ball->velocity.x;
-	}
-	if (ball->getDiagonalPos().x >= WIDTH)
-	{
-		ball->sprite.setPosition(WIDTH - offset, ball->sprite.getPosition().y);
-		ball->velocity.x = -ball->velocity.x;
-	}
-	if (ball->sprite.getPosition().y <= 0)
-	{
-		ball->sprite.setPosition(ball->sprite.getPosition().x, 0);
-		ball->velocity.y = -ball->velocity.y;
-	}
-	if (ball->getDiagonalPos().y >= HEIGHT)
-	{
-		ball->sprite.setPosition(ball->defaultPos);
-		ball->velocity = ball->defaultVel;
-	}
-	ball->sprite.move(ball->velocity.x, ball->velocity.y);// * dt.asMilliseconds() + 1, ball->velocity.y * dt.asMilliseconds());
-	system("CLS");
-	std::cout << "v:" << ball->velocity.x << std::endl;
-	printf("dt: %.6f\n", (float)dt.asMilliseconds() * 1000);
+	//system("CLS");
+	//std::cout << "v:" << ball->velocity.x << std::endl;
+	//printf("v: (%.3f, %.3f)\n", ball->velocity.x, ball->velocity.y);
+	//printf("dt: %.6f\n", (float)dt.asMilliseconds() * 1000);
 
 	if (ball->velocity.x < 0)
 		ball->currentDir = Direction::Left;

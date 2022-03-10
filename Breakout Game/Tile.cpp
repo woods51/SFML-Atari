@@ -10,16 +10,10 @@ float Tile::distance(sf::Vector2f p1, sf::Vector2f p2)
 	return abs(p1.y-p2.y) * 1.0;
 }
 
-enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_diagonal)
+enum class Surface Tile::collision(sf::Vector2f ball_pos, sf::Vector2f ball_diagonal_pos)
 {
 	sf::Vector2f pos = this->sprite.getPosition();
 	sf::Vector2f diagonal_pos = this->getDiagonalPos();
-
-	sf::Vector2f b1(obj_pos.x, obj_pos.y);
-	sf::Vector2f b2(obj_pos_diagonal.x, obj_pos.y);
-	sf::Vector2f b3(obj_pos.x, obj_pos_diagonal.y);
-	sf::Vector2f b4(obj_pos_diagonal.x, obj_pos_diagonal.y);
-	
 	// Tile			Ball
 	// p1	p2		b1	 b2
 	// p3	p4		b3	 b4
@@ -28,15 +22,20 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 	sf::Vector2f p3(pos.x, diagonal_pos.y);
 	sf::Vector2f p4(diagonal_pos.x, diagonal_pos.y);
 
+	sf::Vector2f b1(ball_pos.x, ball_pos.y);
+	sf::Vector2f b2(ball_diagonal_pos.x, ball_pos.y);
+	sf::Vector2f b3(ball_pos.x, ball_diagonal_pos.y);
+	sf::Vector2f b4(ball_diagonal_pos.x, ball_diagonal_pos.y);
+
 	bool coll = false;
 	bool point[4] = { false, false, false, false };
 	int num = 0;
 
 	int i = 0;
-	for (auto p : { b1, b2, b3, b4 })
+	for (auto b : { b1, b2, b3, b4 })
 	{
-		if ((p.x >= pos.x && p.x <= diagonal_pos.x) &&
-			(p.y >= pos.y && p.y <= diagonal_pos.y))
+		if ((b.x >= pos.x && b.x <= diagonal_pos.x) &&
+			(b.y >= pos.y && b.y <= diagonal_pos.y))
 		{
 			coll = true;
 			point[i] = true;
@@ -49,7 +48,11 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 	float p1_dist, p2_dist, p3_dist, p4_dist;
 	if (!coll)
 		return Surface::None;
-
+	for (int i = 0; i < 4; i++) {
+		bool x = point[i];
+		std::cout << "p" << i + 1 << ": " << (point[i] ? "True" : "False") << "  ";
+	}
+	std::cout<<std::endl;
 	if (num == 1)
 	{
 		for (int i = 0; i < 4; i++) {
@@ -60,7 +63,7 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 					p2_dist = distance(b1, p2);
 					p4_dist = distance(b1, p4);
 
-					if (p2_dist > p4_dist)
+					if (p2_dist < p4_dist)
 						return Surface::Right;
 					else
 						return Surface::Bottom;
@@ -70,7 +73,7 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 					p1_dist = distance(b2, p1);
 					p3_dist = distance(b2, p3);
 
-					if (p1_dist > p3_dist)
+					if (p1_dist < p3_dist)
 						return Surface::Left;
 					else
 						return Surface::Bottom;
@@ -80,7 +83,7 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 					p2_dist = distance(b3, p2);
 					p4_dist = distance(b3, p4);
 
-					if (p2_dist > p4_dist)
+					if (p2_dist < p4_dist)
 						return Surface::Top;
 					else
 						return Surface::Right;
@@ -90,10 +93,14 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 					p1_dist = distance(b4, p1);
 					p3_dist = distance(b4, p3);
 
-					if (p1_dist > p3_dist)
+					if (p1_dist < p3_dist) {
+						std::cout << "Top" << std::endl;
 						return Surface::Top;
-					else
+					}
+					else {
+						std::cout << "Left" << std::endl;
 						return Surface::Left;
+					}
 					break;
 				}
 
@@ -103,13 +110,13 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 	else
 	{
 		if (point[0] && point[1])
-			return Surface::Top;
+			return Surface::Bottom;
 		if (point[0] && point[2])
 			return Surface::Right;
 		if (point[1] && point[3])
 			return Surface::Left;
 		if (point[2] && point[3])
-			return Surface::Bottom;
+			return Surface::Top;
 	}
 	return Surface::None;
 }

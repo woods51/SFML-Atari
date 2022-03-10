@@ -1,6 +1,6 @@
 #pragma once
-#define WIDTH 800
-#define HEIGHT 600
+//#define WIDTH 800
+//#define HEIGHT 600
 
 #include <SFML\Graphics.hpp>
 #include "ResourceManager.h"
@@ -29,7 +29,7 @@ public:
 	sf::Sprite sprite;
 	sf::Texture* texture;
 	std::string textureID;
-	float speed = 5.0f;
+	float speed = 8.0f;
 	bool isActive;
 
 	sf::Vector2f getDiagonalPos();

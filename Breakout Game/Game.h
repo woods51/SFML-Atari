@@ -11,9 +11,6 @@
 #include "Paddle.h"
 #include "ResourceManager.h"
 
-#define WIDTH 800
-#define HEIGHT 600
-
 class Game
 {
 public:

@@ -4,6 +4,10 @@
 #include <filesystem>
 #include <string>
 
+#define WIDTH 800
+#define HEIGHT 600
+#define MULTIPLIER 25
+
 class ResourceManager
 {
 private:

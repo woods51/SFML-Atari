@@ -5,12 +5,12 @@ void Paddle::move(sf::Time dt)
 	sf::Vector2f movement(0, 0);
 	if (m_IsMovingLeft)
 	{
-		movement.x = -speed;// *dt.asMilliseconds() + 1;
+		movement.x = -speed * dt.asSeconds() * MULTIPLIER;
 		updateDir(Direction::Left);
 	}
 	else if (m_IsMovingRight)
 	{
-		movement.x = speed; //* dt.asMilliseconds() + 1;
+		movement.x = speed * dt.asSeconds() * MULTIPLIER;
 		updateDir(Direction::Right);
 	}
 	else
