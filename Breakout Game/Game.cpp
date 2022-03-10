@@ -2,22 +2,26 @@
 
 void Game::run()
 {
-	m_states.push_back(std::make_unique<PlayState>(&rm, window));
+	ResourceManager rm;
+	rm.load();
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "My Window");
+
+	m_states.push_back(std::make_unique<PlayState>(rm, window));
 	sf::err().rdbuf(NULL);
-	window->setFramerateLimit(240);
+	window.setFramerateLimit(240);
 
 	sf::Clock deltaClock;
 	sf::Time deltaTime;
 
-	while (window->isOpen())
+	while (window.isOpen())
 	{
-		system("pause");
-		m_states.at(0)->eventHandler();
+		//system("pause");
+		m_states.at(0)->eventHandler(window);
 
 		deltaTime = deltaClock.restart();
 		m_states.at(0)->update(deltaTime);
 		deltaClock.restart();
 
-		m_states.at(0)->render();
+		m_states.at(0)->render(window);
 	}
 }

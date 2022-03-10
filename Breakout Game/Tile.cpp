@@ -7,7 +7,7 @@ sf::Vector2f Tile::getDiagonalPos()
 
 float Tile::distance(sf::Vector2f p1, sf::Vector2f p2)
 {
-	return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2) * 1.0);
+	return abs(p1.y-p2.y) * 1.0;
 }
 
 enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_diagonal)
@@ -19,7 +19,10 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 	sf::Vector2f b2(obj_pos_diagonal.x, obj_pos.y);
 	sf::Vector2f b3(obj_pos.x, obj_pos_diagonal.y);
 	sf::Vector2f b4(obj_pos_diagonal.x, obj_pos_diagonal.y);
-
+	
+	// Tile			Ball
+	// p1	p2		b1	 b2
+	// p3	p4		b3	 b4
 	sf::Vector2f p1(pos.x, pos.y);
 	sf::Vector2f p2(diagonal_pos.x, pos.y);
 	sf::Vector2f p3(pos.x, diagonal_pos.y);
@@ -42,8 +45,7 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 		i++;
 		continue;
 	}
-	// p1	p2
-	// p3	p4
+
 	float p1_dist, p2_dist, p3_dist, p4_dist;
 	if (!coll)
 		return Surface::None;
@@ -55,8 +57,8 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 			{
 				switch (i + 1) {
 				case 1:
-					p2_dist = abs(distance(b1, p2));
-					p4_dist = abs(distance(b1, p4));
+					p2_dist = distance(b1, p2);
+					p4_dist = distance(b1, p4);
 
 					if (p2_dist > p4_dist)
 						return Surface::Right;
@@ -65,8 +67,8 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 					break;
 
 				case 2:
-					p1_dist = abs(distance(b2, p1));
-					p3_dist = abs(distance(b2, p3));
+					p1_dist = distance(b2, p1);
+					p3_dist = distance(b2, p3);
 
 					if (p1_dist > p3_dist)
 						return Surface::Left;
@@ -75,8 +77,8 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 					break;
 
 				case 3:
-					p2_dist = abs(distance(b3, p2));
-					p4_dist = abs(distance(b3, p4));
+					p2_dist = distance(b3, p2);
+					p4_dist = distance(b3, p4);
 
 					if (p2_dist > p4_dist)
 						return Surface::Top;
@@ -85,8 +87,8 @@ enum class Surface Tile::collision(sf::Vector2f obj_pos, sf::Vector2f obj_pos_di
 					break;
 
 				default:
-					p1_dist = abs(distance(b4, p1));
-					p3_dist = abs(distance(b4, p3));
+					p1_dist = distance(b4, p1);
+					p3_dist = distance(b4, p3);
 
 					if (p1_dist > p3_dist)
 						return Surface::Top;

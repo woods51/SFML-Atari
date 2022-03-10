@@ -1,6 +1,6 @@
 #include "Ball.h"
 
-void Ball::handlePaddle(enum class Surface surface, enum class Direction paddleDir, sf::Time dt)
+void Ball::handlePaddle(enum class Surface surface, enum class Direction paddleDir)
 {
 	// Ball collides with Side of Paddle
 	if (surface == Surface::Left || surface == Surface::Right)
@@ -31,7 +31,7 @@ void Ball::handlePaddle(enum class Surface surface, enum class Direction paddleD
 
 	return;
 }
-void Ball::handleTile(enum class Surface surface, sf::Time dt)
+void Ball::handleTile(enum class Surface surface)
 {
 	// Ball collides with Side of Tile
 	if (surface == Surface::Left || surface == Surface::Right)

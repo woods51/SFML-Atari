@@ -2,6 +2,10 @@
 
 ResourceManager::ResourceManager()
 {
+
+}
+void ResourceManager::load()
+{
 	std::string name;
 	std::string texturePath;
 	std::string path = "\Assets/";
@@ -9,24 +13,23 @@ ResourceManager::ResourceManager()
 	{
 		texturePath = file.path().string();
 
-		sf::Texture temp;
+		sf::Texture* temp = new sf::Texture;
 		name = file.path().filename().string();
 		name = name.substr(0, name.length() - 4);
 
-		if (!temp.loadFromFile(texturePath))
+		if (!temp->loadFromFile(texturePath))
 		{
 			printf("Error loading texture: %s\n", texturePath.c_str());
 
-			temp.loadFromFile(defaultTexture);
+			temp->loadFromFile(defaultTexture);
 		}
 
 		// Texture is copied to map
 		textures[name] = temp;
 		printf("Added %s at textures[%s].\n", texturePath.c_str(), name.c_str());
 	}
-
 }
-sf::Texture ResourceManager::getTexture(std::string textureID)
+sf::Texture* ResourceManager::getTexture(std::string textureID)
 {
 	if (textures.find(textureID) == textures.end())
 		return textures["0"];

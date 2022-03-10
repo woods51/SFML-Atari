@@ -9,9 +9,10 @@ class ResourceManager
 private:
 	std::string defaultTexture = "Assets/0.png";
 public:
-	std::map<std::string, sf::Texture> textures;
+	std::map<std::string, sf::Texture*> textures;
+	void load();
 
 	ResourceManager();
-	sf::Texture getTexture(std::string textureID);
+	sf::Texture* getTexture(std::string textureID);
 	//~ResourceManager();
 };

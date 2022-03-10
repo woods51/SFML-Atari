@@ -1,14 +1,14 @@
 #include "PlayState.h"
 
-PlayState::PlayState(ResourceManager* rm, sf::RenderWindow* window) : State(rm, window)
+PlayState::PlayState(ResourceManager& rm, sf::RenderWindow& window) //: State(rm, window)
 {
-	this->ball = new Ball(m_rm, sf::Vector2f(300.0f, 250.0f), "ball", sf::Vector2f(16.0f, 16.0f), sf::Vector2f(1.0f, 1.0f));
-	this->paddle = new Paddle(m_rm, sf::Vector2f(700.0f, 550.0f), "paddle_2", sf::Vector2f(32.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
+	this->ball = new Ball(rm, sf::Vector2f(300.0f, 250.0f), "ball", sf::Vector2f(16.0f, 16.0f), sf::Vector2f(1.0f, 1.0f));
+	this->paddle = new Paddle(rm, sf::Vector2f(700.0f, 550.0f), "paddle_2", sf::Vector2f(32.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
 
 	float posy = 0;
 	for (auto i : { "1", "2", "1" })
 	{
-		generateTileRow(posy, i);
+		generateTileRow(rm, posy, i);
 		posy += 40.0f;
 	}
 }
@@ -29,12 +29,12 @@ void PlayState::update(sf::Time dt)
 	for (auto const& tile : tileMap)	// Collision with a tile
 	{
 		if (tile->isActive == false || tile->getDiagonalPos().y < ball->sprite.getPosition().y)
-			;			continue;
+			continue;
 
 		contact = tile->collision(ball->sprite.getPosition(), ball->getDiagonalPos());
 		if (contact != Surface::None)
 		{
-			ball->handleTile(contact, dt);
+			ball->handleTile(contact);
 			tile->isActive = false;
 		}
 	}
@@ -42,7 +42,7 @@ void PlayState::update(sf::Time dt)
 	contact = paddle->collision(ball->sprite.getPosition(), ball->getDiagonalPos());
 	if (contact != Surface::None)
 	{
-		ball->handlePaddle(contact, paddle->currentDir, dt);
+		ball->handlePaddle(contact, paddle->currentDir);
 	}
 
 	// Window Border collision detection and handling w/ Ball
@@ -67,9 +67,10 @@ void PlayState::update(sf::Time dt)
 		ball->sprite.setPosition(ball->defaultPos);
 		ball->velocity = ball->defaultVel;
 	}
-	ball->sprite.move(ball->velocity.x * dt.asMilliseconds(), ball->velocity.y * dt.asMilliseconds());
+	ball->sprite.move(ball->velocity.x, ball->velocity.y);// * dt.asMilliseconds() + 1, ball->velocity.y * dt.asMilliseconds());
 	system("CLS");
-	std::cout << "v:" << ball->velocity.x << " dt:" << dt.asMilliseconds() << std::endl;
+	std::cout << "v:" << ball->velocity.x << std::endl;
+	printf("dt: %.6f\n", (float)dt.asMilliseconds() * 1000);
 
 	if (ball->velocity.x < 0)
 		ball->currentDir = Direction::Left;
@@ -83,10 +84,10 @@ void PlayState::inputHandler(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::D || key == sf::Keyboard::Right)
 		paddle->m_IsMovingRight = isPressed;
 }
-void PlayState::eventHandler()
+void PlayState::eventHandler(sf::RenderWindow& window)
 {
 	sf::Event event;
-	while (m_window->pollEvent(event))
+	while (window.pollEvent(event))
 	{
 		switch (event.type)
 		{
@@ -97,14 +98,14 @@ void PlayState::eventHandler()
 			inputHandler(event.key.code, false);
 			break;
 		case sf::Event::Closed:
-			m_window->close();
+			window.close();
 			break;
 		}
 	}
 }
-void PlayState::render()
+void PlayState::render(sf::RenderWindow& window)
 {
-	m_window->clear(sf::Color::Black);
+	window.clear(sf::Color::Black);
 
 	for (const auto& tile : tileMap)
 	{
@@ -112,13 +113,13 @@ void PlayState::render()
 			continue;
 
 		sf::Sprite temp = tile->sprite;
-		m_window->draw(temp);
+		window.draw(temp);
 	}
 	sf::Sprite temp = ball->sprite;
-	m_window->draw(temp);
+	window.draw(temp);
 	temp = paddle->sprite;
 
-	m_window->draw(temp);
+	window.draw(temp);
 
-	m_window->display();
+	window.display();
 }

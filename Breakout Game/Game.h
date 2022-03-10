@@ -18,13 +18,13 @@ class Game
 {
 public:
 	Game() {
-		window = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "My Window");
+
 	};
 	void run();
 	void exitGame();
 
-	ResourceManager rm;
-	sf::RenderWindow* window ;
+	//ResourceManager rm;
+	//sf::RenderWindow* window ;
 
 private:
 	// Vector of smart pointers to game states

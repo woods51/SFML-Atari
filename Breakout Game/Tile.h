@@ -10,12 +10,12 @@
 class Tile
 {
 public:
-	Tile(ResourceManager* rm, sf::Vector2f pos = sf::Vector2f(0, 0), 
+	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), 
 		std::string textureID = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
 	{
 		this->textureID = textureID;
-		texture = rm->getTexture(textureID);
-		sprite.setTexture(texture);
+		texture = rm.getTexture(textureID);
+		sprite.setTexture(*texture);
 		sprite.setPosition(pos);
 		sprite.setScale(scale);
 		this->scale = scale;
@@ -27,7 +27,7 @@ public:
 	sf::Vector2f scale;
 	sf::Vector2f size;
 	sf::Sprite sprite;
-	sf::Texture texture;
+	sf::Texture* texture;
 	std::string textureID;
 	float speed = 5.0f;
 	bool isActive;

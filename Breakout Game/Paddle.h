@@ -5,7 +5,7 @@
 class Paddle : public Tile
 {
 public:
-	Paddle(ResourceManager* rm, sf::Vector2f pos = sf::Vector2f(0, 0), std::string textureID = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
+	Paddle(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), std::string textureID = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
 		: Tile(rm, pos, textureID, size, scale)
 	{
 		currentDir = Direction::Idle;
