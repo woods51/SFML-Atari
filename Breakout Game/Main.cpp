@@ -1,16 +1,23 @@
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
-#include "GameObject.h"
-#include "ResourceManager.h"
+//#include "GameObject.h"
+//#include "ResourceManager.h"
 #include <iostream>
 #include <Windows.h>
+#include "Game.h"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
+	Game game;
+	game.run();
+	/*sf::RenderWindow window(sf::VideoMode(800, 600), "My Window");
 	sf::Event event;
 	
 	sf::err().rdbuf(NULL);
+	window.setFramerateLimit(240);
+	sf::Clock deltaClock;
+	sf::Time deltaTime;
+	float dt;
 
 	ResourceManager rm;
 	std::vector<std::unique_ptr<Tile>> tiles;
@@ -27,7 +34,7 @@ int main()
 	{
 		std::cout << tile->sprite.getPosition().x << " " << tile->sprite.getPosition().y << std::endl;
 		std::cout << tile->textureID << std::endl << std::endl;
-	}*/
+	}
 
 	Paddle paddle(rm, sf::Vector2f(700.0f, 550.0f), "paddle_2", sf::Vector2f(32.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
 
@@ -40,17 +47,17 @@ int main()
 				window.close();
 			}
 		}
-		// clear the window with black color
-		// *** otherwise the contents of the previous frames will be present
-
+		// code
+		//dt = deltaClock.getElapsedTime().asSeconds() * 100;
+		deltaTime = deltaClock.restart();
+		dt = deltaTime.asMilliseconds();
+		
+		update(tiles, ball, paddle, dt);
+		
+		deltaClock.restart();
 		// draw everything here...
-
 		window.clear(sf::Color::Black);
 
-		// code
-
-		update(tiles, ball, paddle);
-		
 		for (const auto& t : tiles)
 		{
 			sf::Sprite temp = t->sprite;
@@ -63,9 +70,10 @@ int main()
 
 		// end the current frame
 		// *** copies local buffer to window
+		
 		window.display();
 		//Sleep(25);
 		//std::system("pause");
 		//window.close();
-	}
+	}*/
 }

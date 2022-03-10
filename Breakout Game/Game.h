@@ -2,19 +2,31 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "BaseState.h"
+#include <iostream>
+
+#include "State.h"
+#include "PlayState.h"
+#include "Tile.h"
+#include "Ball.h"
+#include "Paddle.h"
+#include "ResourceManager.h"
+
+#define WIDTH 800
+#define HEIGHT 600
 
 class Game
 {
 public:
-	Game();
-
+	Game() {
+		window = new sf::RenderWindow(sf::VideoMode(WIDTH, HEIGHT), "My Window");
+	};
 	void run();
 	void exitGame();
 
-private:
-	void eventHandler();
+	ResourceManager rm;
+	sf::RenderWindow* window ;
 
+private:
 	// Vector of smart pointers to game states
-	std::vector<std::unique_ptr<BaseState>> m_states;
+	std::vector<std::unique_ptr<PlayState>> m_states;
 };
