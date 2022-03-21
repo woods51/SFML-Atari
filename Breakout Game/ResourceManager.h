@@ -12,11 +12,15 @@ class ResourceManager
 {
 private:
 	std::string defaultTexture = "Assets/0.png";
+	std::string defaultFont = "default.TTF";
 public:
 	std::map<std::string, sf::Texture*> textures;
-	void load();
+	std::map<std::string, sf::Font*> fonts;
+	void loadTextures();
+	void loadFonts();
 
 	ResourceManager();
 	sf::Texture* getTexture(std::string textureID);
-	//~ResourceManager();
+	sf::Font* getFont(std::string fontID);
+	~ResourceManager();
 };

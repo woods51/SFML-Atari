@@ -10,6 +10,7 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include "ResourceManager.h"
+#include "Button.h"
 
 class Game
 {
@@ -25,5 +26,5 @@ public:
 
 private:
 	// Vector of smart pointers to game states
-	std::vector<std::unique_ptr<PlayState>> m_states;
+	std::vector<std::unique_ptr<State>> m_states;
 };

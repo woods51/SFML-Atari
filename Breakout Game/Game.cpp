@@ -3,7 +3,8 @@
 void Game::run()
 {
 	ResourceManager rm;
-	rm.load();
+	rm.loadTextures();
+	rm.loadFonts();
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "My Window");
 
 	m_states.push_back(std::make_unique<PlayState>(rm, window));

@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "ResourceManager.h"
+#include "Button.h"
 
 class State
 {

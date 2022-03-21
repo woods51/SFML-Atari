@@ -50,9 +50,9 @@ enum class Surface Tile::collision(sf::Vector2f ball_pos, sf::Vector2f ball_diag
 		return Surface::None;
 	for (int i = 0; i < 4; i++) {
 		bool x = point[i];
-		std::cout << "p" << i + 1 << ": " << (point[i] ? "True" : "False") << "  ";
+		//std::cout << "p" << i + 1 << ": " << (point[i] ? "True" : "False") << "  ";
 	}
-	std::cout<<std::endl;
+	//std::cout<<std::endl;
 	if (num == 1)
 	{
 		for (int i = 0; i < 4; i++) {
@@ -94,11 +94,11 @@ enum class Surface Tile::collision(sf::Vector2f ball_pos, sf::Vector2f ball_diag
 					p3_dist = distance(b4, p3);
 
 					if (p1_dist < p3_dist) {
-						std::cout << "Top" << std::endl;
+						//std::cout << "Top" << std::endl;
 						return Surface::Top;
 					}
 					else {
-						std::cout << "Left" << std::endl;
+						//std::cout << "Left" << std::endl;
 						return Surface::Left;
 					}
 					break;

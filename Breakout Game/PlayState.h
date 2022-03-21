@@ -27,7 +27,14 @@ public:
 	}
 private:
 	std::vector<std::unique_ptr<Tile>> tileMap;
+	std::vector<Button*> buttons;
 
 	Ball *ball;
 	Paddle *paddle;
+
+	sf::Sprite border;
+	sf::Text scoreText;
+	int score = 0;
+	void updateUI();
+	void generateUI(ResourceManager& rm);
 };
