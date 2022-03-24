@@ -20,7 +20,7 @@ void Game::run()
 		m_states.at(0)->eventHandler(window);
 
 		deltaTime = deltaClock.restart();
-		m_states.at(0)->update(deltaTime);
+		m_states.at(0)->update(deltaTime, rm);
 		deltaClock.restart();
 
 		m_states.at(0)->render(window);

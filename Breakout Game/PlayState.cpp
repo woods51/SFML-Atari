@@ -2,15 +2,16 @@
 
 PlayState::PlayState(ResourceManager& rm, sf::RenderWindow& window) //: State(rm, window)
 {
-	this->ball = new Ball(rm, sf::Vector2f(300.0f, 250.0f), "ball", sf::Vector2f(16.0f, 16.0f), sf::Vector2f(1.0f, 1.0f));
-	this->paddle = new Paddle(rm, sf::Vector2f(700.0f, 530.0f), "paddle_2", sf::Vector2f(32.0f, 4.0f), sf::Vector2f(5.0f, 5.0f));
+	this->ball = new Ball(rm, sf::Vector2f(300.0f, 250.0f), sf::Vector2f(16.0f, 16.0f), sf::Vector2f(1.0f, 1.0f), "ball_01");
+	this->paddle = new Paddle(rm, sf::Vector2f(700.0f, 530.0f), sf::Vector2f(32.0f, 4.0f), sf::Vector2f(5.0f, 5.0f), "paddle_2");
 
 	float posy = 0;
-	for (auto i : { "1", "2", "1" })
+	/*for (auto i : {"1", "2", "1"})
 	{
 		generateTileRow(rm, posy, i);
 		posy += 40.0f;
-	}
+	}*/
+	generateLevel1(rm);
 	generateUI(rm);
 }
 
@@ -23,8 +24,13 @@ PlayState::~PlayState()
 		delete b;
 }
 
-void PlayState::update(sf::Time dt)
+void PlayState::update(sf::Time dt, ResourceManager& rm)
 {
+	if (color_flag)
+	{
+		color_flag = false;
+		ball->changeColor(rm);
+	}
 	// Paddle Movment //
 	paddle->move(dt);
 
@@ -81,6 +87,7 @@ void PlayState::eventHandler(sf::RenderWindow& window)
 		switch (event.type)
 		{
 		case sf::Event::MouseButtonPressed:
+			// Left Mouse Click
 			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
 			{
 				sf::Vector2i pos = sf::Mouse::getPosition(window);
@@ -89,8 +96,6 @@ void PlayState::eventHandler(sf::RenderWindow& window)
 				
 				for (auto b : buttons)
 				{
-					//std::cout << "bpos: " << b->sprite.getPosition().x << " " << b->sprite.getPosition().y
-					//	<< " ... " << b->getDiagonalPos().x << " " << b->getDiagonalPos().y << std::endl;
 					if (pos.y < b->sprite.getPosition().y)
 						continue;
 					
@@ -100,7 +105,16 @@ void PlayState::eventHandler(sf::RenderWindow& window)
 					if ((pos.x >= b_pos.x && pos.y >= b_pos.y) &&
 						(pos.x <= b_diag_pos.x && pos.y <= b_diag_pos.y))
 					{
-						b->OnClick();
+						switch (b->OnClick())
+						{
+						case B_DEFAULT:
+							break;
+						case B_BALLCOLOR:
+							this->color_flag = true;
+							break;
+						default:
+							break;
+						}
 					}
 				}
 			}
@@ -163,17 +177,18 @@ void PlayState::generateUI(ResourceManager& rm)
 	scoreText.setFont(*rm.getFont("default"));
 	scoreText.setFillColor(sf::Color::White);
 	scoreText.setCharacterSize(25);
-	scoreText.setPosition(0, 562);
+	scoreText.setPosition(5, 562);
+
 	// generate all sprite UI / text -> spriteUI
 	border.setTexture(*rm.getTexture("border"));
 	border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
 
 	// Buttons
-	Button* temp = new Button(rm);
-	temp->text.setString("test");
+	Button* temp = new Button(rm, sf::Vector2f(WIDTH / 2, HEIGHT / 2), sf::Vector2f(5.0f, 5.0f), sf::Vector2f(16.0f, 8.0f), "test");
 	temp->text.setFillColor(sf::Color::Blue);
-	temp->sprite.setPosition(sf::Vector2f(WIDTH / 2, HEIGHT / 2));
-	temp->text.setPosition(temp->sprite.getPosition());
+	temp->text.setCharacterSize(25);
+	buttons.push_back(temp);
 
+	temp = new BallColor(rm, sf::Vector2f(700, 560));
 	buttons.push_back(temp);
 }

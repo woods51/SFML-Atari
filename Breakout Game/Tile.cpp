@@ -1,5 +1,8 @@
 #include "Tile.h"
 
+Tile::Tile() {
+
+}
 sf::Vector2f Tile::getDiagonalPos()
 {
 	return sprite.getPosition() + (size * sprite.getScale().x);
