@@ -20,6 +20,8 @@ public:
 	void updateDir(enum class Direction d);
 
 	void move(sf::Time dt);
+
+	bool hasCollided = false;
 private:
 	void handleBorder();
 };

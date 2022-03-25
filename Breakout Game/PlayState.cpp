@@ -2,15 +2,9 @@
 
 PlayState::PlayState(ResourceManager& rm, sf::RenderWindow& window) //: State(rm, window)
 {
-	this->ball = new Ball(rm, sf::Vector2f(300.0f, 250.0f), sf::Vector2f(16.0f, 16.0f), sf::Vector2f(1.0f, 1.0f), "ball_01");
+	this->ball = new Ball(rm, sf::Vector2f(300.0f, 350.0f));
 	this->paddle = new Paddle(rm, sf::Vector2f(700.0f, 530.0f), sf::Vector2f(32.0f, 4.0f), sf::Vector2f(5.0f, 5.0f), "paddle_2");
 
-	float posy = 0;
-	/*for (auto i : {"1", "2", "1"})
-	{
-		generateTileRow(rm, posy, i);
-		posy += 40.0f;
-	}*/
 	generateLevel1(rm);
 	generateUI(rm);
 }
@@ -51,10 +45,21 @@ void PlayState::update(sf::Time dt, ResourceManager& rm)
 	}
 
 	// Ball collides with paddle
-	contact = paddle->collision(ball->sprite.getPosition(), ball->getDiagonalPos());
-	if (contact != Surface::None)
+	// Paddle velocity > Ball escape velocity // Prevents multiple collisions in a frame
+	if (paddle->hasCollided && paddle->sprite.getPosition().y > ball->getDiagonalPos().y)
 	{
-		ball->handlePaddle(contact, paddle->currentDir);
+		paddle->hasCollided = false;
+	}
+	// Ball is near Paddle
+	if (!paddle->hasCollided && 
+		paddle->sprite.getPosition().y <= ball->getDiagonalPos().y && paddle->sprite.getPosition().x <= ball->getDiagonalPos().x)
+	{
+		contact = paddle->collision(ball->sprite.getPosition(), ball->getDiagonalPos());
+		if (contact != Surface::None)
+		{
+			ball->handlePaddle(contact, paddle->currentDir);
+			paddle->hasCollided = true;
+		}
 	}
 	
 	ball->move(dt);

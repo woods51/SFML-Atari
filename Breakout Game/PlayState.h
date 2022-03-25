@@ -28,7 +28,7 @@ public:
 	void generateLevel1(ResourceManager& rm)
 	{
 		float pos_x = 0;
-		float pos_y = 0;
+		float pos_y = 80.0f;
 		std::string tiles[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
 		for (auto const&texture : tiles)
 		{

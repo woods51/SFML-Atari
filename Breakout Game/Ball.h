@@ -6,7 +6,7 @@ class Ball : public Tile
 {
 public:
 	Ball(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f size = sf::Vector2f(16.0f, 16.0f),
-		sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f), std::string textureID = "ball_01")
+		sf::Vector2f scale = sf::Vector2f(1.0f, 1.0f), std::string textureID = "ball_01")
 	{
 		this->textureID = textureID;
 		texture = rm.getTexture(textureID);

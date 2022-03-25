@@ -7,32 +7,29 @@ void Ball::move(sf::Time dt)
 }
 void Ball::handlePaddle(enum class Surface surface, enum class Direction paddleDir)
 {
-	float scalar = 0.1f;
-	float incr_scalar = 0.25f;
-	// Ball collides with Side of Paddle
+	float scalar = 1.01f;
+
+	// Ball collides with Side of Paddle ...Should Rarely Happen :/
 	if (surface == Surface::Left || surface == Surface::Right)
-	{
-		if (paddleDir == currentDir)
-			velocity = sf::Vector2f(-velocity.x + scalar, -velocity.y + scalar);
-		else
-			velocity.x = -velocity.x;
-	}
+		velocity.x = -velocity.x;
+
 	else if (surface == Surface::Top) // Ball Hits Top of Paddle
 	{
 		// Ball and Paddle moving in same direction
 		if (currentDir == paddleDir)
-			velocity = sf::Vector2f(velocity.x + (speed * scalar), -velocity.y + (speed * incr_scalar));
-			//velocity = sf::Vector2f(velocity.x * scalar + 0.1f, -velocity.y * scalar);
+			velocity = sf::Vector2f(velocity.x * scalar, -velocity.y * scalar);
 
 		// Paddle Idle
 		else if (paddleDir == Direction::Idle)
-			velocity = sf::Vector2f(velocity.x + scalar, -velocity.y + scalar);
-			//velocity.y = -velocity.y;
+			velocity.y = -velocity.y;
 
 		// Ball and Paddle moving in opposite directions
 		else
-			velocity = sf::Vector2f( -1 *(velocity.x + (speed * incr_scalar)), -1 * (velocity.y + (speed * scalar)));
-			//velocity = sf::Vector2f(-velocity.x, -velocity.y);
+			velocity = sf::Vector2f(-velocity.x * scalar, -velocity.y);
+	}
+	else if (surface == Surface::Diagonal)
+	{
+		velocity = -velocity;
 	}
 	else // ball it bottom of paddle (aka something broke)
 	{
@@ -43,15 +40,20 @@ void Ball::handlePaddle(enum class Surface surface, enum class Direction paddleD
 }
 void Ball::handleTile(enum class Surface surface)
 {
+	float scalar = 1.05f;
 	// Ball collides with Side of Tile
 	if (surface == Surface::Left || surface == Surface::Right)
 	{
-		velocity.x = -velocity.x;
+		velocity.x = -velocity.x * scalar;
 	}
 	// Ball collides with Top or Bottom of Tile
 	else if (surface == Surface::Top || surface == Surface::Bottom)
 	{
-		velocity.y = -velocity.y;
+		velocity.y = -velocity.y * scalar;
+	}
+	else if (surface == Surface::Diagonal)
+	{
+		velocity = -velocity * scalar;
 	}
 }
 void Ball::handleBorder()

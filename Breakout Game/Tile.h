@@ -37,7 +37,7 @@ public:
 
 	enum class Surface collision(sf::Vector2f, sf::Vector2f);
 
-	float distance(sf::Vector2f, sf::Vector2f);
+	double distance(sf::Vector2i, sf::Vector2i);
 };
 
 enum class Direction
@@ -52,5 +52,6 @@ enum class Surface
 	Bottom,
 	Left,
 	Right,
+	Diagonal,
 	None
 };
