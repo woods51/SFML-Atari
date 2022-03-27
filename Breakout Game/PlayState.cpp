@@ -23,7 +23,7 @@ void PlayState::update(sf::Time dt, ResourceManager& rm)
 	if (color_flag)
 	{
 		color_flag = false;
-		ball->changeColor(rm);
+		ball->toggleColor(rm);
 	}
 	// Paddle Movment //
 	paddle->move(dt);
@@ -32,47 +32,37 @@ void PlayState::update(sf::Time dt, ResourceManager& rm)
 	Surface contact = Surface::None;
 	for (auto const& tile : tileMap)	// Collision with a tile
 	{
-		if (tile->isActive == false || tile->getDiagonalPos().y < ball->sprite.getPosition().y)
+		if (!tile->isActive() || tile->getDiagonalPos().y < ball->getPosition().y)
 			continue;
 
-		contact = tile->collision(ball->sprite.getPosition(), ball->getDiagonalPos());
+		contact = ball->collision(tile->getPosition(), tile->getDiagonalPos());
 		if (contact != Surface::None)
 		{
 			ball->handleTile(contact);
 			this->score++;
-			tile->isActive = false;
+			tile->setDeactive();
 		}
 	}
 
 	// Ball collides with paddle
 	// Paddle velocity > Ball escape velocity // Prevents multiple collisions in a frame
-	if (paddle->hasCollided && paddle->sprite.getPosition().y > ball->getDiagonalPos().y)
+	if (paddle->hasCollided && paddle->getPosition().y > ball->getPosition().y + ball->getRadius())
 	{
 		paddle->hasCollided = false;
 	}
 	// Ball is near Paddle
-	if (!paddle->hasCollided && 
-		paddle->sprite.getPosition().y <= ball->getDiagonalPos().y && paddle->sprite.getPosition().x <= ball->getDiagonalPos().x)
+	if (!paddle->hasCollided &&
+		paddle->getPosition().y <= ball->getPosition().y + ball->getRadius() && paddle->getPosition().x <= ball->getPosition().x + ball->getRadius())
 	{
-		contact = paddle->collision(ball->sprite.getPosition(), ball->getDiagonalPos());
+		contact = ball->collision(paddle->getPosition(), paddle->getDiagonalPos());
 		if (contact != Surface::None)
 		{
-			ball->handlePaddle(contact, paddle->currentDir);
+			ball->handlePaddle(contact, paddle->getDirection());
 			paddle->hasCollided = true;
 		}
 	}
 	
-	ball->move(dt);
-
-	//system("CLS");
-	//std::cout << "v:" << ball->velocity.x << std::endl;
-	//printf("v: (%.3f, %.3f)\n", ball->velocity.x, ball->velocity.y);
-	//printf("dt: %.6f\n", (float)dt.asMilliseconds() * 1000);
-
-	if (ball->velocity.x < 0)
-		ball->currentDir = Direction::Left;
-	else
-		ball->currentDir = Direction::Right;
+	ball->update(dt);
 
 	updateUI();
 }
@@ -147,23 +137,22 @@ void PlayState::render(sf::RenderWindow& window)
 	// Render Tiles
 	for (const auto& tile : tileMap)
 	{
-		if (!tile->isActive)
+		if (!tile->isActive())
 			continue;
 
-		sf::Sprite temp = tile->sprite;
+		sf::RectangleShape temp = tile->getShape();
 		window.draw(temp);
 	}
 	// Render Ball & Paddle
-	sf::Sprite temp = ball->sprite;
-	window.draw(temp);
-	temp = paddle->sprite;
-	window.draw(temp);
+	window.draw(ball->getShape());
+	window.draw(paddle->getShape());
 
 	// Render UI
 	window.draw(scoreText);
 
 	for (auto b : buttons)
 	{
+		sf::Sprite temp;
 		temp = b->sprite;
 		window.draw(temp);
 		window.draw(b->text);

@@ -6,38 +6,38 @@ void Paddle::move(sf::Time dt)
 	if (m_IsMovingLeft)
 	{
 		movement.x = -speed * dt.asSeconds() * MULTIPLIER;
-		updateDir(Direction::Left);
+		setDirection(Direction::Left);
 	}
 	else if (m_IsMovingRight)
 	{
 		movement.x = speed * dt.asSeconds() * MULTIPLIER;
-		updateDir(Direction::Right);
+		setDirection(Direction::Right);
 	}
 	else
-		updateDir(Direction::Idle);
+		setDirection(Direction::Idle);
 
-	sprite.move(movement);
+	this->shape.move(movement);
 
 	handleBorder();
 }
-void Paddle::updateDir(enum class Direction d) { currentDir = d; }
+void Paddle::setDirection(enum class Direction d) { currentDir = d; }
 
 void Paddle::handleBorder()
 {
-	if (sprite.getPosition().x < 0)
+	if (getPosition().x < 0)
 	{
-		sprite.setPosition(sf::Vector2f(0, sprite.getPosition().y));
+		shape.setPosition(sf::Vector2f(0, getPosition().y));
 	}
 	if (getDiagonalPos().x > WIDTH)
 	{
-		sprite.setPosition(sf::Vector2f(WIDTH - (size.x * sprite.getScale().x), sprite.getPosition().y));
+		shape.setPosition(sf::Vector2f(WIDTH - (shape.getSize().x * shape.getScale().x), getPosition().y));
 	}
-	if (sprite.getPosition().y < 0)
+	if (getPosition().y < 0)
 	{
-		sprite.setPosition(sf::Vector2f(sprite.getPosition().x, 0));
+		shape.setPosition(sf::Vector2f(getPosition().x, 0));
 	}
 	if (getDiagonalPos().y > HEIGHT)
 	{
-		sprite.setPosition(sf::Vector2f(sprite.getPosition().x, HEIGHT - (size.y * sprite.getScale().y)));
+		shape.setPosition(sf::Vector2f(getPosition().x, HEIGHT - (shape.getSize().y * shape.getScale().y)));
 	}
 }
