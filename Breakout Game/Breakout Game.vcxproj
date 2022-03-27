@@ -163,7 +163,6 @@
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameObject.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Button.h" />
