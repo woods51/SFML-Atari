@@ -1,13 +1,46 @@
 #include "Ball.h"
 
-double Ball::distance(sf::Vector2i p1, sf::Vector2i p2)
+void Ball::update(sf::Time dt)
 {
-	return (double)sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2));
+	move(dt);
+
+	if (m_velocity.x < 0)
+		m_currentDir = Direction::Left;
+	else
+		m_currentDir = Direction::Right;
 }
 void Ball::move(sf::Time dt)
 {
-	shape.move(velocity.x * dt.asSeconds() * MULTIPLIER, velocity.y * dt.asSeconds() * MULTIPLIER);
+	m_shape.move(m_velocity.x * dt.asSeconds() * MULTIPLIER, m_velocity.y * dt.asSeconds() * MULTIPLIER);
 	handleBorder();
+}
+void Ball::handleBorder()
+{
+	// Window Border collision detection and handling w/ Ball
+	float offset = m_shape.getRadius() * 2;
+
+	if (m_shape.getPosition().x <= 0)
+	{
+		m_shape.setPosition(0, m_shape.getPosition().y);
+		m_velocity.x = -m_velocity.x;
+	}
+
+	if (getDiagonalPosition().x >= WIDTH)
+	{
+		float pos_x = getPosition().y;
+		float pos = getDiagonalPosition().y;
+		m_shape.setPosition(WIDTH - offset, m_shape.getPosition().y);
+		m_velocity.x = -m_velocity.x;
+	}
+	if (m_shape.getPosition().y <= 0)
+	{
+		m_shape.setPosition(m_shape.getPosition().x, 0);
+		m_velocity.y = -m_velocity.y;
+	}
+	if (getDiagonalPosition().y >= HEIGHT)
+	{
+		reset();
+	}
 }
 void Ball::handlePaddle(enum class Surface surface, enum class Direction paddleDir)
 {
@@ -15,25 +48,25 @@ void Ball::handlePaddle(enum class Surface surface, enum class Direction paddleD
 
 	// Ball collides with Side of Paddle ...Should Rarely Happen :/
 	if (surface == Surface::Left || surface == Surface::Right)
-		velocity.x = -velocity.x;
+		m_velocity.x = -m_velocity.x;
 
 	else if (surface == Surface::Top) // Ball Hits Top of Paddle
 	{
 		// Ball and Paddle moving in same direction
-		if (currentDir == paddleDir)
-			velocity = sf::Vector2f(velocity.x * scalar, -velocity.y * scalar);
+		if (m_currentDir == paddleDir)
+			m_velocity = sf::Vector2f(m_velocity.x * scalar, -m_velocity.y * scalar);
 
 		// Paddle Idle
 		else if (paddleDir == Direction::Idle)
-			velocity.y = -velocity.y;
+			m_velocity.y = -m_velocity.y;
 
 		// Ball and Paddle moving in opposite directions
 		else
-			velocity = sf::Vector2f(-velocity.x * scalar, -velocity.y);
+			m_velocity = sf::Vector2f(-m_velocity.x * scalar, -m_velocity.y);
 	}
 	else if (surface == Surface::Diagonal)
 	{
-		velocity = -velocity;
+		m_velocity.y = -m_velocity.y;
 	}
 	else // ball it bottom of paddle (aka something broke)
 	{
@@ -48,74 +81,50 @@ void Ball::handleTile(enum class Surface surface)
 	// Ball collides with Side of Tile
 	if (surface == Surface::Left || surface == Surface::Right)
 	{
-		velocity.x = -velocity.x * scalar;
+		m_velocity.x = -m_velocity.x * scalar;
 	}
 	// Ball collides with Top or Bottom of Tile
 	else if (surface == Surface::Top || surface == Surface::Bottom)
 	{
-		velocity.y = -velocity.y * scalar;
+		m_velocity.y = -m_velocity.y * scalar;
 	}
 	else if (surface == Surface::Diagonal)
 	{
-		velocity = -velocity * scalar;
-	}
-}
-void Ball::handleBorder()
-{
-	// Window Border collision detection and handling w/ Ball
-	float radius = shape.getRadius();
-
-	if (shape.getPosition().x - radius <= 0)
-	{
-		shape.setPosition(radius, shape.getPosition().y);
-		velocity.x = -velocity.x;
-	}
-	
-	if (shape.getPosition().x + radius >= WIDTH)
-	{
-		shape.setPosition(WIDTH - radius, shape.getPosition().y);
-		velocity.x = -velocity.x;
-	}
-	if (shape.getPosition().y - radius <= 0)
-	{
-		shape.setPosition(shape.getPosition().x, radius);
-		velocity.y = -velocity.y;
-	}
-	if (shape.getPosition().y + radius >= HEIGHT)
-	{
-		reset();
+		m_velocity = -m_velocity * scalar;
 	}
 }
 void Ball::reset()
 {
-	shape.setPosition(defaultPos);
-	velocity = defaultVel;
+	m_shape.setPosition(m_startPos);
+	m_velocity = m_startVel;
 }
-enum class Surface Ball::collision(sf::Vector2f obj_pos, sf::Vector2f obj_diagonal_pos)
+
+enum class Surface Ball::collision(sf::Vector2f obj_pos, sf::Vector2f obj_diagonal_pos) const
 {
 	sf::Vector2f tile_pos = obj_pos;
 	sf::Vector2f tile_diagonal_pos = obj_diagonal_pos;
 
-	sf::Vector2f pos = shape.getPosition();
-	float radius = shape.getRadius();
+	sf::Vector2f pos = m_shape.getPosition();
+	sf::Vector2f diagonal_pos = getDiagonalPosition();
+	float radius = m_shape.getRadius();
 
 	// Tile			Ball
 	// p1	p2		       b_top
 	// p3	p4		b_left	     b_right
 	//                    b_bottom
 
-	sf::Vector2i p1(tile_pos.x, tile_pos.y);
-	sf::Vector2i p2(tile_diagonal_pos.x, tile_pos.y);
-	sf::Vector2i p3(tile_pos.x, tile_diagonal_pos.y);
-	sf::Vector2i p4(tile_diagonal_pos.x, tile_diagonal_pos.y);
+	sf::Vector2i p1((int)tile_pos.x, (int)tile_pos.y);
+	sf::Vector2i p2((int)tile_diagonal_pos.x, (int)tile_pos.y);
+	sf::Vector2i p3((int)tile_pos.x, (int)tile_diagonal_pos.y);
+	sf::Vector2i p4((int)tile_diagonal_pos.x, (int)tile_diagonal_pos.y);
 
 	// Isolate Vertex data Left, Right, Top and Bottom
-	sf::Vector2i b_top(pos.x, pos.y - radius);
-	sf::Vector2i b_bottom(pos.x, pos.y + radius);
-	sf::Vector2i b_left(pos.x - radius, pos.y);
-	sf::Vector2i b_right(pos.x + radius, pos.y);
+	sf::Vector2i b_top((int)pos.x + ((int)diagonal_pos.x - (int)pos.x) / 2, (int)pos.y);
+	sf::Vector2i b_bottom((int)pos.x + ((int)diagonal_pos.x - (int)pos.x) / 2, (int)diagonal_pos.y);
+	sf::Vector2i b_left((int)pos.x, (int)pos.y + ((int)diagonal_pos.y - (int)pos.y) / 2);
+	sf::Vector2i b_right((int)diagonal_pos.x, (int)pos.y + ((int)diagonal_pos.y - (int)pos.y) / 2);
 
-	sf::Vector2i vertex = sf::Vector2i(pos.x, pos.y);
+	sf::Vector2i vertex = b_top + ((b_bottom - b_top) / 2);
 	for (auto p : { p1, p2, p3, p4 })
 	{
 		// if the distance between any point and the center of the ball is less than the radius of the ball
@@ -123,8 +132,6 @@ enum class Surface Ball::collision(sf::Vector2f obj_pos, sf::Vector2f obj_diagon
 
 		if (dist <= double(radius))
 		{
-			//std::cout << "dist = " << dist << std::endl;
-			//std::cout << "radius = " << dist << std::endl;
 			return Surface::Diagonal;
 		}
 	}
@@ -153,3 +160,34 @@ enum class Surface Ball::collision(sf::Vector2f obj_pos, sf::Vector2f obj_diagon
 
 	return Surface::None;
 }
+double Ball::distance(sf::Vector2i p1, sf::Vector2i p2) const
+{
+	return (double)sqrt(pow((p2.x - p1.x), 2) + pow((p2.y - p1.y), 2));
+}
+void Ball::toggleColor(ResourceManager& rm)
+{
+	m_colorIndex++;
+	if (m_colorIndex > 5)
+		m_colorIndex = 0;
+	m_shape.setTexture(rm.getTexture(m_colors[m_colorIndex]));
+}
+
+const sf::Texture* Ball::getTexture() const { return m_shape.getTexture(); }
+const sf::CircleShape& Ball::getShape() const { return m_shape; }
+
+enum class Direction Ball::getDirection() const { return m_currentDir; }
+float Ball::getRadius() const { return m_shape.getRadius(); }
+sf::Vector2f Ball::getPosition() const { return m_shape.getPosition(); }
+sf::Vector2f Ball::getDiagonalPosition() const
+{
+	return sf::Vector2f(m_shape.getPosition().x + m_shape.getGlobalBounds().width,
+		m_shape.getPosition().y + m_shape.getGlobalBounds().height);
+}
+sf::Vector2f Ball::getVelocity() const { return m_velocity; }
+sf::Vector2f Ball::getStartPosition() const { return m_startPos; }
+sf::Vector2f Ball::getStartVelocity() const { return m_startVel; }
+
+void Ball::setPosition(sf::Vector2f pos) { m_shape.setPosition(pos); }
+void Ball::setVelocity(sf::Vector2f vel) { m_velocity = vel; }
+void Ball::setStartPosition(sf::Vector2f pos) { m_startPos = pos; }
+void Ball::setStartVelocity(sf::Vector2f vel) { m_startVel = vel; }

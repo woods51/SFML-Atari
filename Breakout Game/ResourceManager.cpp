@@ -21,11 +21,11 @@ void ResourceManager::loadTextures()
 		{
 			printf("Error loading texture: %s\n", texturePath.c_str());
 
-			temp->loadFromFile(defaultTexture);
+			temp->loadFromFile(m_defaultTexture);
 		}
 
 		// Texture is copied to map
-		textures[name] = temp;
+		m_textures[name] = temp;
 		printf("Added %s at textures[%s].\n", texturePath.c_str(), name.c_str());
 	}
 }
@@ -46,33 +46,33 @@ void ResourceManager::loadFonts()
 		{
 			printf("Error loading font: %s\n", fontPath.c_str());
 
-			temp->loadFromFile(defaultFont);
+			temp->loadFromFile(m_defaultFont);
 		}
 
 		// Font is copied to map
-		fonts[name] = temp;
+		m_fonts[name] = temp;
 		printf("Added %s at fonts[%s].\n", fontPath.c_str(), name.c_str());
 	}
 }
 sf::Texture* ResourceManager::getTexture(std::string textureID)
 {
-	if (textures.find(textureID) == textures.end())
-		return textures["0"];
+	if (m_textures.find(textureID) == m_textures.end())
+		return m_textures["0"];
 
-	return textures[textureID];
+	return m_textures[textureID];
 }
 sf::Font* ResourceManager::getFont(std::string fontID)
 {
-	if (fonts.find(fontID) == fonts.end())
-		return fonts["default"];
+	if (m_fonts.find(fontID) == m_fonts.end())
+		return m_fonts["default"];
 
-	return fonts[fontID];
+	return m_fonts[fontID];
 }
 ResourceManager::~ResourceManager()
 {
-	for (auto t : textures)
+	for (const auto& t : m_textures)
 		delete t.second;
 
-	for (auto f : fonts)
+	for (const auto& f : m_fonts)
 		delete f.second;
 }

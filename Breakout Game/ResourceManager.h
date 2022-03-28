@@ -4,23 +4,28 @@
 #include <filesystem>
 #include <string>
 
-#define WIDTH 800
-#define HEIGHT 600
+#define WIDTH 1280
+#define HEIGHT 720
 #define MULTIPLIER 25
 
 class ResourceManager
 {
-private:
-	std::string defaultTexture = "Assets/0.png";
-	std::string defaultFont = "default.TTF";
+
 public:
-	std::map<std::string, sf::Texture*> textures;
-	std::map<std::string, sf::Font*> fonts;
+	ResourceManager();
+	~ResourceManager();
+
 	void loadTextures();
 	void loadFonts();
 
-	ResourceManager();
 	sf::Texture* getTexture(std::string textureID);
 	sf::Font* getFont(std::string fontID);
-	~ResourceManager();
+	
+	
+private:
+	std::map<std::string, sf::Texture*> m_textures;
+	std::map<std::string, sf::Font*> m_fonts;
+
+	std::string m_defaultTexture = "Assets/0.png";
+	std::string m_defaultFont = "default.TTF";
 };
