@@ -140,8 +140,8 @@ enum class Surface Ball::collision(sf::Vector2f obj_pos, sf::Vector2f obj_diagon
 	int i = 0;
 	for (auto b : { b_top, b_bottom, b_left, b_right })
 	{
-		if ((b.x >= tile_pos.x && b.x <= tile_diagonal_pos.x) &&
-			(b.y >= tile_pos.y && b.y <= tile_diagonal_pos.y))
+		if (b.x >= tile_pos.x && b.x <= tile_diagonal_pos.x &&
+			b.y >= tile_pos.y && b.y <= tile_diagonal_pos.y)
 		{
 			switch (i)
 			{
@@ -172,22 +172,8 @@ void Ball::toggleColor(ResourceManager& rm)
 	m_shape.setTexture(rm.getTexture(m_colors[m_colorIndex]));
 }
 
-const sf::Texture* Ball::getTexture() const { return m_shape.getTexture(); }
-const sf::CircleShape& Ball::getShape() const { return m_shape; }
-
-enum class Direction Ball::getDirection() const { return m_currentDir; }
-float Ball::getRadius() const { return m_shape.getRadius(); }
-sf::Vector2f Ball::getPosition() const { return m_shape.getPosition(); }
 sf::Vector2f Ball::getDiagonalPosition() const
 {
 	return sf::Vector2f(m_shape.getPosition().x + m_shape.getGlobalBounds().width,
 		m_shape.getPosition().y + m_shape.getGlobalBounds().height);
 }
-sf::Vector2f Ball::getVelocity() const { return m_velocity; }
-sf::Vector2f Ball::getStartPosition() const { return m_startPos; }
-sf::Vector2f Ball::getStartVelocity() const { return m_startVel; }
-
-void Ball::setPosition(sf::Vector2f pos) { m_shape.setPosition(pos); }
-void Ball::setVelocity(sf::Vector2f vel) { m_velocity = vel; }
-void Ball::setStartPosition(sf::Vector2f pos) { m_startPos = pos; }
-void Ball::setStartVelocity(sf::Vector2f vel) { m_startVel = vel; }

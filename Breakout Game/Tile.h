@@ -22,14 +22,14 @@ public:
 		setActive();
 	};
 
-	sf::Vector2f getPosition() const;
 	sf::Vector2f getDiagonalPosition() const;
-	const sf::Texture* getTexture();
-	const sf::RectangleShape& getShape() const;
+	inline sf::Vector2f getPosition() const { return m_shape.getPosition(); }
+	const sf::Texture* getTexture() { return m_shape.getTexture(); }
+	const sf::RectangleShape& getShape() const { return m_shape; }
 	
-	bool isActive() const;
-	void setActive();
-	void setDeactive();
+	bool isActive() const { return m_active; }
+	void setActive() { m_active = true; }
+	void setDeactive() { m_active = false; }
 
 protected:
 	sf::RectangleShape m_shape;

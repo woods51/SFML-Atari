@@ -27,5 +27,5 @@ private:
 	std::map<std::string, sf::Font*> m_fonts;
 
 	std::string m_defaultTexture = "Assets/0.png";
-	std::string m_defaultFont = "default.TTF";
+	std::string m_defaultFont = "Fonts/default.TTF";
 };

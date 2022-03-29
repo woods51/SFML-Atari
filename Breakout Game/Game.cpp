@@ -10,8 +10,8 @@ void Game::run()
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "My Window");
 	window.setFramerateLimit(240);
 
-	m_states.push_back(std::make_unique<PlayState>(rm, window));
-
+	//m_states.push_back(std::make_unique<PlayState>(rm, window));
+	m_states.push_back(std::make_unique<MenuState>(rm, window));
 	// Turning off console errors
 	sf::err().rdbuf(NULL);
 
@@ -26,7 +26,7 @@ void Game::run()
 	{
 		//system("pause");
 		
-		m_states.at(m_states.size() - 1)->eventHandler(window, view);
+		m_states.at(m_states.size() - 1)->eventHandler(window, rm, m_states);
 
 		deltaTime = deltaClock.restart();
 		m_states.at(m_states.size() - 1)->update(deltaTime, rm);

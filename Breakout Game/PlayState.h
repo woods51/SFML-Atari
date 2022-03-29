@@ -10,7 +10,7 @@ public:
 	PlayState(ResourceManager&, sf::RenderWindow&);
 
 	void inputHandler(sf::Keyboard::Key, bool) override;
-	void eventHandler(sf::RenderWindow&, sf::View&) override;
+	void eventHandler(sf::RenderWindow&, ResourceManager&, std::vector<std::unique_ptr<State>>&) override;
 	void update(sf::Time dt, ResourceManager&) override;
 	void render(sf::RenderWindow&) override;
 
@@ -29,6 +29,7 @@ private:
 
 	sf::Sprite m_border;
 	sf::Text m_scoreText;
+	sf::Text m_startText;
 	bool m_color_flag = false;
 	int m_score = 0;
 };

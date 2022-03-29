@@ -1,13 +1,15 @@
 #include "PlayState.h"
 PlayState::PlayState(ResourceManager& rm, sf::RenderWindow& window)
 {
-	m_ball = new Ball(rm, sf::Vector2f(300.0f, 550.0f));
-	m_paddle = new Paddle(rm, sf::Vector2f(300.0f, 640.0f));
+	m_ball = new Ball(rm);
+	m_paddle = new Paddle(rm);
 
 	generateLevel1(rm);
 	generateUI(rm);
 }
-
+//
+// ADD PRESS SPACE TO START GAME
+//
 void PlayState::update(sf::Time dt, ResourceManager& rm)
 {
 	if (m_color_flag)
@@ -66,8 +68,12 @@ void PlayState::inputHandler(sf::Keyboard::Key key, bool isPressed)
 		m_paddle->m_IsMovingLeft = isPressed;
 	else if (key == sf::Keyboard::D || key == sf::Keyboard::Right)
 		m_paddle->m_IsMovingRight = isPressed;
+	else if (key == sf::Keyboard::Space)
+	{
+		m_ball->setActive();
+	}
 }
-void PlayState::eventHandler(sf::RenderWindow& window, sf::View& view)
+void PlayState::eventHandler(sf::RenderWindow& window, ResourceManager& rm, std::vector<std::unique_ptr<State>>& states)
 {
 	sf::Event event;
 	static bool lock_click = false;
@@ -90,10 +96,8 @@ void PlayState::eventHandler(sf::RenderWindow& window, sf::View& view)
 					sf::Vector2f b_pos = b->getPosition();
 					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
 
-					if (mousePosition.x >= b_pos.x - b->getGlobalBounds().width
-						&& mousePosition.y >= b_pos.y - b->getGlobalBounds().height
-						&& mousePosition.x <= b_pos.x + b->getGlobalBounds().width
-						&& mousePosition.y <= b_pos.y + b->getGlobalBounds().height)
+					if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
+						mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
 					{
 						switch (b->OnClick())
 						{
@@ -158,6 +162,9 @@ void PlayState::render(sf::RenderWindow& window)
 		window.draw(b->getText());
 	}
 
+	if (!m_ball->getActive())
+		window.draw(m_startText);
+
 	window.display();
 }
 void PlayState::updateUI()
@@ -173,15 +180,21 @@ void PlayState::generateUI(ResourceManager& rm)
 	m_scoreText.setCharacterSize(35);
 	m_scoreText.setPosition(5, 670);
 
+	m_startText.setFont(*rm.getFont("default"));
+	m_startText.setFillColor(sf::Color::White);
+	m_startText.setCharacterSize(30);
+	m_startText.setString("Press space to start.");
+	m_startText.setPosition(WIDTH / 2 - 250, 500);
+
 	// generate all sprite UI / text -> spriteUI
 	m_border.setTexture(*rm.getTexture("border"));
 	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
 
 	// Buttons
-	Button* temp = new Button(rm, sf::Vector2f(WIDTH / 2, HEIGHT / 2), sf::Vector2f(5.0f, 5.0f), sf::Vector2f(16.0f, 8.0f), "test");
-	temp->setFillColor(sf::Color::Blue);
-	temp->setCharacterSize(25);
-	m_buttons.push_back(temp);
+	Button* temp;/* = new Button(rm, sf::Vector2f(WIDTH / 2, HEIGHT / 2), sf::Vector2f(5.0f, 5.0f), sf::Vector2f(16.0f, 8.0f), "test");
+	temp->m_text.setFillColor(sf::Color::Blue);
+	temp->m_text.setCharacterSize(25);
+	m_buttons.push_back(temp);*/
 
 	temp = new BallColor(rm, sf::Vector2f(1100, 660));
 	m_buttons.push_back(temp);

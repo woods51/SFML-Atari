@@ -5,7 +5,7 @@
 class Paddle : public Tile
 {
 public:
-	Paddle(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f size = sf::Vector2f(32.0f, 4.0f),
+	Paddle(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(WIDTH/2 - 160.0f, 640.0f), sf::Vector2f size = sf::Vector2f(64.0f, 4.0f),
 		sf::Vector2f scale = sf::Vector2f(5.0f, 5.0f), std::string textureID = "paddle")
 		: Tile(rm, pos, textureID, size, scale)
 	{

@@ -8,7 +8,7 @@ void ResourceManager::loadTextures()
 {
 	std::string name;
 	std::string texturePath;
-	std::string path = "\Assets/";
+	std::string path = "Assets/";
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
 		texturePath = file.path().string();
@@ -33,7 +33,7 @@ void ResourceManager::loadFonts()
 {
 	std::string name;
 	std::string fontPath;
-	std::string path = "\Fonts/";
+	std::string path = "Fonts/";
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
 		fontPath = file.path().string();
