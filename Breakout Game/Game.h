@@ -7,6 +7,7 @@
 #include "State.h"
 #include "PlayState.h"
 #include "MenuState.h"
+#include "PauseState.h"
 
 #include "Tile.h"
 #include "Ball.h"

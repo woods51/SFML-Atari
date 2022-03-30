@@ -1,26 +1,26 @@
 #pragma once
 
 #include "State.h"
+#include "PauseState.h"
 #include "Ball.h"
 #include "Paddle.h"
 
 class PlayState : public State
 {
 public:
-	PlayState(ResourceManager&, sf::RenderWindow&);
+	PlayState(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
-	void inputHandler(sf::Keyboard::Key, bool) override;
-	void eventHandler(sf::RenderWindow&, ResourceManager&, std::vector<std::unique_ptr<State>>&) override;
-	void update(sf::Time dt, ResourceManager&) override;
-	void render(sf::RenderWindow&) override;
+	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
+	void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) override;
+	void update(sf::Time dt, ResourceManager& a_window) override;
+	void render(sf::RenderWindow& a_window) override;
 
-	void generateTileRow(ResourceManager&, float, std::string, int);
-	void generateLevel1(ResourceManager&);
+	void generateLevel1(ResourceManager& a_rm);
 
 	~PlayState();
 private:
 	void updateUI();
-	void generateUI(ResourceManager& rm);
+	void generateUI(ResourceManager& a_rm);
 
 	std::vector<std::unique_ptr<Tile>> m_tileMap;
 	std::vector<Button*> m_buttons;
@@ -30,6 +30,8 @@ private:
 	sf::Sprite m_border;
 	sf::Text m_scoreText;
 	sf::Text m_startText;
-	bool m_color_flag = false;
+	bool m_colorFlag = false;
+	bool m_pauseFlag = false;
+	bool m_escapeLock = false;
 	int m_score = 0;
 };

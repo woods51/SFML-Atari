@@ -153,6 +153,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Paddle.cpp" />
+    <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="State.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Ball.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Paddle.h" />
+    <ClInclude Include="PauseState.h" />
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Game.h" />

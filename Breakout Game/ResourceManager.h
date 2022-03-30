@@ -29,3 +29,14 @@ private:
 	std::string m_defaultTexture = "Assets/0.png";
 	std::string m_defaultFont = "Fonts/default.TTF";
 };
+
+enum class Press {
+	DEFAULT,
+	START,
+	QUIT,
+	PAUSE,
+	RESUME,
+	OPTIONS,
+	BALLCOLOR,
+	OTHER
+};

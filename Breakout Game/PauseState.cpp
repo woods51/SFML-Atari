@@ -1,21 +1,33 @@
-#include "MenuState.h"
+#include "PauseState.h"
 
-MenuState::MenuState(ResourceManager& a_rm, sf::RenderWindow& a_window)
+PauseState::PauseState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
+	sf::Vector2u winSize = a_window.getSize();
+	m_frameTexture.create(winSize.x, winSize.y);
+	m_frameTexture.update(a_window);
+	m_frameSprite.setTexture(m_frameTexture);
+
 	generateUI(a_rm);
 }
-MenuState::~MenuState()
+PauseState::~PauseState()
 {
 	for (const auto& b : m_buttons)
 	{
 		delete b;
 	}
 }
-void MenuState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
+void PauseState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
-
+	if (!a_isPressed)
+	{
+		m_escapeLock = false;
+		return;
+	}
+		
+	if (a_key == sf::Keyboard::Escape && !m_escapeLock)
+		m_resumeFlag = true;
 }
-void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;
 	static bool lock_click = false;
@@ -43,11 +55,12 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 					{
 						switch (b->OnClick())
 						{
-						case Press::START:
-							a_states.push_back(std::make_unique<PlayState>(a_rm, a_window));
+						case Press::RESUME:
+							a_states.pop_back();
+							m_resumeFlag = false;
 							break;
-						case Press::QUIT:
-							a_window.close();
+						case Press::OPTIONS:
+							break;
 						default:
 							break;
 						}
@@ -77,14 +90,21 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 			break;
 		}
 	}
+	if (m_resumeFlag)
+	{
+		a_states.pop_back();
+	}
 }
-void MenuState::update(sf::Time a_dt, ResourceManager& a_rm)
+void PauseState::update(sf::Time a_dt, ResourceManager& a_rm)
 {
 
 }
-void MenuState::render(sf::RenderWindow& a_window)
+void PauseState::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
+	
+	a_window.draw(m_frameSprite);
+	a_window.draw(m_overlay);
 
 	// Render UI
 	for (const auto& b : m_buttons)
@@ -93,29 +113,26 @@ void MenuState::render(sf::RenderWindow& a_window)
 		a_window.draw(b->getText());
 	}
 
-	a_window.draw(m_breakoutText);
-
 	a_window.display();
 }
-void MenuState::generateUI(ResourceManager& a_rm)
+void PauseState::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
 	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 64),
-		Press::START, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Play", "menu_button");
+		Press::RESUME, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Resume", "menu_button");
 	temp->m_text.setFillColor(sf::Color::White);
 	temp->m_text.setCharacterSize(40);
-	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
+	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(29.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 128),
-		Press::QUIT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Quit", "menu_button");
+		Press::OPTIONS, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Options", "menu_button");
 	temp->m_text.setFillColor(sf::Color::White);
 	temp->m_text.setCharacterSize(40);
-	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
+	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(20.0f, 8.0f));
 	m_buttons.push_back(temp);
 
-	// generate text UI
-	m_breakoutText.setPosition((WIDTH / 2) - 108*3, 150);
-	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title"));
-	m_breakoutText.setScale(sf::Vector2f(6.0f, 6.0f));
+	//UI
+	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
+	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 }

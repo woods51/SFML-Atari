@@ -1,30 +1,29 @@
 #include "PlayState.h"
-PlayState::PlayState(ResourceManager& rm, sf::RenderWindow& window)
-{
-	m_ball = new Ball(rm);
-	m_paddle = new Paddle(rm);
 
-	generateLevel1(rm);
-	generateUI(rm);
-}
-//
-// ADD PRESS SPACE TO START GAME
-//
-void PlayState::update(sf::Time dt, ResourceManager& rm)
+PlayState::PlayState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
-	if (m_color_flag)
+	m_ball = new Ball(a_rm);
+	m_paddle = new Paddle(a_rm);
+
+	generateLevel1(a_rm);
+	generateUI(a_rm);
+}
+
+void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
+{
+	// Check color flag
+	if (m_colorFlag)
 	{
-		m_color_flag = false;
-		m_ball->toggleColor(rm);
+		m_colorFlag = false;
+		m_ball->toggleColor(a_rm);
 	}
 	// Paddle Movment
-	m_paddle->move(dt);
+	m_paddle->move(a_dt);
 
 	// Ball Physics
 	Surface contact = Surface::None;
-	//
+
 	// Collision with a tile
-	//
 	for (auto const& tile : m_tileMap)
 	{
 		if (!tile->isActive() || tile->getDiagonalPosition().y < m_ball->getPosition().y)
@@ -38,17 +37,18 @@ void PlayState::update(sf::Time dt, ResourceManager& rm)
 			tile->setDeactive();
 		}
 	}
-	//
+
 	// Collision with paddle
-	// 
+
 	// Prevents compounded collisions with paddle
 	if (m_paddle->hasCollided() && m_paddle->getPosition().y > m_ball->getDiagonalPosition().y)
 	{
 		m_paddle->collided(false);
 	}
 	// Ball is near Paddle
-	if (!m_paddle->hasCollided() &&
-		m_paddle->getPosition().x <= m_ball->getDiagonalPosition().x && m_paddle->getPosition().y <= m_ball->getDiagonalPosition().y)
+	if (!m_paddle->hasCollided()
+		&& m_paddle->getPosition().x <= m_ball->getDiagonalPosition().x
+		&& m_paddle->getPosition().y <= m_ball->getDiagonalPosition().y)
 	{
 		contact = m_ball->collision(m_paddle->getPosition(), m_paddle->getDiagonalPosition());
 		if (contact != Surface::None)
@@ -58,26 +58,35 @@ void PlayState::update(sf::Time dt, ResourceManager& rm)
 		}
 	}
 	
-	m_ball->update(dt);
+	m_ball->move(a_dt);
 
 	updateUI();
 }
-void PlayState::inputHandler(sf::Keyboard::Key key, bool isPressed)
+void PlayState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
-	if (key == sf::Keyboard::A || key == sf::Keyboard::Left)
-		m_paddle->m_IsMovingLeft = isPressed;
-	else if (key == sf::Keyboard::D || key == sf::Keyboard::Right)
-		m_paddle->m_IsMovingRight = isPressed;
-	else if (key == sf::Keyboard::Space)
-	{
+	if (a_key == sf::Keyboard::A || a_key == sf::Keyboard::Left)
+		m_paddle->m_IsMovingLeft = a_isPressed;
+
+	else if (a_key == sf::Keyboard::D || a_key == sf::Keyboard::Right)
+		m_paddle->m_IsMovingRight = a_isPressed;
+
+	else if (a_key == sf::Keyboard::Space)
 		m_ball->setActive();
+
+	else if (a_key == sf::Keyboard::Escape && !m_escapeLock)
+	{
+		m_pauseFlag = true;
+		m_escapeLock = true;
 	}
+
+	if (a_key == sf::Keyboard::Escape && !a_isPressed)
+		m_escapeLock = false;
 }
-void PlayState::eventHandler(sf::RenderWindow& window, ResourceManager& rm, std::vector<std::unique_ptr<State>>& states)
+void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;
 	static bool lock_click = false;
-	while (window.pollEvent(event))
+	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
 		{
@@ -85,7 +94,7 @@ void PlayState::eventHandler(sf::RenderWindow& window, ResourceManager& rm, std:
 			// Left Mouse Click
 			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
 			{
-				sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+				sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 				lock_click = true;
 				
 				for (auto b : m_buttons)
@@ -101,10 +110,14 @@ void PlayState::eventHandler(sf::RenderWindow& window, ResourceManager& rm, std:
 					{
 						switch (b->OnClick())
 						{
-						case B_DEFAULT:
+						case Press::DEFAULT:
 							break;
-						case B_BALLCOLOR:
-							m_color_flag = true;
+						case Press::BALLCOLOR:
+							m_colorFlag = true;
+							break;
+						case Press::PAUSE:
+							a_states.push_back(std::make_unique<PauseState>(a_rm, a_window));
+							m_pauseFlag = false;
 							break;
 						default:
 							break;
@@ -131,15 +144,21 @@ void PlayState::eventHandler(sf::RenderWindow& window, ResourceManager& rm, std:
 			break;
 
 		case sf::Event::Closed:
-			window.close();
+			a_window.close();
 			break;
 		}
 	}
+	if (m_pauseFlag)
+	{
+		a_states.push_back(std::make_unique<PauseState>(a_rm, a_window));
+		m_pauseFlag = false;
+	}
+	
 }
-void PlayState::render(sf::RenderWindow& window)
+void PlayState::render(sf::RenderWindow& a_window)
 {
-	window.clear(sf::Color::Black);
-	window.draw(m_border);
+	a_window.clear(sf::Color::Black);
+	a_window.draw(m_border);
 	// Render Tiles
 	for (const auto& tile : m_tileMap)
 	{
@@ -147,83 +166,80 @@ void PlayState::render(sf::RenderWindow& window)
 			continue;
 
 		sf::RectangleShape temp = tile->getShape();
-		window.draw(temp);
+		a_window.draw(temp);
 	}
 	// Render Ball & Paddle
-	window.draw(m_ball->getShape());
-	window.draw(m_paddle->getShape());
+	a_window.draw(m_ball->getShape());
+	a_window.draw(m_paddle->getShape());
 
 	// Render UI
-	window.draw(m_scoreText);
+	a_window.draw(m_scoreText);
 
 	for (auto b : m_buttons)
 	{
-		window.draw(b->getShape());
-		window.draw(b->getText());
+		a_window.draw(b->getShape());
+		a_window.draw(b->getText());
 	}
 
 	if (!m_ball->getActive())
-		window.draw(m_startText);
+		a_window.draw(m_startText);
 
-	window.display();
+	a_window.display();
 }
 void PlayState::updateUI()
 {
 	m_scoreText.setString("Score: " + std::to_string(m_score));
 
 }
-void PlayState::generateUI(ResourceManager& rm)
+void PlayState::generateUI(ResourceManager& a_rm)
 {
 	// generate all text UI -> textUI
-	m_scoreText.setFont(*rm.getFont("default"));
+	m_scoreText.setFont(*a_rm.getFont("default"));
 	m_scoreText.setFillColor(sf::Color::White);
 	m_scoreText.setCharacterSize(35);
 	m_scoreText.setPosition(5, 670);
 
-	m_startText.setFont(*rm.getFont("default"));
+	m_startText.setFont(*a_rm.getFont("default"));
 	m_startText.setFillColor(sf::Color::White);
 	m_startText.setCharacterSize(30);
 	m_startText.setString("Press space to start.");
 	m_startText.setPosition(WIDTH / 2 - 250, 500);
 
 	// generate all sprite UI / text -> spriteUI
-	m_border.setTexture(*rm.getTexture("border"));
+	m_border.setTexture(*a_rm.getTexture("border"));
 	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
 
 	// Buttons
-	Button* temp;/* = new Button(rm, sf::Vector2f(WIDTH / 2, HEIGHT / 2), sf::Vector2f(5.0f, 5.0f), sf::Vector2f(16.0f, 8.0f), "test");
-	temp->m_text.setFillColor(sf::Color::Blue);
-	temp->m_text.setCharacterSize(25);
-	m_buttons.push_back(temp);*/
+	Button* temp = new Button(a_rm, sf::Vector2f(1100, 660), Press::BALLCOLOR, sf::Vector2f(5.0f, 5.0f),
+		sf::Vector2f(20.0f, 4.0f), "Ball Color", "empty_button");
+	temp->m_text.setFillColor(sf::Color::White);
+	temp->m_text.setCharacterSize(12);
+	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(0, 2.0f));
+	m_buttons.push_back(temp);
 
-	temp = new BallColor(rm, sf::Vector2f(1100, 660));
+	temp = new Button(a_rm, sf::Vector2f(WIDTH - 128, HEIGHT - 40),
+		Press::PAUSE, sf::Vector2f(4.0f, 4.0f), sf::Vector2f(32.0f, 8.0f), "Pause", "menu_button");
+	temp->m_text.setFillColor(sf::Color::White);
+	temp->m_text.setCharacterSize(24);
+	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(14.0f, 2.0f));
 	m_buttons.push_back(temp);
 }
 
-void PlayState::generateTileRow(ResourceManager& rm, float pos_y, std::string textureID, int iter = 20)
+void PlayState::generateLevel1(ResourceManager& a_rm)
 {
-	float pos_x = 0;
-	for (int i = 0; i < iter; i++)
-	{
-		m_tileMap.push_back(std::make_unique<Tile>(rm, sf::Vector2f(pos_x, pos_y), textureID));
-		pos_x += 40.0f;
-	}
-}
-void PlayState::generateLevel1(ResourceManager& rm)
-{
-	float pos_x = 0;
-	float pos_y = 100.0f;
-	std::string tiles[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
-	for (auto const& texture : tiles)
+	float posX = 0;
+	float posY = 100.0f;
+	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
+	for (auto const& textureKey : keys)
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			m_tileMap.push_back(std::make_unique<Tile>(rm, sf::Vector2f(pos_x, pos_y), texture,
+			m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), textureKey,
 				sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f)));
-			pos_x += 128.0f;
+			posX += 128.0f;
 		}
-		pos_x = 0;
-		pos_y += 60.0f;
+		posX = 0;
+		posY += 60.0f;
 	}
 }
 

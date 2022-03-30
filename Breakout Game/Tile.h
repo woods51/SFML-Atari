@@ -10,14 +10,14 @@ class Tile
 public:
 	Tile();
 	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), 
-		std::string textureID = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
+		std::string textureKey = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
 	{
-		m_defaultTexture = textureID;
+		m_defaultTexture = textureKey;
 
 		m_shape.setPosition(pos);
 		m_shape.setSize(size);
 		m_shape.setScale(scale);
-		m_shape.setTexture(rm.getTexture(textureID));
+		m_shape.setTexture(rm.getTexture(textureKey));
 
 		setActive();
 	};
@@ -49,6 +49,6 @@ enum class Surface
 	Bottom,
 	Left,
 	Right,
-	Diagonal,
+	Corner,
 	None
 };

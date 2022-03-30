@@ -7,11 +7,13 @@ void Game::run()
 	rm.loadTextures();
 	rm.loadFonts();
 
-	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "My Window");
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Woods Game");
 	window.setFramerateLimit(240);
 
 	//m_states.push_back(std::make_unique<PlayState>(rm, window));
 	m_states.push_back(std::make_unique<MenuState>(rm, window));
+	//m_states.push_back(std::make_unique<PauseState>(rm, window));
+
 	// Turning off console errors
 	sf::err().rdbuf(NULL);
 
