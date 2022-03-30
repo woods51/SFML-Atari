@@ -33,6 +33,7 @@ private:
 enum class Press {
 	DEFAULT,
 	START,
+	MAINMENU,
 	QUIT,
 	PAUSE,
 	RESUME,

@@ -29,8 +29,26 @@ void PauseState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 }
 void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
-	sf::Event event;
+	// Button Selector Update
+	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
+
+	for (auto b : m_buttons)
+	{
+		sf::Vector2f b_pos = b->getPosition();
+		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
+
+		if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
+			mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
+		{
+			b->setSelected(true);
+		}
+		else
+			b->setSelected(false);
+	}
+
+	// Handle Events
+	sf::Event event;
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
@@ -39,14 +57,10 @@ void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm,
 			// Left Mouse Click
 			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
 			{
-				sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 				lock_click = true;
 
 				for (auto b : m_buttons)
 				{
-					if (mousePosition.y < b->getPosition().y || mousePosition.x < b->getPosition().x)
-						continue;
-
 					sf::Vector2f b_pos = b->getPosition();
 					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
 
@@ -61,6 +75,12 @@ void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm,
 							break;
 						case Press::OPTIONS:
 							break;
+						case Press::MAINMENU:
+							for (unsigned int i = 0; i < a_states.size()-1; i++)
+								a_states.pop_back();
+							break;
+						case Press::QUIT:
+							a_window.close();
 						default:
 							break;
 						}
@@ -118,18 +138,36 @@ void PauseState::render(sf::RenderWindow& a_window)
 void PauseState::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
-	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 64),
+	// Resume
+	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 140),
 		Press::RESUME, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Resume", "menu_button");
 	temp->m_text.setFillColor(sf::Color::White);
 	temp->m_text.setCharacterSize(40);
 	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(29.0f, 8.0f));
 	m_buttons.push_back(temp);
-
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 128),
+	
+	// Options
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 68),
 		Press::OPTIONS, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Options", "menu_button");
 	temp->m_text.setFillColor(sf::Color::White);
 	temp->m_text.setCharacterSize(40);
 	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(20.0f, 8.0f));
+	m_buttons.push_back(temp);
+
+	// Main Menu
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4),
+		Press::MAINMENU, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "MainMenu", "menu_button");
+	temp->m_text.setFillColor(sf::Color::White);
+	temp->m_text.setCharacterSize(35);
+	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(15.0f, 12.0f));
+	m_buttons.push_back(temp);
+
+	// Quit
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 76),
+		Press::QUIT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Quit", "menu_button");
+	temp->m_text.setFillColor(sf::Color::White);
+	temp->m_text.setCharacterSize(40);
+	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	//UI

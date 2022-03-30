@@ -22,14 +22,17 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 
 	// Ball Physics
 	Surface contact = Surface::None;
+	sf::Vector2f ballPos = m_ball->getPosition();
+	sf::Vector2f ballDiagPos = m_ball->getDiagonalPosition();
 
 	// Collision with a tile
 	for (auto const& tile : m_tileMap)
 	{
-		if (!tile->isActive() || tile->getDiagonalPosition().y < m_ball->getPosition().y)
+		sf::Vector2f tileDiagPos = tile->getDiagonalPosition();
+		if (!tile->isActive() || tileDiagPos.y < ballPos.y)
 			continue;
 
-		contact = m_ball->collision(tile->getPosition(), tile->getDiagonalPosition());
+		contact = m_ball->collision(tile->getPosition(), tileDiagPos);
 		if (contact != Surface::None)
 		{
 			m_ball->handleTile(contact);
@@ -39,18 +42,20 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 	}
 
 	// Collision with paddle
+	sf::Vector2f paddlePos = m_paddle->getPosition();
+	sf::Vector2f paddleDiagPos = m_paddle->getDiagonalPosition();
 
 	// Prevents compounded collisions with paddle
-	if (m_paddle->hasCollided() && m_paddle->getPosition().y > m_ball->getDiagonalPosition().y)
+	if (m_paddle->hasCollided() && paddlePos.y > ballDiagPos.y)
 	{
 		m_paddle->collided(false);
 	}
 	// Ball is near Paddle
 	if (!m_paddle->hasCollided()
-		&& m_paddle->getPosition().x <= m_ball->getDiagonalPosition().x
-		&& m_paddle->getPosition().y <= m_ball->getDiagonalPosition().y)
+		&& paddlePos.x <= ballDiagPos.x
+		&& paddlePos.y <= ballDiagPos.y)
 	{
-		contact = m_ball->collision(m_paddle->getPosition(), m_paddle->getDiagonalPosition());
+		contact = m_ball->collision(paddlePos, paddleDiagPos);
 		if (contact != Surface::None)
 		{
 			m_ball->handlePaddle(contact, m_paddle->getDirection());
@@ -99,9 +104,6 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 				
 				for (auto b : m_buttons)
 				{
-					if (mousePosition.y < b->getPosition().y || mousePosition.x < b->getPosition().x)
-						continue;
-					
 					sf::Vector2f b_pos = b->getPosition();
 					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
 

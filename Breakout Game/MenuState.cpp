@@ -17,8 +17,26 @@ void MenuState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 }
 void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
-	sf::Event event;
+	// Button Selector Update
+	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
+
+	for (auto b : m_buttons)
+	{
+		sf::Vector2f b_pos = b->getPosition();
+		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
+
+		if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
+			mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
+		{
+			b->setSelected(true);
+		}
+		else
+			b->setSelected(false);
+	}
+
+	// Handle Events
+	sf::Event event;
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
@@ -27,14 +45,11 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 			// Left Mouse Click
 			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
 			{
-				sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
+				//sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 				lock_click = true;
 
 				for (auto b : m_buttons)
 				{
-					if (mousePosition.y < b->getPosition().y || mousePosition.x < b->getPosition().x)
-						continue;
-
 					sf::Vector2f b_pos = b->getPosition();
 					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
 
