@@ -38,6 +38,7 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 			m_ball->handleTile(contact);
 			m_score++;
 			tile->setDeactive();
+			a_rm.playSound(SoundType::Ball);
 		}
 	}
 
@@ -60,10 +61,11 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 		{
 			m_ball->handlePaddle(contact, m_paddle->getDirection());
 			m_paddle->collided(true);
+			a_rm.playSound(SoundType::Ball);
 		}
 	}
 	
-	m_ball->move(a_dt);
+	m_ball->move(a_rm, a_dt);
 
 	updateUI();
 }
@@ -91,6 +93,7 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 {
 	sf::Event event;
 	static bool lock_click = false;
+	sf::Vector2u winSize = a_window.getSize();
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
@@ -110,7 +113,7 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 					if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
 						mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
 					{
-						switch (b->OnClick())
+						switch (b->OnClick(a_rm))
 						{
 						case Press::DEFAULT:
 							break;
@@ -118,7 +121,9 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 							m_colorFlag = true;
 							break;
 						case Press::PAUSE:
-							a_states.push_back(std::make_unique<PauseState>(a_rm, a_window));
+							m_frameTexture.create(winSize.x, winSize.y);
+							m_frameTexture.update(a_window);
+							a_states.push_back(std::make_unique<PauseState>(a_rm, a_window, m_frameTexture));
 							m_pauseFlag = false;
 							break;
 						default:
@@ -152,7 +157,9 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 	}
 	if (m_pauseFlag)
 	{
-		a_states.push_back(std::make_unique<PauseState>(a_rm, a_window));
+		m_frameTexture.create(winSize.x, winSize.y);
+		m_frameTexture.update(a_window);
+		a_states.push_back(std::make_unique<PauseState>(a_rm, a_window, m_frameTexture));
 		m_pauseFlag = false;
 	}
 	
@@ -214,16 +221,12 @@ void PlayState::generateUI(ResourceManager& a_rm)
 	// Buttons
 	Button* temp = new Button(a_rm, sf::Vector2f(1100, 660), Press::BALLCOLOR, sf::Vector2f(5.0f, 5.0f),
 		sf::Vector2f(20.0f, 4.0f), "Ball Color", "empty_button");
-	temp->m_text.setFillColor(sf::Color::White);
-	temp->m_text.setCharacterSize(12);
-	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(0, 2.0f));
+	temp->setDefaultText(a_rm, 12, temp->getShape().getPosition() + sf::Vector2f(0, 2.0f));
 	m_buttons.push_back(temp);
 
 	temp = new Button(a_rm, sf::Vector2f(WIDTH - 128, HEIGHT - 40),
 		Press::PAUSE, sf::Vector2f(4.0f, 4.0f), sf::Vector2f(32.0f, 8.0f), "Pause", "menu_button");
-	temp->m_text.setFillColor(sf::Color::White);
-	temp->m_text.setCharacterSize(24);
-	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(14.0f, 2.0f));
+	temp->setDefaultText(a_rm, 24, temp->getShape().getPosition() + sf::Vector2f(14.0f, 2.0f));
 	m_buttons.push_back(temp);
 }
 

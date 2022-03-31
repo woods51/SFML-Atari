@@ -36,7 +36,7 @@ public:
 	/// 
 	/// \param a_dt	--> deltaTime
 	////////////////////////////////////////////////////////////
-	void move(sf::Time a_dt);
+	void move(ResourceManager& a_rm, sf::Time a_dt);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Handles collision with paddle.
@@ -66,7 +66,7 @@ public:
 	/// This function adjusts the ball if positioned outside the
 	/// bounds of the playable screen. Adjusts position and velocity.
 	////////////////////////////////////////////////////////////
-	void handleBorder();
+	void handleBorder(ResourceManager& a_rm);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Resets ball.

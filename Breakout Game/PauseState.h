@@ -1,10 +1,11 @@
 #pragma once
 #include "State.h"
+#include "OptionsState.h"
 
 class PauseState : public State
 {
 public:
-	PauseState(ResourceManager& a_rm, sf::RenderWindow& a_window);
+	PauseState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture);
 
 	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) override;

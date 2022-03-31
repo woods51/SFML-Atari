@@ -56,7 +56,7 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 					if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
 						mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
 					{
-						switch (b->OnClick())
+						switch (b->OnClick(a_rm))
 						{
 						case Press::START:
 							a_states.push_back(std::make_unique<PlayState>(a_rm, a_window));
@@ -117,16 +117,12 @@ void MenuState::generateUI(ResourceManager& a_rm)
 	// generate all buttons
 	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 64),
 		Press::START, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Play", "menu_button");
-	temp->m_text.setFillColor(sf::Color::White);
-	temp->m_text.setCharacterSize(40);
-	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
+	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 128),
 		Press::QUIT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Quit", "menu_button");
-	temp->m_text.setFillColor(sf::Color::White);
-	temp->m_text.setCharacterSize(40);
-	temp->m_text.setPosition(temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
+	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	// generate text UI

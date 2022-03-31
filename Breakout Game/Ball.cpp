@@ -1,38 +1,44 @@
 #include "Ball.h"
 
-void Ball::move(sf::Time a_dt)
+void Ball::move(ResourceManager& a_rm, sf::Time a_dt)
 {
 	m_shape.move(m_velocity.x * a_dt.asSeconds() * MULTIPLIER, m_velocity.y * a_dt.asSeconds() * MULTIPLIER);
-	handleBorder();
+	handleBorder(a_rm);
 
 	if (m_velocity.x < 0)
 		m_currentDir = Direction::Left;
 	else
 		m_currentDir = Direction::Right;
 }
-void Ball::handleBorder()
+void Ball::handleBorder(ResourceManager& a_rm)
 {
 	// Window Border collision detection and handling w/ Ball
+	bool hit = false;
 	float offset = m_shape.getRadius() * 2;
 
 	if (m_shape.getPosition().x <= 0)
 	{
 		m_shape.setPosition(0, m_shape.getPosition().y);
 		m_velocity.x = -m_velocity.x;
+		hit = true;
 	}
 	else if (getDiagonalPosition().x >= WIDTH)
 	{
 		m_shape.setPosition(WIDTH - offset, m_shape.getPosition().y);
 		m_velocity.x = -m_velocity.x;
+		hit = true;
 	}
 
 	if (m_shape.getPosition().y <= 0)
 	{
 		m_shape.setPosition(m_shape.getPosition().x, 0);
 		m_velocity.y = -m_velocity.y;
+		hit = true;
 	}
 	else if (getDiagonalPosition().y >= HEIGHT)
 		reset();
+	if (hit)
+		a_rm.playSound(SoundType::Ball);
 
 }
 void Ball::handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir)
