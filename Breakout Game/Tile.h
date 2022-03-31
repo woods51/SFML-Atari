@@ -9,8 +9,9 @@ class Tile
 {
 public:
 	Tile();
-	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0), 
-		std::string textureKey = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f), sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f))
+	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0),
+		std::string textureKey = "0", sf::Vector2f size = sf::Vector2f(16.0f, 16.0f),
+		sf::Vector2f scale = sf::Vector2f(2.5f, 2.5f), bool a_isDestructable = true)
 	{
 		m_defaultTexture = textureKey;
 
@@ -19,6 +20,7 @@ public:
 		m_shape.setScale(scale);
 		m_shape.setTexture(rm.getTexture(textureKey));
 
+		m_destructable = a_isDestructable;
 		setActive();
 	};
 
@@ -28,11 +30,13 @@ public:
 	const sf::RectangleShape& getShape() const { return m_shape; }
 	
 	bool isActive() const { return m_active; }
+	bool isDestructable() const { return m_destructable; }
 	void setActive() { m_active = true; }
 	void setDeactive() { m_active = false; }
 
 protected:
 	sf::RectangleShape m_shape;
+	bool m_destructable;
 	bool m_active;
 	std::string m_defaultTexture;
 };

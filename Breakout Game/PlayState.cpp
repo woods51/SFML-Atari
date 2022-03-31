@@ -25,10 +25,14 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 	sf::Vector2f ballPos = m_ball->getPosition();
 	sf::Vector2f ballDiagPos = m_ball->getDiagonalPosition();
 
+	m_completeFlag = true;
 	// Collision with a tile
 	for (auto const& tile : m_tileMap)
 	{
 		sf::Vector2f tileDiagPos = tile->getDiagonalPosition();
+		if (tile->isActive() && tile->isDestructable())
+			m_completeFlag = false;
+
 		if (!tile->isActive() || tileDiagPos.y < ballPos.y)
 			continue;
 
@@ -36,8 +40,11 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 		if (contact != Surface::None)
 		{
 			m_ball->handleTile(contact);
-			m_score++;
-			tile->setDeactive();
+			if (tile->isDestructable())
+			{
+				tile->setDeactive();
+				m_score++;
+			}	
 			a_rm.playSound(SoundType::Ball);
 		}
 	}
@@ -67,6 +74,10 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 	
 	m_ball->move(a_rm, a_dt);
 
+	if (m_completeFlag)
+	{
+		levelComplete(a_rm);
+	}
 	updateUI();
 }
 void PlayState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
@@ -210,9 +221,30 @@ void PlayState::generateUI(ResourceManager& a_rm)
 		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "pause_button", "pause_button_selected");
 	m_buttons.push_back(temp);
 }
+void PlayState::levelComplete(ResourceManager& a_rm)
+{
+	m_completeFlag = false;
+	m_currentLevel++;
 
+	m_ball->reset();
+	m_paddle->reset();
+
+	switch (m_currentLevel)
+	{
+	case 0:
+		generateLevel1(a_rm);
+		break;
+	case 1:
+		generateLevel2(a_rm);
+		break;
+	default:
+		generateLevel1(a_rm);
+		break;
+	}
+}
 void PlayState::generateLevel1(ResourceManager& a_rm)
 {
+	m_tileMap.clear();
 	float posX = 0;
 	float posY = 100.0f;
 	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
@@ -228,7 +260,30 @@ void PlayState::generateLevel1(ResourceManager& a_rm)
 		posY += 60.0f;
 	}
 }
-
+void PlayState::generateLevel2(ResourceManager& a_rm)
+{
+	m_tileMap.clear();
+	float posX = 0;
+	float posY = 100.0f;
+	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
+	for (auto const& textureKey : keys)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			if (textureKey == "tile_03" && (i < 3 || i > 6))
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), m_wallTile,
+					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f), false));
+			}
+			else
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), textureKey,
+					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f)));
+			posX += 128.0f;
+		}
+		posX = 0;
+		posY += 60.0f;
+	}
+}
 PlayState::~PlayState()
 {
 	delete m_ball;

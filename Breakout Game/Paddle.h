@@ -9,12 +9,14 @@ public:
 		sf::Vector2f scale = sf::Vector2f(5.0f, 5.0f), std::string textureKey = "paddle")
 		: Tile(rm, pos, textureKey, size, scale)
 	{
+		m_defaultPos = pos;
 		m_currentDir = Direction::Idle;
 		m_IsMovingLeft = false;
 		m_IsMovingRight = false;
 	};
 
 	void move(sf::Time dt);
+	void reset();
 
 	void handleBorder();
 
@@ -37,4 +39,6 @@ private:
 	enum class Direction m_currentDir;
 	float m_speed = 12.0f;
 	bool m_collided = false;
+
+	sf::Vector2f m_defaultPos;
 };
