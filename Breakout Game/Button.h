@@ -8,19 +8,14 @@ class Button
 public:
 	Button(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT,
 		sf::Vector2f a_scale = sf::Vector2f(8.0f, 8.0f), sf::Vector2f a_size = sf::Vector2f(32.0f, 8.0f),
-		std::string a_text = "enter text", std::string a_textureKey = "button_default", SoundType a_sound = SoundType::Button,
-		std::string a_fontID = "default")
+		std::string a_text = "enter text", std::string a_textureKey = "menu_button", std::string a_selectedTexture = "menu_button_selected",
+		SoundType a_sound = SoundType::Button, std::string a_fontID = "default")
 	{
 		m_shape.setPosition(a_pos);
 		m_shape.setScale(a_scale);
 		m_shape.setSize(a_size);
-
 		m_texture = a_rm.getTexture(a_textureKey);
-		if (a_textureKey == "menu_button")
-			m_textureSelect = a_rm.getTexture("menu_button_selected");
-		else
-			m_textureSelect = m_texture;
-
+		m_textureSelect = a_rm.getTexture(a_selectedTexture);
 		m_shape.setTexture(m_texture);
 		m_sound = a_sound;
 		m_text.setPosition(m_shape.getPosition());
@@ -33,7 +28,7 @@ public:
 	
 	Press OnClick(ResourceManager& a_rm)
 	{
-		a_rm.playSound(SoundType::Button);
+		a_rm.playSound(m_sound);
 		
 		return m_buttonType;
 	}
@@ -73,6 +68,7 @@ public:
 	void setString(std::string s) { m_text.setString(s); }
 	void setFillColor(const sf::Color& color) { m_text.setFillColor(color); }
 	void setCharacterSize(unsigned int size) { m_text.setCharacterSize(size); }
+	void setPosition(sf::Vector2f pos) { m_text.setPosition(pos); }
 
 	void setDefaultText(ResourceManager& a_rm, unsigned int a_charSize,
 		sf::Vector2f a_pos, sf::Color fill = sf::Color::White)
@@ -91,4 +87,20 @@ protected:
 	sf::RectangleShape m_shape;
 	Press m_buttonType = Press::DEFAULT;
 	SoundType m_sound = SoundType::None;
+
+
+};
+
+class TickButton : public Button
+{
+public:
+	TickButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT, std::string a_text = "enter text",
+		SoundType a_sound = SoundType::Button, sf::Vector2f a_scale = sf::Vector2f(3.0f, 3.0f),
+		sf::Vector2f a_size = sf::Vector2f(16.0f, 12.0f), std::string a_textureKey = "tick_button",
+		std::string a_selectedTexture = "tick_button_selected", std::string a_fontID = "default")
+		: Button(a_rm, a_pos, a_type, a_scale, a_size, a_text, a_textureKey, a_selectedTexture, a_sound, a_fontID)
+	{
+
+	}
+
 };

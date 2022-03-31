@@ -32,7 +32,5 @@ private:
 	sf::Text m_startText;
 	sf::Texture m_frameTexture;
 	bool m_colorFlag = false;
-	bool m_pauseFlag = false;
-	bool m_escapeLock = false;
 	int m_score = 0;
 };

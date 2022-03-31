@@ -79,15 +79,6 @@ void PlayState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 
 	else if (a_key == sf::Keyboard::Space)
 		m_ball->setActive();
-
-	else if (a_key == sf::Keyboard::Escape && !m_escapeLock)
-	{
-		m_pauseFlag = true;
-		m_escapeLock = true;
-	}
-
-	if (a_key == sf::Keyboard::Escape && !a_isPressed)
-		m_escapeLock = false;
 }
 void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
@@ -124,7 +115,6 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 							m_frameTexture.create(winSize.x, winSize.y);
 							m_frameTexture.update(a_window);
 							a_states.push_back(std::make_unique<PauseState>(a_rm, a_window, m_frameTexture));
-							m_pauseFlag = false;
 							break;
 						default:
 							break;
@@ -155,14 +145,6 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 			break;
 		}
 	}
-	if (m_pauseFlag)
-	{
-		m_frameTexture.create(winSize.x, winSize.y);
-		m_frameTexture.update(a_window);
-		a_states.push_back(std::make_unique<PauseState>(a_rm, a_window, m_frameTexture));
-		m_pauseFlag = false;
-	}
-	
 }
 void PlayState::render(sf::RenderWindow& a_window)
 {
@@ -220,13 +202,12 @@ void PlayState::generateUI(ResourceManager& a_rm)
 
 	// Buttons
 	Button* temp = new Button(a_rm, sf::Vector2f(1100, 660), Press::BALLCOLOR, sf::Vector2f(5.0f, 5.0f),
-		sf::Vector2f(20.0f, 4.0f), "Ball Color", "empty_button");
+		sf::Vector2f(20.0f, 4.0f), "Ball Color", "empty_button", "empty_button");
 	temp->setDefaultText(a_rm, 12, temp->getShape().getPosition() + sf::Vector2f(0, 2.0f));
 	m_buttons.push_back(temp);
 
-	temp = new Button(a_rm, sf::Vector2f(WIDTH - 128, HEIGHT - 40),
-		Press::PAUSE, sf::Vector2f(4.0f, 4.0f), sf::Vector2f(32.0f, 8.0f), "Pause", "menu_button");
-	temp->setDefaultText(a_rm, 24, temp->getShape().getPosition() + sf::Vector2f(14.0f, 2.0f));
+	temp = new Button(a_rm, sf::Vector2f(WIDTH - 55, HEIGHT - 55),
+		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "pause_button", "pause_button_selected");
 	m_buttons.push_back(temp);
 }
 

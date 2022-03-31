@@ -138,13 +138,11 @@ void ResourceManager::setVolume(enum class SoundType a_sound, int a_volume)
 {
 	if (a_volume < 0)
 	{
-		m_buttonSound.setVolume(0);
-		return;
+		a_volume = 0;
 	}
 	else if (a_volume > 100)
 	{
-		m_buttonSound.setVolume(100);
-		return;
+		a_volume = 100;
 	}
 		
 	switch (a_sound)

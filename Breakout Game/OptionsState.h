@@ -23,8 +23,13 @@ private:
 
 	sf::Text m_buttonText;
 	sf::Text m_buttonVolume;
-	sf::Text m_volumeText;
 	int m_buttonVolumeNum;
+
+	sf::Text m_ballText;
+	sf::Text m_ballVolume;
+	int m_ballVolumeNum;
+
+	sf::Text m_volumeText;
 
 	void setDefaultText(ResourceManager& a_rm, sf::Text& a_text, unsigned int a_charSize,
 		sf::Vector2f a_pos, std::string a_font = "default", sf::Color fill = sf::Color::White)
@@ -43,6 +48,16 @@ private:
 			a_volume = 100;
 		return;
 	}
-
+	void adjustVolumeText(int& a_volume, sf::Text& a_text)
+	{
+		float posY = a_text.getPosition().y;
+		if (a_volume == 100)
+			a_text.setPosition((WIDTH / 2) - 50, posY);
+		else if (a_volume < 10)
+			a_text.setPosition((WIDTH / 2) - 15, posY);
+		else
+			a_text.setPosition((WIDTH / 2) - 35, posY);
+		return;
+	}
 	void generateUI(ResourceManager&);
 };

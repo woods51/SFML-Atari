@@ -37,6 +37,7 @@ private:
 
 	sf::Sound m_buttonSound;
 	sf::Sound m_ballSound;
+
 };
 
 enum class Press {
