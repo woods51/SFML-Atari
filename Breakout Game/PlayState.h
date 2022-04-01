@@ -17,6 +17,7 @@ public:
 
 	void generateLevel1(ResourceManager& a_rm);
 	void generateLevel2(ResourceManager& a_rm);
+	void generateLevel3(ResourceManager& a_rm);
 
 	~PlayState();
 private:
@@ -32,7 +33,10 @@ private:
 	std::string m_wallTile = "tile_06";
 	sf::Sprite m_border;
 	sf::Text m_scoreText;
+	sf::Text m_level;
 	sf::Text m_startText;
+	sf::Text m_secondLevelText;
+	sf::Text m_thirdLevelText;
 	sf::Texture m_frameTexture;
 	int m_currentLevel = 0;
 	bool m_completeFlag = false;

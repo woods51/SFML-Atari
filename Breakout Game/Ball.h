@@ -17,7 +17,7 @@ public:
 	/// \param a_scale		--> Scale
 	/// \param a_textureKey --> Key for texture
 	////////////////////////////////////////////////////////////
-	Ball(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH/2, 610.0f), float a_radius = 12.0f,
+	Ball(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH/2 - 12, 610.0f), float a_radius = 12.0f,
 		sf::Vector2f a_scale = sf::Vector2f(1.0f, 1.0f), std::string a_textureKey = "ball_01")
 	{
 		m_startPos = a_pos;
@@ -76,6 +76,7 @@ public:
 	////////////////////////////////////////////////////////////
 	void reset();
 	
+	void freeze() { m_shape.setPosition(m_startPos);  m_velocity = sf::Vector2f(0, 0); }
 	////////////////////////////////////////////////////////////
 	/// \brief Checks for collision between ball and tile.
 	///
@@ -145,8 +146,11 @@ public:
 	// Sets start velocity
 	void setStartVelocity(sf::Vector2f vel) { m_startVel = vel; }
 
+	// Sets deactive
+	void deactivate() { m_active = false; freeze(); }
+
 	// Sets active
-	void setActive() { if (!m_active) m_velocity = m_startVel; m_active = true; }
+	void activate() { if (!m_active) m_velocity = m_startVel; m_active = true; }
 
 private:
 	sf::CircleShape m_shape;

@@ -16,6 +16,6 @@ public:
 private:
 	std::vector<Button*> m_buttons;
 	sf::Sprite m_breakoutText;
-
+	sf::Texture m_frameTexture;
 	void generateUI(ResourceManager&);
 };

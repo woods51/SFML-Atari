@@ -42,7 +42,7 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 			m_ball->handleTile(contact);
 			if (tile->isDestructable())
 			{
-				tile->setDeactive();
+				tile->handleBall();
 				m_score++;
 			}	
 			a_rm.playSound(SoundType::Ball);
@@ -77,6 +77,7 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 	if (m_completeFlag)
 	{
 		levelComplete(a_rm);
+		m_ball->deactivate();
 	}
 	updateUI();
 }
@@ -89,7 +90,7 @@ void PlayState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 		m_paddle->m_IsMovingRight = a_isPressed;
 
 	else if (a_key == sf::Keyboard::Space)
-		m_ball->setActive();
+		m_ball->activate();
 }
 void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
@@ -141,6 +142,13 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 			break;
 
 		case sf::Event::KeyPressed:
+			// FOR TESTING LEVELS //
+			if (event.key.code == sf::Keyboard::B)
+			{
+				levelComplete(a_rm);
+				m_ball->deactivate();
+			}
+				
 			inputHandler(event.key.code, true);
 			break;
 
@@ -176,22 +184,33 @@ void PlayState::render(sf::RenderWindow& a_window)
 
 	// Render UI
 	a_window.draw(m_scoreText);
+	a_window.draw(m_level);
 
 	for (auto b : m_buttons)
 	{
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
 	}
-
+	
 	if (!m_ball->getActive())
+	{
 		a_window.draw(m_startText);
+		switch (m_currentLevel)
+		{
+		case 1:
+			a_window.draw(m_secondLevelText);
+			break;
+		default:
+			break;
+		}
+	}
 
 	a_window.display();
 }
 void PlayState::updateUI()
 {
 	m_scoreText.setString("Score: " + std::to_string(m_score));
-
+	m_level.setString("Level " + std::to_string(m_currentLevel + 1));
 }
 void PlayState::generateUI(ResourceManager& a_rm)
 {
@@ -206,6 +225,25 @@ void PlayState::generateUI(ResourceManager& a_rm)
 	m_startText.setCharacterSize(30);
 	m_startText.setString("Press space to start.");
 	m_startText.setPosition(WIDTH / 2 - 250, 500);
+
+	m_secondLevelText.setFont(*a_rm.getFont("default"));
+	m_secondLevelText.setFillColor(sf::Color::White);
+	m_secondLevelText.setCharacterSize(30);
+	m_secondLevelText.setString("Black bricks cannot be broken!");
+	m_secondLevelText.setPosition(WIDTH / 2 - 345, 450);
+
+	m_thirdLevelText.setFont(*a_rm.getFont("default"));
+	m_thirdLevelText.setFillColor(sf::Color::White);
+	m_thirdLevelText.setCharacterSize(30);
+	m_thirdLevelText.setString("Purple bricks must be hit twice!");
+	m_thirdLevelText.setPosition(WIDTH / 2 - 345, 450);
+
+	m_level.setFont(*a_rm.getFont("default"));
+	m_level.setFillColor(sf::Color::White);
+	m_level.setCharacterSize(35);
+	m_level.setString("Level 1");
+	m_level.setPosition(WIDTH / 2 - 90, HEIGHT-50);
+
 
 	// generate all sprite UI / text -> spriteUI
 	m_border.setTexture(*a_rm.getTexture("border"));
@@ -228,6 +266,7 @@ void PlayState::levelComplete(ResourceManager& a_rm)
 
 	m_ball->reset();
 	m_paddle->reset();
+	m_ball->freeze();
 
 	switch (m_currentLevel)
 	{
@@ -236,6 +275,9 @@ void PlayState::levelComplete(ResourceManager& a_rm)
 		break;
 	case 1:
 		generateLevel2(a_rm);
+		break;
+	case 2:
+		generateLevel3(a_rm);
 		break;
 	default:
 		generateLevel1(a_rm);
@@ -282,6 +324,37 @@ void PlayState::generateLevel2(ResourceManager& a_rm)
 		}
 		posX = 0;
 		posY += 60.0f;
+	}
+}
+void PlayState::generateLevel3(ResourceManager& a_rm)
+{
+	m_tileMap.clear();
+	float posX = 0;
+	float posY = 100.0f;
+	int counter = 9;
+	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if ((j == i || j == counter) && i != 4)
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), m_wallTile,
+					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f), false));
+			}
+			else if ((j == 4 || j == 5) && i == 4)
+			{
+				m_tileMap.push_back(std::make_unique<StrongTile>(a_rm, sf::Vector2f(posX, posY), "tile_07",
+					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f), "tile_07_1"));
+			}
+			else
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), keys[i],
+					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f)));
+			posX += 128.0f;
+		}
+		posX = 0;
+		posY += 60.0f;
+		counter--;
 	}
 }
 PlayState::~PlayState()

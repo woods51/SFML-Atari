@@ -37,6 +37,7 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 
 	// Handle Events
 	sf::Event event;
+	sf::Vector2u winSize = a_window.getSize();
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
@@ -59,6 +60,9 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 						{
 						case Press::START:
 							a_states.push_back(std::make_unique<PlayState>(a_rm, a_window));
+							break;
+						case Press::OPTIONS:
+							a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, m_frameTexture));
 							break;
 						case Press::QUIT:
 							a_window.close();
@@ -117,6 +121,12 @@ void MenuState::generateUI(ResourceManager& a_rm)
 	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 64),
 		Press::START, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Play", "menu_button");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
+	m_buttons.push_back(temp);
+
+	// Options
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 32),
+		Press::OPTIONS, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Options", "menu_button");
+	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 128),
