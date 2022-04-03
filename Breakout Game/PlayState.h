@@ -12,7 +12,7 @@ public:
 
 	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) override;
-	void update(sf::Time dt, ResourceManager& a_window) override;
+	void update(sf::Time a_dt, ResourceManager& a_rm) override;
 	void render(sf::RenderWindow& a_window) override;
 
 	void generateLevel1(ResourceManager& a_rm);

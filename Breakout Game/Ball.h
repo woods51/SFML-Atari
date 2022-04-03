@@ -36,7 +36,7 @@ public:
 	/// 
 	/// \param a_dt	--> deltaTime
 	////////////////////////////////////////////////////////////
-	void move(ResourceManager& a_rm, sf::Time a_dt);
+	virtual void move(ResourceManager& a_rm, sf::Time a_dt);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Handles collision with paddle.
@@ -48,7 +48,7 @@ public:
 	/// \param a_surface	--> Surface of contact
 	/// \param a_paddleDir	--> Current direction of paddle
 	////////////////////////////////////////////////////////////
-	void handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir);
+	virtual void handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Handles collision with tile.
@@ -66,7 +66,7 @@ public:
 	/// This function adjusts the ball if positioned outside the
 	/// bounds of the playable screen. Adjusts position and velocity.
 	////////////////////////////////////////////////////////////
-	void handleBorder(ResourceManager& a_rm);
+	virtual void handleBorder(ResourceManager& a_rm);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Resets ball.
@@ -134,6 +134,9 @@ public:
 	// Returns true if ball is active
 	inline bool getActive() const { return m_active; }
 
+	// Sets velocity scalar
+	void setScalar(float a_scalar) { m_scalar = a_scalar; }
+
 	// Sets ball position
 	void setPosition(sf::Vector2f a_pos) { m_shape.setPosition(a_pos); }
 
@@ -152,10 +155,13 @@ public:
 	// Sets active
 	void activate() { if (!m_active) m_velocity = m_startVel; m_active = true; }
 
-private:
+protected:
 	sf::CircleShape m_shape;
 	sf::Vector2f m_velocity;
 	float m_speed = 8.0f;
+
+	// Default velocity scalar
+	float m_scalar = 1.01f;
 	enum class Direction m_currentDir = Direction::Idle;
 
 	sf::Vector2f m_startPos;
@@ -167,3 +173,24 @@ private:
 	
 };
 double vectorDistance(sf::Vector2i a_p1, sf::Vector2i a_p2);
+
+class PongBall : public Ball
+{
+public:
+	PongBall(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH / 2 - 12, 610.0f), float a_radius = 12.0f,
+		sf::Vector2f a_scale = sf::Vector2f(1.0f, 1.0f), std::string a_textureKey = "ball_01")
+		: Ball(a_rm, a_pos, a_radius, a_scale, a_textureKey)
+	{
+		
+	};
+	void move(ResourceManager& a_rm, sf::Time a_dt) override;
+	void handleBorder(ResourceManager& a_rm) override;
+	void handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir) override;
+
+	// Returns player scores
+	sf::Vector2i getScores() const { return sf::Vector2i(m_scoreP1, m_scoreP2); };
+protected:
+
+	int m_scoreP1 = 0;
+	int m_scoreP2 = 0;
+};

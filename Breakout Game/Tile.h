@@ -61,6 +61,8 @@ enum class Direction
 {
 	Left,
 	Right,
+	Up,
+	Down,
 	Idle
 };
 enum class Surface

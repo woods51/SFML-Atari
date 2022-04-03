@@ -12,6 +12,16 @@ void Paddle::move(sf::Time a_dt)
 		m_shape.move(m_speed * a_dt.asSeconds() * MULTIPLIER, 0);
 		setDirection(Direction::Right);
 	}
+	else if (m_IsMovingUp)
+	{
+		m_shape.move(0, -m_speed * a_dt.asSeconds() * MULTIPLIER);
+		setDirection(Direction::Up);
+	}
+	else if (m_IsMovingDown)
+	{
+		m_shape.move(0, m_speed * a_dt.asSeconds() * MULTIPLIER);
+		setDirection(Direction::Down);
+	}
 	else
 		setDirection(Direction::Idle);
 
@@ -35,8 +45,8 @@ void Paddle::handleBorder()
 	{
 		m_shape.setPosition(sf::Vector2f(getPosition().x, 0));
 	}
-	if (getDiagonalPosition().y > HEIGHT)
+	if (getDiagonalPosition().y > HEIGHT-60)
 	{
-		m_shape.setPosition(sf::Vector2f(getPosition().x, HEIGHT - (m_shape.getSize().y * m_shape.getScale().y)));
+		m_shape.setPosition(sf::Vector2f(getPosition().x, HEIGHT-60 - (m_shape.getSize().y * m_shape.getScale().y)));
 	}
 }

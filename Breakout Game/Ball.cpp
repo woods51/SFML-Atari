@@ -35,17 +35,15 @@ void Ball::handleBorder(ResourceManager& a_rm)
 		m_velocity.y = -m_velocity.y;
 		hit = true;
 	}
-	else if (getDiagonalPosition().y >= HEIGHT)
+	else if (getDiagonalPosition().y >= HEIGHT/* - 60*/)
 		reset();
+
 	if (hit)
 		a_rm.playSound(SoundType::Ball);
 
 }
 void Ball::handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir)
 {
-	// Default velocity scalar
-	float scalar = 1.01f;
-
 	// Collision with side of Paddle
 	if (a_surface == Surface::Left || a_surface == Surface::Right)
 		m_velocity.x = -m_velocity.x;
@@ -55,7 +53,7 @@ void Ball::handlePaddle(enum class Surface a_surface, enum class Direction a_pad
 	{
 		// Paddle same direction
 		if (m_currentDir == a_paddleDir)
-			m_velocity = sf::Vector2f(m_velocity.x * scalar, -m_velocity.y * scalar);
+			m_velocity = sf::Vector2f(m_velocity.x * m_scalar, -m_velocity.y * m_scalar);
 
 		// Paddle Idle
 		else if (a_paddleDir == Direction::Idle)
@@ -63,7 +61,7 @@ void Ball::handlePaddle(enum class Surface a_surface, enum class Direction a_pad
 
 		// Paddle opposite direction
 		else
-			m_velocity = sf::Vector2f(-m_velocity.x * scalar, -m_velocity.y);
+			m_velocity = sf::Vector2f(-m_velocity.x * m_scalar, -m_velocity.y);
 	}
 
 	// Collision with corner of Paddle
@@ -176,10 +174,85 @@ sf::Vector2f Ball::getDiagonalPosition() const
 /// \param a_p1	--> Vector 1
 /// \param a_p2	--> Vector 2
 ///
-/// \return Surface of contact, otherwise Surface::None.
+/// \return Distance between 2D vectors as double.
 ///
 ////////////////////////////////////////////////////////////
 double vectorDistance(sf::Vector2i a_p1, sf::Vector2i a_p2)
 {
 	return (double)sqrt(pow((a_p2.x - a_p1.x), 2) + pow((a_p2.y - a_p1.y), 2));
+}
+
+void PongBall::move(ResourceManager& a_rm, sf::Time a_dt)
+{
+	m_shape.move(m_velocity.x * a_dt.asSeconds() * MULTIPLIER, m_velocity.y * a_dt.asSeconds() * MULTIPLIER);
+	handleBorder(a_rm);
+
+	if (m_velocity.y < 0)
+		m_currentDir = Direction::Up;
+	else
+		m_currentDir = Direction::Down;
+}
+
+void PongBall::handleBorder(ResourceManager& a_rm)
+{
+	// Window Border collision detection and handling w/ Ball
+	bool hit = false;
+	float offset = m_shape.getRadius() * 2;
+
+	if (m_shape.getPosition().x <= 0)
+	{
+		m_scoreP2++;
+		reset();
+	}
+	else if (getDiagonalPosition().x >= WIDTH)
+	{
+		m_scoreP1++;
+		reset();
+	}
+
+	if (m_shape.getPosition().y <= 0)
+	{
+		m_shape.setPosition(m_shape.getPosition().x, 0);
+		m_velocity.y = -m_velocity.y;
+		hit = true;
+	}
+	else if (getDiagonalPosition().y >= HEIGHT - 60)
+	{
+		m_shape.setPosition(m_shape.getPosition().x, HEIGHT - 60 - offset);
+		m_velocity.y = -m_velocity.y;
+		hit = true;
+	}
+
+	if (hit)
+		a_rm.playSound(SoundType::Ball);
+}
+void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir)
+{
+	// Collision with side of Paddle
+	if (a_surface == Surface::Top)
+		m_velocity.y = -m_velocity.y;
+
+	// Collision top of Paddle
+	else if (a_surface == Surface::Left || a_surface == Surface::Right)
+	{
+		// Paddle same direction
+		if (m_currentDir == a_paddleDir)
+			m_velocity = sf::Vector2f(-m_velocity.x * m_scalar, m_velocity.y * m_scalar);
+
+		// Paddle Idle
+		else if (a_paddleDir == Direction::Idle)
+			m_velocity.x = -m_velocity.x;
+
+		// Paddle opposite direction
+		else
+			m_velocity = sf::Vector2f(-m_velocity.x, -m_velocity.y * m_scalar);
+	}
+
+	// Collision with corner of Paddle
+	else if (a_surface == Surface::Corner)
+		m_velocity.x = -m_velocity.x;
+
+	// Collision with bottom of Paddle (Something Broke)
+	else
+		std::cout << "ball hit below paddle" << std::endl;
 }

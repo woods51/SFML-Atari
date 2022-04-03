@@ -5,14 +5,17 @@
 class Paddle : public Tile
 {
 public:
-	Paddle(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(WIDTH/2 - 160.0f, 640.0f), sf::Vector2f size = sf::Vector2f(64.0f, 4.0f),
-		sf::Vector2f scale = sf::Vector2f(5.0f, 5.0f), std::string textureKey = "paddle")
-		: Tile(rm, pos, textureKey, size, scale)
+	Paddle(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH/2 - 160.0f, 640.0f),
+		sf::Vector2f a_size = sf::Vector2f(64.0f, 4.0f), sf::Vector2f a_scale = sf::Vector2f(5.0f, 5.0f),
+		std::string a_textureKey = "paddle")
+		: Tile(a_rm, a_pos, a_textureKey, a_size, a_scale)
 	{
-		m_defaultPos = pos;
+		m_defaultPos = a_pos;
 		m_currentDir = Direction::Idle;
 		m_IsMovingLeft = false;
 		m_IsMovingRight = false;
+		m_IsMovingUp = false;
+		m_IsMovingDown = false;
 	};
 
 	void move(sf::Time dt);
@@ -32,7 +35,7 @@ public:
 	// Returns current direction
 	enum class Direction getDirection() const { return m_currentDir; }
 
-	bool m_IsMovingLeft, m_IsMovingRight;
+	bool m_IsMovingLeft, m_IsMovingRight, m_IsMovingUp, m_IsMovingDown;
 
 private:
 	

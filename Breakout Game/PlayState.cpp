@@ -200,6 +200,9 @@ void PlayState::render(sf::RenderWindow& a_window)
 		case 1:
 			a_window.draw(m_secondLevelText);
 			break;
+		case 2:
+			a_window.draw(m_thirdLevelText);
+			break;
 		default:
 			break;
 		}
@@ -230,20 +233,19 @@ void PlayState::generateUI(ResourceManager& a_rm)
 	m_secondLevelText.setFillColor(sf::Color::White);
 	m_secondLevelText.setCharacterSize(30);
 	m_secondLevelText.setString("Black bricks cannot be broken!");
-	m_secondLevelText.setPosition(WIDTH / 2 - 345, 450);
+	m_secondLevelText.setPosition(WIDTH / 2 - 350, 450);
 
 	m_thirdLevelText.setFont(*a_rm.getFont("default"));
 	m_thirdLevelText.setFillColor(sf::Color::White);
 	m_thirdLevelText.setCharacterSize(30);
 	m_thirdLevelText.setString("Purple bricks must be hit twice!");
-	m_thirdLevelText.setPosition(WIDTH / 2 - 345, 450);
+	m_thirdLevelText.setPosition(WIDTH / 2 - 360, 450);
 
 	m_level.setFont(*a_rm.getFont("default"));
 	m_level.setFillColor(sf::Color::White);
 	m_level.setCharacterSize(35);
 	m_level.setString("Level 1");
 	m_level.setPosition(WIDTH / 2 - 90, HEIGHT-50);
-
 
 	// generate all sprite UI / text -> spriteUI
 	m_border.setTexture(*a_rm.getTexture("border"));
@@ -362,6 +364,6 @@ PlayState::~PlayState()
 	delete m_ball;
 	delete m_paddle;
 
-	for (auto b : m_buttons)
+	for (const auto& b : m_buttons)
 		delete b;
 }
