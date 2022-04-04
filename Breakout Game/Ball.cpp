@@ -92,7 +92,7 @@ void Ball::handleTile(enum class Surface a_surface)
 void Ball::reset()
 {
 	m_shape.setPosition(m_startPos);
-	m_velocity = m_startVel;
+	m_velocity = sf::Vector2f(velocityRNG(), -m_speed);;
 }
 
 enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDiagPos) const
@@ -255,4 +255,13 @@ void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a
 	// Collision with bottom of Paddle (Something Broke)
 	else
 		std::cout << "ball hit below paddle" << std::endl;
+}
+
+float velocityRNG()
+{
+	int num = rand() % 8 + 6;
+	int sign = rand() % 2 + 1;
+	if (sign == 2)
+		num = -num;
+	return (float)num;
 }

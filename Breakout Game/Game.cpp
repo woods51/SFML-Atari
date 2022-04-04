@@ -12,9 +12,9 @@ void Game::run()
 	window.setFramerateLimit(240);
 
 	//m_states.push_back(std::make_unique<PlayState>(rm, window));
-	//m_states.push_back(std::make_unique<MenuState>(rm, window));
+	m_states.push_back(std::make_unique<MenuState>(rm, window));
 	//m_states.push_back(std::make_unique<PauseState>(rm, window));
-	m_states.push_back(std::make_unique<PongState>(rm, window));
+	//m_states.push_back(std::make_unique<PongState>(rm, window));
 	//sf::Texture temp;
 	//m_states.push_back(std::make_unique<OptionsState>(rm, window, temp));
 

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Tile.h"
-
+#include <ctime>
+#include <stdlib.h>
+float velocityRNG();
 class Ball
 {
 public:
@@ -20,12 +22,14 @@ public:
 	Ball(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH/2 - 12, 610.0f), float a_radius = 12.0f,
 		sf::Vector2f a_scale = sf::Vector2f(1.0f, 1.0f), std::string a_textureKey = "ball_01")
 	{
+
 		m_startPos = a_pos;
-		m_startVel = sf::Vector2f(m_speed, -m_speed);
+		m_startVel = sf::Vector2f(velocityRNG(), -m_speed);
 		m_shape.setPosition(a_pos);
 		m_shape.setRadius(a_radius);
 		m_shape.setScale(a_scale);
 		m_shape.setTexture(a_rm.getTexture(a_textureKey));
+
 	};
 	
 	////////////////////////////////////////////////////////////

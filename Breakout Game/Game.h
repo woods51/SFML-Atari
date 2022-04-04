@@ -21,7 +21,7 @@ class Game
 {
 public:
 	Game() {
-
+		
 	};
 	void run();
 	void exitGame();
