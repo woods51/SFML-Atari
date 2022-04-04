@@ -229,7 +229,7 @@ void PongBall::handleBorder(ResourceManager& a_rm)
 void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir)
 {
 	// Collision with side of Paddle
-	if (a_surface == Surface::Top)
+	if (a_surface == Surface::Top || a_surface == Surface::Bottom)
 		m_velocity.y = -m_velocity.y;
 
 	// Collision top of Paddle
@@ -251,10 +251,6 @@ void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a
 	// Collision with corner of Paddle
 	else if (a_surface == Surface::Corner)
 		m_velocity.x = -m_velocity.x;
-
-	// Collision with bottom of Paddle (Something Broke)
-	else
-		std::cout << "ball hit below paddle" << std::endl;
 }
 
 float velocityRNG()

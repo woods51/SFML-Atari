@@ -5,10 +5,10 @@
 #include "Ball.h"
 #include "Paddle.h"
 
-class PlayState : public State
+class BreakoutState : public State
 {
 public:
-	PlayState(ResourceManager& a_rm, sf::RenderWindow& a_window);
+	BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) override;
@@ -19,7 +19,7 @@ public:
 	void generateLevel2(ResourceManager& a_rm);
 	void generateLevel3(ResourceManager& a_rm);
 
-	~PlayState();
+	~BreakoutState();
 private:
 	void updateUI();
 	void generateUI(ResourceManager& a_rm);

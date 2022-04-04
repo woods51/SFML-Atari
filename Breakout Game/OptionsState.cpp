@@ -15,14 +15,7 @@ OptionsState::~OptionsState()
 }
 void OptionsState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
-	if (!a_isPressed)
-	{
-		m_escapeLock = false;
-		return;
-	}
-
-	if (a_key == sf::Keyboard::Escape && !m_escapeLock)
-		m_resumeFlag = true;
+	
 }
 void OptionsState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
@@ -68,7 +61,6 @@ void OptionsState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 						{
 						case Press::BACK:
 							a_states.pop_back();
-							m_resumeFlag = false;
 							break;
 						case Press::BUTTON_UP:
 							a_rm.setVolume(SoundType::Button, m_buttonVolumeNum++);
@@ -122,12 +114,7 @@ void OptionsState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 			a_window.close();
 			break;
 		}
-	}
-	if (m_resumeFlag)
-	{
-		a_states.pop_back();
-	}
-	
+	}	
 }
 void OptionsState::update(sf::Time a_dt, ResourceManager& a_rm)
 {

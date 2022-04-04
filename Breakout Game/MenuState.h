@@ -1,5 +1,7 @@
 #pragma once
-#include "PlayState.h"
+#include "State.h"
+#include "OptionsState.h"
+#include "PongState.h"
 
 class MenuState : public State
 {
@@ -15,7 +17,12 @@ public:
 
 private:
 	std::vector<Button*> m_buttons;
+	sf::Sprite m_atariText;
 	sf::Sprite m_breakoutText;
+	sf::Sprite m_pongText;
 	sf::Texture m_frameTexture;
+
+	bool m_breakoutFlag = false;
+	bool m_pongFlag = false;
 	void generateUI(ResourceManager&);
 };

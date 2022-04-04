@@ -50,6 +50,9 @@ enum class Press {
 	PAUSE,
 	RESUME,
 	OPTIONS,
+	PONG,
+	BREAKOUT,
+	GAMESELECT,
 	BALLCOLOR,
 
 	BUTTON_UP,

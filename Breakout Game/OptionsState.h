@@ -1,5 +1,5 @@
 #pragma once
-#include "PlayState.h"
+#include "BreakoutState.h"
 
 class OptionsState : public State
 {
@@ -17,9 +17,6 @@ private:
 	std::vector<Button*> m_buttons;
 	sf::Sprite m_frameSprite;
 	sf::Sprite m_overlay;
-
-	bool m_resumeFlag = false;
-	bool m_escapeLock = true;
 
 	sf::Text m_buttonText;
 	sf::Text m_buttonVolume;

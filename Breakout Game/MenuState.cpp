@@ -30,9 +30,26 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 			mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
 		{
 			b->setSelected(true);
+			switch (b->getButtonType())
+			{
+			case Press::BREAKOUT:
+				m_breakoutFlag = true;
+				m_pongFlag = false;
+				break;
+			case Press::PONG:
+				m_breakoutFlag = false;
+				m_pongFlag = true;
+				break;
+			default:
+				m_breakoutFlag = m_pongFlag = false;
+				break;
+			}
 		}
 		else
+		{
 			b->setSelected(false);
+		}
+			
 	}
 
 	// Handle Events
@@ -58,8 +75,11 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 					{
 						switch (b->OnClick(a_rm))
 						{
-						case Press::START:
-							a_states.push_back(std::make_unique<PlayState>(a_rm, a_window));
+						case Press::BREAKOUT:
+							a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window));
+							break;
+						case Press::PONG:
+							a_states.push_back(std::make_unique<PongState>(a_rm, a_window));
 							break;
 						case Press::OPTIONS:
 							a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, m_frameTexture));
@@ -110,32 +130,50 @@ void MenuState::render(sf::RenderWindow& a_window)
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
 	}
-
-	a_window.draw(m_breakoutText);
+	if (m_breakoutFlag)
+		a_window.draw(m_breakoutText);
+	else if (m_pongFlag)
+		a_window.draw(m_pongText);
+	else
+		a_window.draw(m_atariText);
 
 	a_window.display();
 }
 void MenuState::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
-	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 64),
-		Press::START, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Play", "menu_button");
+	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 100),
+		Press::BREAKOUT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Breakout", "menu_button");
+	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(12.0f, 10.0f));
+	m_buttons.push_back(temp);
+
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 28),
+		Press::PONG, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Pong", "menu_button");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	// Options
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 32),
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 44),
 		Press::OPTIONS, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Options", "menu_button");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20.0f, 8.0f));
 	m_buttons.push_back(temp);
 
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 128),
+	// Quit
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 116),
 		Press::QUIT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Quit", "menu_button");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	// generate text UI
-	m_breakoutText.setPosition((WIDTH / 2) - 108*3, 150);
+	m_breakoutText.setPosition((WIDTH / 2) - (108 * 3), 130);
 	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title"));
-	m_breakoutText.setScale(sf::Vector2f(6.0f, 6.0f));
+	m_breakoutText.setScale(sf::Vector2f(6, 6));
+
+	m_pongText.setPosition((WIDTH / 2) - (48*3), 130);
+	m_pongText.setTexture(*a_rm.getTexture("pong_title"));
+	m_pongText.setScale(sf::Vector2f(6, 6));
+
+	m_atariText.setPosition((WIDTH / 2) - 295, 130);
+	m_atariText.setTexture(*a_rm.getTexture("sfml_atari_title"));
+	m_atariText.setScale(sf::Vector2f(5, 5));
 }

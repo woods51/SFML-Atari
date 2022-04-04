@@ -32,6 +32,9 @@ private:
 	sf::Text m_scoreP2Text;
 	sf::Vector2i m_pScores = sf::Vector2i(0,0);
 
+	sf::Text m_player1;
+	sf::Text m_player2;
+
 	sf::Text m_startText;
 	sf::Texture m_frameTexture;
 	bool m_colorFlag = false;

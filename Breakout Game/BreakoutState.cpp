@@ -1,6 +1,6 @@
-#include "PlayState.h"
+#include "BreakoutState.h"
 
-PlayState::PlayState(ResourceManager& a_rm, sf::RenderWindow& a_window)
+BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
 	m_ball = new Ball(a_rm);
 	m_paddle = new Paddle(a_rm);
@@ -9,7 +9,7 @@ PlayState::PlayState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 	generateUI(a_rm);
 }
 
-void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
+void BreakoutState::update(sf::Time a_dt, ResourceManager& a_rm)
 {
 	// Check color flag
 	if (m_colorFlag)
@@ -81,7 +81,7 @@ void PlayState::update(sf::Time a_dt, ResourceManager& a_rm)
 	}
 	updateUI();
 }
-void PlayState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
+void BreakoutState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
 	if (a_key == sf::Keyboard::A || a_key == sf::Keyboard::Left)
 		m_paddle->m_IsMovingLeft = a_isPressed;
@@ -92,7 +92,7 @@ void PlayState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 	else if (a_key == sf::Keyboard::Space)
 		m_ball->activate();
 }
-void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void BreakoutState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;
 	static bool lock_click = false;
@@ -165,7 +165,7 @@ void PlayState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 		}
 	}
 }
-void PlayState::render(sf::RenderWindow& a_window)
+void BreakoutState::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 	a_window.draw(m_border);
@@ -210,12 +210,12 @@ void PlayState::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
-void PlayState::updateUI()
+void BreakoutState::updateUI()
 {
 	m_scoreText.setString("Score: " + std::to_string(m_score));
 	m_level.setString("Level " + std::to_string(m_currentLevel + 1));
 }
-void PlayState::generateUI(ResourceManager& a_rm)
+void BreakoutState::generateUI(ResourceManager& a_rm)
 {
 	// generate all text UI -> textUI
 	m_scoreText.setFont(*a_rm.getFont("default"));
@@ -261,7 +261,7 @@ void PlayState::generateUI(ResourceManager& a_rm)
 		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "pause_button", "pause_button_selected");
 	m_buttons.push_back(temp);
 }
-void PlayState::levelComplete(ResourceManager& a_rm)
+void BreakoutState::levelComplete(ResourceManager& a_rm)
 {
 	m_completeFlag = false;
 	m_currentLevel++;
@@ -286,7 +286,7 @@ void PlayState::levelComplete(ResourceManager& a_rm)
 		break;
 	}
 }
-void PlayState::generateLevel1(ResourceManager& a_rm)
+void BreakoutState::generateLevel1(ResourceManager& a_rm)
 {
 	m_tileMap.clear();
 	float posX = 0;
@@ -304,7 +304,7 @@ void PlayState::generateLevel1(ResourceManager& a_rm)
 		posY += 60.0f;
 	}
 }
-void PlayState::generateLevel2(ResourceManager& a_rm)
+void BreakoutState::generateLevel2(ResourceManager& a_rm)
 {
 	m_tileMap.clear();
 	float posX = 0;
@@ -328,7 +328,7 @@ void PlayState::generateLevel2(ResourceManager& a_rm)
 		posY += 60.0f;
 	}
 }
-void PlayState::generateLevel3(ResourceManager& a_rm)
+void BreakoutState::generateLevel3(ResourceManager& a_rm)
 {
 	m_tileMap.clear();
 	float posX = 0;
@@ -359,7 +359,7 @@ void PlayState::generateLevel3(ResourceManager& a_rm)
 		counter--;
 	}
 }
-PlayState::~PlayState()
+BreakoutState::~BreakoutState()
 {
 	delete m_ball;
 	delete m_paddle;

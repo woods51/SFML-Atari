@@ -155,7 +155,7 @@
     <ClCompile Include="OptionsState.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="PauseState.cpp" />
-    <ClCompile Include="PlayState.cpp" />
+    <ClCompile Include="BreakoutState.cpp" />
     <ClCompile Include="PongState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="State.cpp" />
@@ -167,7 +167,7 @@
     <ClInclude Include="OptionsState.h" />
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="PauseState.h" />
-    <ClInclude Include="PlayState.h" />
+    <ClInclude Include="BreakoutState.h" />
     <ClInclude Include="PongState.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Game.h" />

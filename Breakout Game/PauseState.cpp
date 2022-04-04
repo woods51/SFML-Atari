@@ -16,14 +16,7 @@ PauseState::~PauseState()
 }
 void PauseState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
-	if (!a_isPressed)
-	{
-		m_escapeLock = false;
-		return;
-	}
-		
-	if (a_key == sf::Keyboard::Escape && !m_escapeLock)
-		m_resumeFlag = true;
+
 }
 void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
@@ -69,14 +62,12 @@ void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm,
 						{
 						case Press::RESUME:
 							a_states.pop_back();
-							m_resumeFlag = false;
-							m_escapeLock = false;
 							break;
 						case Press::OPTIONS:
 							a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, m_frameTexture));
 							break;
 						case Press::MAINMENU:
-							for (unsigned int i = 0; i < a_states.size()-1; i++)
+							for (unsigned int i = 0; i < a_states.size(); i++)
 								a_states.pop_back();
 							break;
 						case Press::QUIT:
@@ -109,10 +100,6 @@ void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm,
 			a_window.close();
 			break;
 		}
-	}
-	if (m_resumeFlag)
-	{
-		a_states.pop_back();
 	}
 }
 void PauseState::update(sf::Time a_dt, ResourceManager& a_rm)

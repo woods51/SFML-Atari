@@ -55,10 +55,8 @@ public:
 			}
 			return;
 		}
-		
-
 	}
-
+	const enum class Press getButtonType() const { return m_buttonType; }
 	sf::Vector2f getDiagonalPosition() const;
 	inline sf::Vector2f getPosition() const { return m_shape.getPosition(); }
 	inline sf::FloatRect getGlobalBounds() const { return m_shape.getGlobalBounds(); }

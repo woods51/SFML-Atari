@@ -5,8 +5,8 @@ PongState::PongState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 	m_ball = new PongBall(a_rm, sf::Vector2f(WIDTH/2, HEIGHT/2));
 	m_ball->setStartVelocity(sf::Vector2f(12, 6));
 	m_ball->setScalar(1.25f);
-	m_paddleP1 = new Paddle(a_rm, sf::Vector2f(100, HEIGHT/2 - 80), sf::Vector2f(4, 32), sf::Vector2f(5,5), "paddle_pong");
-	m_paddleP2 = new Paddle(a_rm, sf::Vector2f(WIDTH - 120, HEIGHT/2 - 80), sf::Vector2f(4, 32), sf::Vector2f(5, 5), "paddle_pong");
+	m_paddleP1 = new Paddle(a_rm, sf::Vector2f(100, HEIGHT/2 - 80), sf::Vector2f(4, 32), sf::Vector2f(5,5), "paddle_pong_02");
+	m_paddleP2 = new Paddle(a_rm, sf::Vector2f(WIDTH - 120, HEIGHT/2 - 80), sf::Vector2f(4, 32), sf::Vector2f(5, 5), "paddle_pong_03");
 
 	m_paddles.push_back(m_paddleP1);
 	m_paddles.push_back(m_paddleP2);
@@ -123,11 +123,7 @@ void PongState::update(sf::Time a_dt, ResourceManager& a_rm)
 		sf::Vector2f paddleDiagPos = paddle->getDiagonalPosition();
 
 		// Prevents compounded collisions with paddle
-		if (paddle->hasCollided() && paddlePos.x < ballDiagPos.x && i == 0)
-		{
-			paddle->collided(false);
-		}
-		else if (paddle->hasCollided() && paddlePos.x > ballDiagPos.x && i == i)
+		if (paddle->hasCollided() && ((paddleDiagPos.x < ballPos.x && i == 0) || (paddlePos.x > ballDiagPos.x && i == 1)))
 		{
 			paddle->collided(false);
 		}
@@ -165,6 +161,8 @@ void PongState::render(sf::RenderWindow& a_window)
 	// Render UI
 	a_window.draw(m_scoreP1Text);
 	a_window.draw(m_scoreP2Text);
+	a_window.draw(m_player1);
+	a_window.draw(m_player2);
 
 	for (const auto& b : m_buttons)
 	{
@@ -204,15 +202,21 @@ void PongState::generateUI(ResourceManager& a_rm)
 	m_startText.setString("Press space to start.");
 	m_startText.setPosition(WIDTH / 2 - 250, 500);
 
+	m_player1.setFont(*a_rm.getFont("default"));
+	m_player1.setFillColor(sf::Color::Yellow);
+	m_player1.setCharacterSize(12);
+	m_player1.setString("Player 1");
+	m_player1.setPosition(10, 662);
+	m_player2 = m_player1;
+	m_player2.setString("Player 2");
+	m_player2.setPosition(1190, 662);
+
 	// generate all sprite UI / text -> spriteUI
 	m_border.setTexture(*a_rm.getTexture("border"));
 	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
 
 	// Buttons
-	Button* temp = new Button(a_rm, sf::Vector2f(1100, 660), Press::BALLCOLOR, sf::Vector2f(5.0f, 5.0f),
-		sf::Vector2f(20.0f, 4.0f), "Ball Color", "empty_button", "empty_button");
-	temp->setDefaultText(a_rm, 12, temp->getShape().getPosition() + sf::Vector2f(0, 2.0f));
-	m_buttons.push_back(temp);
+	Button* temp;
 
 	temp = new Button(a_rm, sf::Vector2f(WIDTH/2 - 24, HEIGHT - 55),
 		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "pause_button", "pause_button_selected");
