@@ -8,7 +8,7 @@ void Game::run()
 	rm.loadFonts();
 	rm.loadSounds();
 
-	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Woods Game");
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "SFML Atari");
 	window.setFramerateLimit(240);
 
 	//m_states.push_back(std::make_unique<BreakoutState>(rm, window));

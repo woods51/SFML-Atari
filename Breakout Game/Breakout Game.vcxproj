@@ -172,6 +172,7 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Button.h" />
   </ItemGroup>
