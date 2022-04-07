@@ -5,6 +5,15 @@
 #include <cmath>
 #include <iostream>
 
+enum class TileType
+{
+	Default,
+	Strong,
+	Box,
+	Wall,
+	Blank
+};
+
 class Tile
 {
 public:
@@ -23,14 +32,14 @@ public:
 		m_destructable = a_isDestructable;
 		setActive();
 	};
-	Tile(ResourceManager& rm, sf::Vector2f pos = sf::Vector2f(0, 0),
-		TileType type = TileType::Default, std::string textureKey = "0")
+	Tile(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(0, 0),
+		TileType a_type = TileType::Default, std::string a_textureKey = "0")
 	{
-		m_shape.setPosition(pos);
-		m_shape.setSize(sf::Vector2f(16, 16));
-		m_shape.setScale(sf::Vector2f(2.5f, 2.5f));
+		m_shape.setPosition(a_pos);
+		m_shape.setSize(sf::Vector2f(32, 24));
+		m_shape.setScale(sf::Vector2f(4, 2.5f));
 
-		setTile(rm, type, textureKey);
+		setTile(a_rm, a_type, a_textureKey);
 		setActive();
 	};
 
@@ -68,6 +77,9 @@ public:
 		case TileType::Box:
 			m_defaultTexture = "crate";
 			break;
+		case TileType::Blank:
+			m_defaultTexture = "tile_08";
+			break;
 		default:
 			break;
 		}
@@ -82,19 +94,6 @@ protected:
 	bool m_active;
 	std::string m_defaultTexture;
 	sf::Texture* m_secondTexture;
-};
-
-class StrongTile : public Tile
-{
-public:
-	StrongTile(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(0, 0),
-		std::string a_textureKey = "0", sf::Vector2f a_size = sf::Vector2f(16.0f, 16.0f),
-		sf::Vector2f a_scale = sf::Vector2f(2.5f, 2.5f), std::string a_secondTextureKey = "0", int a_durability = 2)
-		: Tile(a_rm, a_pos, a_textureKey, a_size, a_scale)
-	{
-		m_durability = a_durability;
-		m_secondTexture = a_rm.getTexture(a_secondTextureKey);
-	};
 };
 
 enum class Direction
@@ -113,11 +112,4 @@ enum class Surface
 	Right,
 	Corner,
 	None
-};
-enum class TileType
-{
-	Default,
-	Strong,
-	Box,
-	Wall
 };

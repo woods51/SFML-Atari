@@ -296,8 +296,7 @@ void BreakoutState::generateLevel1(ResourceManager& a_rm)
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), textureKey,
-				sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f)));
+			m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, textureKey));
 			posX += 128.0f;
 		}
 		posX = 0;
@@ -316,12 +315,13 @@ void BreakoutState::generateLevel2(ResourceManager& a_rm)
 		{
 			if (textureKey == "tile_03" && (i < 3 || i > 6))
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), m_wallTile,
-					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f), false));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall));
 			}
 			else
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), textureKey,
-					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f)));
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, textureKey));
+			}
+				
 			posX += 128.0f;
 		}
 		posX = 0;
@@ -341,18 +341,17 @@ void BreakoutState::generateLevel3(ResourceManager& a_rm)
 		{
 			if ((j == i || j == counter) && i != 4)
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), m_wallTile,
-					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f), false));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall));
 			}
 			else if ((j == 4 || j == 5) && i == 4)
 			{
-				m_tileMap.push_back(std::make_unique<StrongTile>(a_rm, sf::Vector2f(posX, posY), "tile_07",
-					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f), "tile_07_1"));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Strong));
 			}
 			else
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), keys[i],
-					sf::Vector2f(32.0f, 24.0f), sf::Vector2f(4.0f, 2.5f)));
-			posX += 128.0f;
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, keys[i]));
+			}
+			posX += 128.0f;	
 		}
 		posX = 0;
 		posY += 60.0f;
