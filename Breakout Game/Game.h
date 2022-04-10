@@ -10,6 +10,7 @@
 #include "MenuState.h"
 #include "PauseState.h"
 #include "PongState.h"
+#include "LevelEditor.h"
 
 #include "Tile.h"
 #include "Ball.h"

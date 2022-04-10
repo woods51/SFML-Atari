@@ -62,7 +62,12 @@ enum class Press {
 	BUTTON_UP_X,
 	BUTTON_DOWN_X,
 	BALL_UP_X,
-	BALL_DOWN_X
+	BALL_DOWN_X,
+
+	TILE,
+	PEN,
+	ERASE,
+	DESELECT
 };
 
 enum class SoundType {

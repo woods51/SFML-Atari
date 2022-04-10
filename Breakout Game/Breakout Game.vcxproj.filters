@@ -54,6 +54,9 @@
     <ClCompile Include="PongState.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="LevelEditor.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

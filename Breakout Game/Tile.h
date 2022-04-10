@@ -11,7 +11,8 @@ enum class TileType
 	Strong,
 	Box,
 	Wall,
-	Blank
+	Blank,
+	None
 };
 
 class Tile
@@ -44,7 +45,7 @@ public:
 	};
 
 	sf::Vector2f getDiagonalPosition() const;
-	inline sf::Vector2f getPosition() const { return m_shape.getPosition(); }
+	sf::Vector2f getPosition() const { return m_shape.getPosition(); }
 	const sf::Texture* getTexture() { return m_shape.getTexture(); }
 	const sf::RectangleShape& getShape() const { return m_shape; }
 	
@@ -53,7 +54,10 @@ public:
 	bool isDestructable() const { return m_destructable; }
 	void setActive() { m_active = true; }
 	void setDeactive() { m_active = false; }
-
+	void setPosition(sf::Vector2f pos) { m_shape.setPosition(pos); }
+	
+	TileType getTileType() { return m_type; }
+	std::string getTextureKey() { return m_defaultTexture; }
 	void setTile(ResourceManager& a_rm, TileType a_type = TileType::Default, std::string a_textureKey = "0")
 	{
 		m_type = a_type;
@@ -71,14 +75,14 @@ public:
 			break;
 		case TileType::Strong:
 			m_durability = 2;
-			m_defaultTexture = "tile_07";
-			m_secondTexture = a_rm.getTexture("tile_07_1");
+			m_defaultTexture = "tile_strong";
+			m_secondTexture = a_rm.getTexture("tile_strong_broken");
 			break;
 		case TileType::Box:
 			m_defaultTexture = "crate";
 			break;
 		case TileType::Blank:
-			m_defaultTexture = "tile_08";
+			m_defaultTexture = "tile_00";
 			break;
 		default:
 			break;
