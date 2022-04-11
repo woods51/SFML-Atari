@@ -38,6 +38,7 @@ private:
 	Tile* m_child = nullptr;
 	sf::Texture* m_childTexture;
 	TileType m_childTileType;
+	sf::Text m_toolsText;
 	sf::Text m_regularTile;
 
 	sf::Sprite m_currentTile;

@@ -31,16 +31,13 @@ public:
 	Button(ResourceManager& a_rm, sf::Vector2f a_pos, TileType a_type, std::string a_textureKey = "0")
 	{
 		m_shape.setPosition(a_pos);
-		m_shape.setScale(sf::Vector2f(4, 2.5f));
-		m_shape.setSize(sf::Vector2f(32, 24));
+		m_shape.setScale(sf::Vector2f(4, 4));
+		m_shape.setSize(sf::Vector2f(32, 16));
 		m_textureKey = a_textureKey;
 		m_texture = a_rm.getTexture(a_textureKey);
 		m_textureSelect = m_texture;
 		m_shape.setTexture(m_texture);
-		//m_sound = SoundType::None;
-		//m_text.setPosition(m_shape.getPosition());
-		//m_text.setString("");
-		//m_text.setFont(*a_rm.getFont("default"));
+
 		m_tileType = a_type;
 		m_buttonType = Press::TILE;
 	}
@@ -84,6 +81,7 @@ public:
 	inline sf::FloatRect getGlobalBounds() const { return m_shape.getGlobalBounds(); }
 	const sf::Text& getText() const { return m_text; }
 	const sf::RectangleShape& getShape() const { return m_shape; }
+	sf::Texture* getTexture() { return m_texture; }
 
 	void setString(std::string s) { m_text.setString(s); }
 	void setFillColor(const sf::Color& color) { m_text.setFillColor(color); }
@@ -91,7 +89,6 @@ public:
 	void setPosition(sf::Vector2f pos) { m_text.setPosition(pos); }
 	void setTileType(TileType type) { m_tileType = type; }
 	TileType getTileType() { return m_tileType; }
-	sf::Texture* getDefaultTexture() { return m_texture; }
 	std::string getTextureKey() { return m_textureKey; }
 
 	void setDefaultText(ResourceManager& a_rm, unsigned int a_charSize,

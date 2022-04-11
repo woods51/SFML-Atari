@@ -13,12 +13,24 @@ sf::Vector2f Tile::getDiagonalPosition() const
 void Tile::handleBall()
 {
 	m_durability--;
-	if (m_durability <= 0)
+	
+	switch (m_durability)
 	{
+	case 0:
 		setDeactive();
-	}
-	else
+		break;
+	case 1:
+		m_shape.setTexture(m_firstTexture);
+		break;
+	case 2:
 		m_shape.setTexture(m_secondTexture);
+		break;
+	case 3:
+		m_shape.setTexture(m_thirdTexture);
+		break;
+	default:
+		break;
+	}
 
 	return;
 }

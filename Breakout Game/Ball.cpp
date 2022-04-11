@@ -70,7 +70,10 @@ void Ball::handlePaddle(enum class Surface a_surface, enum class Direction a_pad
 
 	// Collision with bottom of Paddle (Something Broke)
 	else
+	{
 		std::cout << "ball hit below paddle" << std::endl;
+	}
+	std::cout << "ball hit" << std::endl;
 }
 void Ball::handleTile(enum class Surface a_surface)
 {
@@ -121,17 +124,6 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 	sf::Vector2i vertex = b_top + ((b_bottom - b_top) / 2);
 	float radius = m_shape.getRadius();
 
-	// Determine if any corner of tile collides with ball
-	for (auto p : { p1, p2, p3, p4 })
-	{
-		double dist = vectorDistance(p, vertex);
-
-		if (dist <= double(radius))
-		{
-			return Surface::Corner;
-		}
-	}
-
 	// Determine if any side of tile collides with ball
 	int i = 0;
 	for (auto b : { b_top, b_bottom, b_left, b_right })
@@ -153,7 +145,16 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 		}
 		i++;
 	}
+	// Determine if any corner of tile collides with ball
+	for (auto p : { p1, p2, p3, p4 })
+	{
+		double dist = vectorDistance(p, vertex);
 
+		if (dist <= double(radius))
+		{
+			return Surface::Corner;
+		}
+	}
 	return Surface::None;
 }
 void Ball::toggleColor(ResourceManager& a_rm)

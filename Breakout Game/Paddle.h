@@ -23,14 +23,9 @@ public:
 
 	void handleBorder();
 
-	// Sets collided
-	void collided(bool b) { m_collided = b; }
-
 	// Sets current direction
 	void setDirection(enum class Direction direction) { m_currentDir = direction; }
 
-	// Returns collided
-	bool hasCollided() const { return m_collided; }
 
 	// Returns current direction
 	enum class Direction getDirection() const { return m_currentDir; }
@@ -41,7 +36,7 @@ private:
 	
 	enum class Direction m_currentDir;
 	float m_speed = 12.0f;
-	bool m_collided = false;
+	bool m_isColliding = false;
 
 	sf::Vector2f m_defaultPos;
 };

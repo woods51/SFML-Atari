@@ -106,46 +106,43 @@ void PongState::update(sf::Time a_dt, ResourceManager& a_rm)
 		m_colorFlag = false;
 		m_ball->toggleColor(a_rm);
 	}
-	// Paddle Movment
+
+	
+	handleBallPhysics(a_dt, a_rm);
 	m_paddleP1->move(a_dt);
 	m_paddleP2->move(a_dt);
+	m_ball->move(a_rm, a_dt);
 
+	m_pScores = m_ball->getScores();
+	updateUI();
+}
+
+void PongState::handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm)
+{
 	// Ball Physics
 	Surface contact = Surface::None;
 	sf::Vector2f ballPos = m_ball->getPosition();
 	sf::Vector2f ballDiagPos = m_ball->getDiagonalPosition();
 
 	// Collision with paddles
-	int i = 0;
 	for (const auto& paddle : m_paddles)
 	{
 		sf::Vector2f paddlePos = paddle->getPosition();
 		sf::Vector2f paddleDiagPos = paddle->getDiagonalPosition();
 
-		// Prevents compounded collisions with paddle
-		if (paddle->hasCollided() && ((paddleDiagPos.x < ballPos.x && i == 0) || (paddlePos.x > ballDiagPos.x && i == 1)))
+		contact = m_ball->collision(paddlePos, paddleDiagPos);
+		if (contact != Surface::None)
 		{
-			paddle->collided(false);
-		}
-
-		// Ball is near Paddle
-		if (!paddle->hasCollided()
-			&& paddlePos.x <= ballDiagPos.x
-			&& paddlePos.y <= ballDiagPos.y)
-		{
-			contact = m_ball->collision(paddlePos, paddleDiagPos);
-			if (contact != Surface::None)
+			if (!paddle->isColliding())
 			{
 				m_ball->handlePaddle(contact, paddle->getDirection());
-				paddle->collided(true);
+				paddle->isColliding(true);
 				a_rm.playSound(SoundType::Ball);
 			}
 		}
-		i++;
+		else
+			paddle->isColliding(false);
 	}
-	m_ball->move(a_rm, a_dt);
-	m_pScores = m_ball->getScores();
-	updateUI();
 }
 
 void PongState::render(sf::RenderWindow& a_window)

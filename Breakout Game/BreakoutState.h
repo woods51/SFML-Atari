@@ -24,6 +24,7 @@ private:
 	void updateUI();
 	void generateUI(ResourceManager& a_rm);
 	void levelComplete(ResourceManager& a_rm);
+	void handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm);
 
 	std::vector<std::unique_ptr<Tile>> m_tileMap;
 	std::vector<Button*> m_buttons;

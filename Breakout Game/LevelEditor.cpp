@@ -54,7 +54,7 @@ void LevelEditor::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm
 							break;
 
 						case Press::TILE:
-							m_child = new Tile(a_rm, sf::Vector2f(0, 0), b->getTileType(), b->getTextureKey());
+							m_child = new Tile(a_rm, sf::Vector2f(0, 0), b->getTileType(), b->getTextureKey(), true);
 							break;
 
 						case Press::PEN:
@@ -109,7 +109,7 @@ void LevelEditor::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm
 					if (mousePosition.x >= tile_pos.x && mousePosition.x <= tile_diag_pos.x &&
 						mousePosition.y >= tile_pos.y && mousePosition.y <= tile_diag_pos.y)
 					{
-						tile->setTile(a_rm, m_child->getTileType(), m_child->getTextureKey());
+						tile->setTile(a_rm, m_child->getTileType(), m_child->getTextureKey(), true);
 					}
 				}
 				if (m_child != NULL)
@@ -167,6 +167,7 @@ void LevelEditor::render(sf::RenderWindow& a_window)
 	if (m_child != nullptr)
 		a_window.draw(m_child->getShape());
 	a_window.draw(m_regularTile);
+	a_window.draw(m_toolsText);
 
 	//a_window.draw(m_selectedTile);
 	a_window.draw(m_currentTile);
@@ -180,12 +181,14 @@ void LevelEditor::updateUI(ResourceManager& a_rm)
 void LevelEditor::generateUI(ResourceManager& a_rm)
 {
 	// generate all text UI -> textUI
-	setDefaultText(a_rm, m_regularTile, 22, sf::Vector2f(380, HEIGHT - 208));
+	setDefaultText(a_rm, m_toolsText, 22, sf::Vector2f(74, HEIGHT - 228));
+	m_toolsText.setString("Tools");
+	setDefaultText(a_rm, m_regularTile, 22, sf::Vector2f(240, HEIGHT - 228));
 	m_regularTile.setString("Regular Tiles");
 
 	// generate all sprite UI / text -> spriteUI
-	m_border.setTexture(*a_rm.getTexture("test_02"));
-	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
+	m_border.setTexture(*a_rm.getTexture("test_04"));
+	m_border.setScale(sf::Vector2f(40, 40));
 
 	//m_selectedTile.setTexture(*a_rm.getTexture("tile_selected_1"));
 	//m_selectedTile.setSize(sf::Vector2f(32, 24));
@@ -193,42 +196,60 @@ void LevelEditor::generateUI(ResourceManager& a_rm)
 	
 
 	m_currentTile.setTexture(*a_rm.getTexture("tile_empty"));
-	m_currentTile.setScale(sf::Vector2f(6, 3.75f));
-	m_currentTile.setPosition(sf::Vector2f(24, HEIGHT - 114));
+	m_currentTile.setScale(sf::Vector2f(6, 6));
+	m_currentTile.setPosition(sf::Vector2f(24, HEIGHT - 120));
 
 	Button* temp;
-	temp = new Button(a_rm, sf::Vector2f(24, HEIGHT - 186),
+	temp = new Button(a_rm, sf::Vector2f(24, HEIGHT - 192),
 		Press::PEN, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "", "button_pen", "button_pen_selected");
 	m_pen = temp;
 	m_buttons.push_back(temp);
-	temp = new Button(a_rm, sf::Vector2f(96, HEIGHT - 186),
+	temp = new Button(a_rm, sf::Vector2f(96, HEIGHT - 192),
 		Press::ERASE, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "", "button_eraser", "button_eraser_selected");
 	m_erase = temp;
 	m_buttons.push_back(temp);
 
-	temp = new Button(a_rm, sf::Vector2f(168, HEIGHT - 186),
+	temp = new Button(a_rm, sf::Vector2f(168, HEIGHT - 192),
 		Press::DESELECT, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "", "button_03", "button_03");
 	m_buttons.push_back(temp);
 
 
 	// Buttons
 	
-	std::string textureKeys[12] = { "tile_03", "tile_02", "tile_01",
-									"tile_06", "tile_05", "tile_04",
-									"tile_09", "tile_08", "tile_07",
-									"tile_10", "tile_11", "tile_12" };
 	float posX_offset = 240;
-	float posY_offset = 60;
+	float posY_offset = 64;
 	int i = 1;
-	for (const auto& key : textureKeys)
+	for (const auto& key : { "tile_03", "tile_02", "tile_01",
+		"tile_07", "tile_12", "tile_06",
+		"tile_04", "tile_05", "tile_08",
+		"tile_09", "tile_10", "tile_11" })
 	{
 		temp = new Button(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::Default, key);
 		m_buttons.push_back(temp);
-		posY_offset += 60;
+		posY_offset += 64;
 		if (i % 3 == 0)
 		{
 			posX_offset += 128;
-			posY_offset = 60;
+			posY_offset = 64;
+		}
+		i++;
+	}
+	i = 1;
+	for (const auto& key : { "tile_09_lock", "tile_10_lock", "tile_11_lock",
+							"tile_09_lock2", "tile_10_lock2", "tile_11_lock2" })
+	{
+		
+		if (i > 3)
+			temp = new Button(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::LOCK, key);
+		else
+			temp = new Button(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::LOCK2, key);
+
+		m_buttons.push_back(temp);
+		posY_offset += 64;
+		if (i % 3 == 0)
+		{
+			posX_offset += 128;
+			posY_offset = 64;
 		}
 		i++;
 	}
@@ -241,8 +262,8 @@ void LevelEditor::generateUI(ResourceManager& a_rm)
 void LevelEditor::generateTileMap(ResourceManager& a_rm)
 {
 	float posX = 0;
-	float posY = 40.0f;
-	for (int i = 0; i < 7; i++)
+	float posY = 64.0f;
+	for (int i = 0; i < 6; i++)
 	{
 		for (int j = 0; j < 10; j++)
 		{
@@ -250,7 +271,7 @@ void LevelEditor::generateTileMap(ResourceManager& a_rm)
 			posX += 128.0f;
 		}
 		posX = 0;
-		posY += 60.0f;
+		posY += 64.0f;
 	}
 }
 

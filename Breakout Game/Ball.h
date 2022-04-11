@@ -159,6 +159,10 @@ public:
 	// Sets active
 	void activate() { if (!m_active) m_velocity = m_startVel; m_active = true; }
 
+	bool isColliding() const { return m_isColliding; }
+
+	void isColliding(bool a_isColliding) { m_isColliding = a_isColliding; }
+
 protected:
 	sf::CircleShape m_shape;
 	sf::Vector2f m_velocity;
@@ -171,6 +175,7 @@ protected:
 	sf::Vector2f m_startPos;
 	sf::Vector2f m_startVel;
 	bool m_active = false;
+	bool m_isColliding = false;
 	
 	std::string m_colors[6] = { "ball_01", "ball_02", "ball_03", "ball_04", "ball_05", "ball_06" };
 	int m_colorIndex = 0;

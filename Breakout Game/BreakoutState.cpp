@@ -17,17 +17,31 @@ void BreakoutState::update(sf::Time a_dt, ResourceManager& a_rm)
 		m_colorFlag = false;
 		m_ball->toggleColor(a_rm);
 	}
-	// Paddle Movment
-	m_paddle->move(a_dt);
 
-	// Ball Physics
+	// Physics
+	handleBallPhysics(a_dt, a_rm);
+	m_ball->move(a_rm, a_dt);
+	m_paddle->move(a_dt);
+	
+	if (m_completeFlag)
+	{
+		levelComplete(a_rm);
+		m_ball->deactivate();
+	}
+	updateUI();
+}
+void BreakoutState::handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm)
+{
+	// Handling Ball Physics
 	Surface contact = Surface::None;
 	sf::Vector2f ballPos = m_ball->getPosition();
 	sf::Vector2f ballDiagPos = m_ball->getDiagonalPosition();
 
 	m_completeFlag = true;
+
 	// Collision with a tile
-	for (auto const& tile : m_tileMap)
+	bool flag = false;
+	for (const auto& tile : m_tileMap)
 	{
 		sf::Vector2f tileDiagPos = tile->getDiagonalPosition();
 		if (tile->isActive() && tile->isDestructable())
@@ -35,51 +49,46 @@ void BreakoutState::update(sf::Time a_dt, ResourceManager& a_rm)
 
 		if (!tile->isActive() || tileDiagPos.y < ballPos.y)
 			continue;
-
+		
 		contact = m_ball->collision(tile->getPosition(), tileDiagPos);
 		if (contact != Surface::None)
 		{
-			m_ball->handleTile(contact);
+			if (!m_ball->isColliding())
+				m_ball->handleTile(contact);
+
 			if (tile->isDestructable())
 			{
 				tile->handleBall();
 				m_score++;
-			}	
+			}
+			flag = true;
+			m_ball->isColliding(true);
 			a_rm.playSound(SoundType::Ball);
 		}
 	}
+	
 
 	// Collision with paddle
 	sf::Vector2f paddlePos = m_paddle->getPosition();
 	sf::Vector2f paddleDiagPos = m_paddle->getDiagonalPosition();
 
-	// Prevents compounded collisions with paddle
-	if (m_paddle->hasCollided() && paddlePos.y > ballDiagPos.y)
+	contact = m_ball->collision(paddlePos, paddleDiagPos);
+	if (contact != Surface::None)
 	{
-		m_paddle->collided(false);
-	}
-	// Ball is near Paddle
-	if (!m_paddle->hasCollided()
-		&& paddlePos.x <= ballDiagPos.x
-		&& paddlePos.y <= ballDiagPos.y)
-	{
-		contact = m_ball->collision(paddlePos, paddleDiagPos);
-		if (contact != Surface::None)
+		if (!flag && !m_paddle->isColliding())
 		{
 			m_ball->handlePaddle(contact, m_paddle->getDirection());
-			m_paddle->collided(true);
+			m_ball->isColliding(true);
+			m_paddle->isColliding(true);
 			a_rm.playSound(SoundType::Ball);
 		}
 	}
-	
-	m_ball->move(a_rm, a_dt);
+	else
+		m_paddle->isColliding(false);
 
-	if (m_completeFlag)
-	{
-		levelComplete(a_rm);
-		m_ball->deactivate();
-	}
-	updateUI();
+	if (!flag)
+		m_ball->isColliding(false);
+
 }
 void BreakoutState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
@@ -290,24 +299,24 @@ void BreakoutState::generateLevel1(ResourceManager& a_rm)
 {
 	m_tileMap.clear();
 	float posX = 0;
-	float posY = 100.0f;
+	float posY = 64;
 	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
 	for (auto const& textureKey : keys)
 	{
 		for (int i = 0; i < 10; i++)
 		{
 			m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, textureKey));
-			posX += 128.0f;
+			posX += 128;
 		}
 		posX = 0;
-		posY += 60.0f;
+		posY += 64;
 	}
 }
 void BreakoutState::generateLevel2(ResourceManager& a_rm)
 {
 	m_tileMap.clear();
 	float posX = 0;
-	float posY = 100.0f;
+	float posY = 64;
 	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
 	for (auto const& textureKey : keys)
 	{
@@ -322,17 +331,17 @@ void BreakoutState::generateLevel2(ResourceManager& a_rm)
 				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, textureKey));
 			}
 				
-			posX += 128.0f;
+			posX += 128;
 		}
 		posX = 0;
-		posY += 60.0f;
+		posY += 64;
 	}
 }
 void BreakoutState::generateLevel3(ResourceManager& a_rm)
 {
 	m_tileMap.clear();
 	float posX = 0;
-	float posY = 100.0f;
+	float posY = 64;
 	int counter = 9;
 	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
 	for (int i = 0; i < 5; i++)
@@ -345,16 +354,16 @@ void BreakoutState::generateLevel3(ResourceManager& a_rm)
 			}
 			else if ((j == 4 || j == 5) && i == 4)
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Strong));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::LOCK2, "tile_11"));
 			}
 			else
 			{
 				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, keys[i]));
 			}
-			posX += 128.0f;	
+			posX += 128;	
 		}
 		posX = 0;
-		posY += 60.0f;
+		posY += 64;
 		counter--;
 	}
 }
