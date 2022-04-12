@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "LevelEditor.h"
 #include "OptionsState.h"
 #include "PongState.h"
 
@@ -19,10 +20,12 @@ private:
 	std::vector<Button*> m_buttons;
 	sf::Sprite m_atariText;
 	sf::Sprite m_breakoutText;
+	sf::Sprite m_editorText;
 	sf::Sprite m_pongText;
 	sf::Texture m_frameTexture;
 
 	bool m_breakoutFlag = false;
 	bool m_pongFlag = false;
+	bool m_editorFlag = false;
 	void generateUI(ResourceManager&);
 };

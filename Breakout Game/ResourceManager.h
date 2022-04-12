@@ -52,6 +52,7 @@ enum class Press {
 	OPTIONS,
 	PONG,
 	BREAKOUT,
+	EDITOR,
 	GAMESELECT,
 	BALLCOLOR,
 

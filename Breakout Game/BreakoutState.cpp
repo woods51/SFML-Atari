@@ -262,7 +262,7 @@ void BreakoutState::generateUI(ResourceManager& a_rm)
 
 	// Buttons
 	Button* temp = new Button(a_rm, sf::Vector2f(WIDTH - 110, HEIGHT - 55),
-		Press::BALLCOLOR, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "", "button_ball", "button_ball");
+		Press::BALLCOLOR, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "", "button_ball", "button_ball_selected");
 	m_buttons.push_back(temp);
 	temp = new Button(a_rm, sf::Vector2f(WIDTH - 55, HEIGHT - 55),
 		Press::PAUSE, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "", "button_pause", "button_pause_selected");

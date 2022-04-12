@@ -34,14 +34,21 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 			{
 			case Press::BREAKOUT:
 				m_breakoutFlag = true;
+				m_editorFlag = false;
+				m_pongFlag = false;
+				break;
+			case Press::EDITOR:
+				m_breakoutFlag = false;
+				m_editorFlag = true;
 				m_pongFlag = false;
 				break;
 			case Press::PONG:
 				m_breakoutFlag = false;
+				m_editorFlag = false;
 				m_pongFlag = true;
 				break;
 			default:
-				m_breakoutFlag = m_pongFlag = false;
+				m_breakoutFlag = m_editorFlag = m_pongFlag = false;
 				break;
 			}
 		}
@@ -77,6 +84,9 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 						{
 						case Press::BREAKOUT:
 							a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window));
+							break;
+						case Press::EDITOR:
+							a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
 							break;
 						case Press::PONG:
 							a_states.push_back(std::make_unique<PongState>(a_rm, a_window));
@@ -132,6 +142,8 @@ void MenuState::render(sf::RenderWindow& a_window)
 	}
 	if (m_breakoutFlag)
 		a_window.draw(m_breakoutText);
+	else if (m_editorFlag)
+		a_window.draw(m_editorText);
 	else if (m_pongFlag)
 		a_window.draw(m_pongText);
 	else
@@ -143,37 +155,45 @@ void MenuState::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
 	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 100),
-		Press::BREAKOUT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Breakout");
-	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(12.0f, 10.0f));
+		Press::BREAKOUT, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "Breakout");
+	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(12, 10));
+	m_buttons.push_back(temp);
+
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 136, (HEIGHT/2) - 100),
+		Press::EDITOR, sf::Vector2f(4, 4), sf::Vector2f(16, 16), "", "button_editor", "button_editor_selected");
 	m_buttons.push_back(temp);
 
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 28),
-		Press::PONG, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Pong", "button_menu");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
+		Press::PONG, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "Pong", "button_menu");
+	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64, 8));
 	m_buttons.push_back(temp);
 
 	// Options
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 44),
-		Press::OPTIONS, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Options");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20.0f, 8.0f));
+		Press::OPTIONS, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "Options");
+	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20, 8));
 	m_buttons.push_back(temp);
 
 	// Quit
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 116),
-		Press::QUIT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Quit");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
+		Press::QUIT, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "Quit");
+	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64, 8));
 	m_buttons.push_back(temp);
 
 	// generate text UI
-	m_breakoutText.setPosition((WIDTH / 2) - (108 * 3), 130);
+	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
 	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title"));
 	m_breakoutText.setScale(sf::Vector2f(6, 6));
 
-	m_pongText.setPosition((WIDTH / 2) - (48*3), 130);
+	m_editorText.setPosition((WIDTH / 2) - 350, 140);
+	m_editorText.setTexture(*a_rm.getTexture("level_editor_title"));
+	m_editorText.setScale(sf::Vector2f(5, 5));
+
+	m_pongText.setPosition((WIDTH / 2) - 144, 130);
 	m_pongText.setTexture(*a_rm.getTexture("pong_title"));
 	m_pongText.setScale(sf::Vector2f(6, 6));
 
-	m_atariText.setPosition((WIDTH / 2) - 295, 130);
+	m_atariText.setPosition((WIDTH / 2) - 295, 140);
 	m_atariText.setTexture(*a_rm.getTexture("sfml_atari_title"));
 	m_atariText.setScale(sf::Vector2f(5, 5));
 }

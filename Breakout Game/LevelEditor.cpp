@@ -119,7 +119,7 @@ void LevelEditor::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm
 			a_window.close();
 			break;
 		}
-		if (lock_click && (m_pen->isSelected() || m_erase->isSelected()) && m_selectedTile != nullptr)
+		if (lock_click && (m_erase->isSelected() || (m_pen->isSelected() && m_selectedTile != nullptr)))
 		{
 			for (auto& tile : m_tileMap)
 			{
@@ -224,11 +224,11 @@ void LevelEditor::generateButtons(ResourceManager& a_rm)
 	m_buttons.push_back(temp);
 
 	temp = new Button(a_rm, sf::Vector2f(168, HEIGHT - 192),
-		Press::DESELECT, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "", "deselect_button", "deselect_button");
+		Press::DESELECT, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "", "button_deselect", "button_deselect");
 	m_buttons.push_back(temp);
 
 	temp = new Button(a_rm, sf::Vector2f(WIDTH / 2 - 20, 10),
-		Press::PAUSE, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16, 16), "", "pause_button", "pause_button_selected");
+		Press::PAUSE, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16, 16), "", "button_pause", "button_pause_selected");
 	m_buttons.push_back(temp);
 }
 void LevelEditor::generateTileButtons(ResourceManager& a_rm)
