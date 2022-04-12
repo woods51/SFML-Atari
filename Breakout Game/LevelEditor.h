@@ -2,21 +2,6 @@
 #include "State.h"
 #include "Tile.h"
 #include "PauseState.h"
-/*
-program that doesn't emulate the tank game from the atari.
-its actually now a program that allows you create a custom breakout level and save it as a playable level.
--there is a grid setup for tiles, user can place any tile they want into a specific location within the grid,
-	when placed the tile will snap to the nearest location on the grid.
--there is a asset manager menu that allows the user to drag
-code
-code
-more code
-more code
-some other code
-complex algorithm
-more code
-you get the point
-*/
 
 class LevelEditor : public State
 {
@@ -43,6 +28,7 @@ private:
 
 	sf::Sprite m_currentTile;
 	sf::Sprite m_selectedTile;
+	sf::Sprite m_seperator;
 	Button* m_pen;
 	Button* m_erase;
 	/*

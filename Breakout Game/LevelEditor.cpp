@@ -171,6 +171,7 @@ void LevelEditor::render(sf::RenderWindow& a_window)
 
 	//a_window.draw(m_selectedTile);
 	a_window.draw(m_currentTile);
+	//a_window.draw(m_seperator);
 
 	a_window.display();
 }
@@ -183,18 +184,21 @@ void LevelEditor::generateUI(ResourceManager& a_rm)
 	// generate all text UI -> textUI
 	setDefaultText(a_rm, m_toolsText, 22, sf::Vector2f(74, HEIGHT - 228));
 	m_toolsText.setString("Tools");
-	setDefaultText(a_rm, m_regularTile, 22, sf::Vector2f(240, HEIGHT - 228));
+	setDefaultText(a_rm, m_regularTile, 22, sf::Vector2f(240 + 20, HEIGHT - 228));
 	m_regularTile.setString("Regular Tiles");
 
 	// generate all sprite UI / text -> spriteUI
 	m_border.setTexture(*a_rm.getTexture("test_04"));
 	m_border.setScale(sf::Vector2f(40, 40));
 
+	m_seperator.setTexture(*a_rm.getTexture("tile_seperator"));
+	m_seperator.setScale(sf::Vector2f(20, 40));
+	m_seperator.setPosition(sf::Vector2f(240, HEIGHT - 240));
+
 	//m_selectedTile.setTexture(*a_rm.getTexture("tile_selected_1"));
 	//m_selectedTile.setSize(sf::Vector2f(32, 24));
 	//m_selectedTile.setScale(sf::Vector2f(8, 5));
 	
-
 	m_currentTile.setTexture(*a_rm.getTexture("tile_empty"));
 	m_currentTile.setScale(sf::Vector2f(6, 6));
 	m_currentTile.setPosition(sf::Vector2f(24, HEIGHT - 120));
@@ -213,10 +217,14 @@ void LevelEditor::generateUI(ResourceManager& a_rm)
 		Press::DESELECT, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "", "button_03", "button_03");
 	m_buttons.push_back(temp);
 
+	temp = new Button(a_rm, sf::Vector2f(WIDTH / 2 - 24, HEIGHT - 240),
+		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "pause_button", "pause_button_selected");
+	m_buttons.push_back(temp);
+
 
 	// Buttons
 	
-	float posX_offset = 240;
+	float posX_offset = 256;
 	float posY_offset = 64;
 	int i = 1;
 	for (const auto& key : { "tile_03", "tile_02", "tile_01",
@@ -238,7 +246,7 @@ void LevelEditor::generateUI(ResourceManager& a_rm)
 	for (const auto& key : { "tile_09_lock", "tile_10_lock", "tile_11_lock",
 							"tile_09_lock2", "tile_10_lock2", "tile_11_lock2" })
 	{
-		
+
 		if (i > 3)
 			temp = new Button(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::LOCK, key);
 		else
@@ -253,10 +261,6 @@ void LevelEditor::generateUI(ResourceManager& a_rm)
 		}
 		i++;
 	}
-	
-	temp = new Button(a_rm, sf::Vector2f(WIDTH / 2 - 24, HEIGHT - 55),
-		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "pause_button", "pause_button_selected");
-	m_buttons.push_back(temp);
 
 }
 void LevelEditor::generateTileMap(ResourceManager& a_rm)
