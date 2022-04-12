@@ -10,7 +10,9 @@ enum class TileType
 	Default,
 	LOCK,
 	LOCK2,
-	Box,
+	Special,
+	Special2,
+	Special3,
 	Wall,
 	Blank,
 	None
@@ -86,7 +88,7 @@ public:
 		case TileType::Default:
 			break;
 		case TileType::Wall:
-			m_defaultTexture = "tile_wall";
+			m_defaultTexture = a_textureKey;
 			m_firstTexture = a_rm.getTexture(m_defaultTexture);
 			texture = m_firstTexture;
 			m_destructable = false;
@@ -102,13 +104,23 @@ public:
 			m_thirdTexture = a_rm.getTexture(a_textureKey + "_lock2");
 			texture = m_thirdTexture;
 			break;
-		case TileType::Box:
-			m_defaultTexture = "crate";
+		case TileType::Special:
+			m_defaultTexture = "tile_special";
+			m_firstTexture = a_rm.getTexture(m_defaultTexture);
+			texture = m_firstTexture;
+			break;
+		case TileType::Special2:
+			m_defaultTexture = "tile_special2";
+			m_firstTexture = a_rm.getTexture(m_defaultTexture);
+			texture = m_firstTexture;
+			break;
+		case TileType::Special3:
+			m_defaultTexture = "tile_special3";
 			m_firstTexture = a_rm.getTexture(m_defaultTexture);
 			texture = m_firstTexture;
 			break;
 		case TileType::Blank:
-			m_defaultTexture = "tile_00";
+			m_defaultTexture = "tile_08";
 			m_firstTexture = a_rm.getTexture(m_defaultTexture);
 			texture = m_firstTexture;
 			break;

@@ -67,13 +67,8 @@ void Ball::handlePaddle(enum class Surface a_surface, enum class Direction a_pad
 	// Collision with corner of Paddle
 	else if (a_surface == Surface::Corner)
 		m_velocity.y = -m_velocity.y;
-
-	// Collision with bottom of Paddle (Something Broke)
-	else
-	{
-		std::cout << "ball hit below paddle" << std::endl;
-	}
-	std::cout << "ball hit" << std::endl;
+	
+	return;
 }
 void Ball::handleTile(enum class Surface a_surface)
 {

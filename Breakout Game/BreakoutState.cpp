@@ -261,13 +261,11 @@ void BreakoutState::generateUI(ResourceManager& a_rm)
 	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
 
 	// Buttons
-	Button* temp = new Button(a_rm, sf::Vector2f(1100, 660), Press::BALLCOLOR, sf::Vector2f(5.0f, 5.0f),
-		sf::Vector2f(20.0f, 4.0f), "Ball Color", "empty_button", "empty_button");
-	temp->setDefaultText(a_rm, 12, temp->getShape().getPosition() + sf::Vector2f(0, 2.0f));
+	Button* temp = new Button(a_rm, sf::Vector2f(WIDTH - 110, HEIGHT - 55),
+		Press::BALLCOLOR, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "", "button_ball", "button_ball");
 	m_buttons.push_back(temp);
-
 	temp = new Button(a_rm, sf::Vector2f(WIDTH - 55, HEIGHT - 55),
-		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "pause_button", "pause_button_selected");
+		Press::PAUSE, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "", "button_pause", "button_pause_selected");
 	m_buttons.push_back(temp);
 }
 void BreakoutState::levelComplete(ResourceManager& a_rm)
@@ -324,7 +322,7 @@ void BreakoutState::generateLevel2(ResourceManager& a_rm)
 		{
 			if (textureKey == "tile_03" && (i < 3 || i > 6))
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall, "tile_wall"));
 			}
 			else
 			{
@@ -350,7 +348,7 @@ void BreakoutState::generateLevel3(ResourceManager& a_rm)
 		{
 			if ((j == i || j == counter) && i != 4)
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall, "tile_wall"));
 			}
 			else if ((j == 4 || j == 5) && i == 4)
 			{

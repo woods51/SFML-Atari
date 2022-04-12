@@ -12,8 +12,8 @@ void Game::run()
 	window.setFramerateLimit(240);
 
 	//m_states.push_back(std::make_unique<BreakoutState>(rm, window));
-	m_states.push_back(std::make_unique<LevelEditor>(rm, window));
-	//m_states.push_back(std::make_unique<MenuState>(rm, window));
+	//m_states.push_back(std::make_unique<LevelEditor>(rm, window));
+	m_states.push_back(std::make_unique<MenuState>(rm, window));
 	//m_states.push_back(std::make_unique<PauseState>(rm, window));
 	//m_states.push_back(std::make_unique<PongState>(rm, window));
 	//sf::Texture temp;

@@ -10,7 +10,7 @@ public:
 	// Default button constructor
 	Button(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT,
 		sf::Vector2f a_scale = sf::Vector2f(8.0f, 8.0f), sf::Vector2f a_size = sf::Vector2f(32.0f, 8.0f),
-		std::string a_text = "enter text", std::string a_textureKey = "menu_button", std::string a_selectedTexture = "menu_button_selected",
+		std::string a_text = "enter text", std::string a_textureKey = "button_menu", std::string a_selectedTexture = "button_menu_selected",
 		SoundType a_sound = SoundType::Button, std::string a_fontID = "default")
 	{
 		m_shape.setPosition(a_pos);
@@ -119,8 +119,8 @@ class TickButton : public Button
 public:
 	TickButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT, std::string a_text = "enter text",
 		SoundType a_sound = SoundType::Button, sf::Vector2f a_scale = sf::Vector2f(3.0f, 3.0f),
-		sf::Vector2f a_size = sf::Vector2f(16.0f, 12.0f), std::string a_textureKey = "tick_button",
-		std::string a_selectedTexture = "tick_button_selected", std::string a_fontID = "default")
+		sf::Vector2f a_size = sf::Vector2f(16.0f, 12.0f), std::string a_textureKey = "button_options",
+		std::string a_selectedTexture = "button_options_selected", std::string a_fontID = "default")
 		: Button(a_rm, a_pos, a_type, a_scale, a_size, a_text, a_textureKey, a_selectedTexture, a_sound, a_fontID)
 	{
 

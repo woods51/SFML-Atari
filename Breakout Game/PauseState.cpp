@@ -127,25 +127,25 @@ void PauseState::generateUI(ResourceManager& a_rm)
 	// generate all buttons
 	// Resume
 	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 140),
-		Press::RESUME, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Resume", "menu_button");
+		Press::RESUME, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Resume");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(29.0f, 8.0f));
 	m_buttons.push_back(temp);
 	
 	// Options
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 68),
-		Press::OPTIONS, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Options", "menu_button");
+		Press::OPTIONS, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Options");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	// Main Menu
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4),
-		Press::MAINMENU, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "MainMenu", "menu_button");
+		Press::MAINMENU, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "MainMenu");
 	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(15.0f, 12.0f));
 	m_buttons.push_back(temp);
 
 	// Quit
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 76),
-		Press::QUIT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Quit", "menu_button");
+		Press::QUIT, sf::Vector2f(8.0f, 8.0f), sf::Vector2f(32.0f, 8.0f), "Quit");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
 

@@ -216,7 +216,7 @@ void PongState::generateUI(ResourceManager& a_rm)
 	Button* temp;
 
 	temp = new Button(a_rm, sf::Vector2f(WIDTH/2 - 24, HEIGHT - 55),
-		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "pause_button", "pause_button_selected");
+		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "", "button_pause", "button_pause_selected");
 	m_buttons.push_back(temp);
 }
 
