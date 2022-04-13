@@ -174,7 +174,8 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 
 	//BACK
 	temp = new Button(a_rm, sf::Vector2f(75, 100),
-		Press::BACK, sf::Vector2f(4.0f, 6.0f), sf::Vector2f(32.0f, 8.0f), "BACK");
+		Press::BACK, sf::Vector2f(4.0f, 6.0f), sf::Vector2f(32.0f, 8.0f), "button_menu", "button_menu_selected");
+	temp->setString("BACK");
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(16.0f, 10.0f));
 	m_buttons.push_back(temp);
 

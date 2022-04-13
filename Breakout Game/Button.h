@@ -7,72 +7,31 @@
 class Button
 {
 public:
-	// Default button constructor
 	Button(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT,
-		sf::Vector2f a_scale = sf::Vector2f(8.0f, 8.0f), sf::Vector2f a_size = sf::Vector2f(32.0f, 8.0f),
-		std::string a_text = "enter text", std::string a_textureKey = "button_menu", std::string a_selectedTexture = "button_menu_selected",
-		SoundType a_sound = SoundType::Button, std::string a_fontID = "default")
+		sf::Vector2f a_scale = sf::Vector2f(8, 8), sf::Vector2f a_size = sf::Vector2f(32, 8),
+		std::string a_textureKey = "", std::string a_selectedTexture = "", SoundType a_sound = SoundType::Button)
 	{
 		m_shape.setPosition(a_pos);
 		m_shape.setScale(a_scale);
 		m_shape.setSize(a_size);
+
 		m_textureKey = a_textureKey;
 		m_texture = a_rm.getTexture(a_textureKey);
 		m_textureSelect = a_rm.getTexture(a_selectedTexture);
 		m_shape.setTexture(m_texture);
-		m_sound = a_sound;
+
 		m_text.setPosition(m_shape.getPosition());
-		m_text.setString(a_text);
-		m_text.setFont(*a_rm.getFont(a_fontID));
+		m_text.setFont(*a_rm.getFont("default"));
 
 		m_buttonType = a_type;
+		m_sound = a_sound;
 	}
-	// For generating tile templates in LevelEditor
-	Button(ResourceManager& a_rm, sf::Vector2f a_pos, TileType a_type, std::string a_textureKey = "0")
-	{
-		m_shape.setPosition(a_pos);
-		m_shape.setScale(sf::Vector2f(4, 4));
-		m_shape.setSize(sf::Vector2f(32, 16));
-		m_textureKey = a_textureKey;
-		m_texture = a_rm.getTexture(a_textureKey);
-		m_textureSelect = m_texture;
-		m_shape.setTexture(m_texture);
 
-		m_tileType = a_type;
-		m_buttonType = Press::TILE;
-	}
 	~Button();
-	
-	Press OnClick(ResourceManager& a_rm)
-	{
-		a_rm.playSound(m_sound);
-		
-		return m_buttonType;
-	}
 
-	void setSelected(bool isSelected)
-	{
-		if (isSelected)
-		{
-			if (!m_selected)
-			{
-				m_shape.setTexture(m_textureSelect);
-				m_selected = true;
-				return;
-			}
-			return;
-		}
-		else
-		{
-			if (m_selected)
-			{
-				m_shape.setTexture(m_texture);
-				m_selected = false;
-				return;
-			}
-			return;
-		}
-	}
+	Press OnClick(ResourceManager& a_rm);
+
+	void setSelected(bool isSelected);
 	bool isSelected() { return m_selected; }
 
 	const enum class Press getButtonType() const { return m_buttonType; }
@@ -87,17 +46,13 @@ public:
 	void setFillColor(const sf::Color& color) { m_text.setFillColor(color); }
 	void setCharacterSize(unsigned int size) { m_text.setCharacterSize(size); }
 	void setPosition(sf::Vector2f pos) { m_text.setPosition(pos); }
-	void setTileType(TileType type) { m_tileType = type; }
-	TileType getTileType() { return m_tileType; }
+	
 	std::string getTextureKey() { return m_textureKey; }
 
+	
+
 	void setDefaultText(ResourceManager& a_rm, unsigned int a_charSize,
-		sf::Vector2f a_pos, sf::Color fill = sf::Color::White)
-	{
-		m_text.setFillColor(fill);
-		m_text.setCharacterSize(a_charSize);
-		m_text.setPosition(a_pos);
-	}
+		sf::Vector2f a_pos);
 
 protected:
 	sf::Text m_text;
@@ -108,22 +63,38 @@ protected:
 	bool m_selected = false;
 	sf::RectangleShape m_shape;
 	Press m_buttonType = Press::DEFAULT;
-	TileType m_tileType = TileType::None;
 	SoundType m_sound = SoundType::None;
-
-
+	
 };
-
+class MenuButton : public Button
+{
+public:
+	MenuButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT, std::string a_text = "enter text")
+		: Button(a_rm, a_pos, a_type, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "button_menu", "button_menu_selected")
+	{
+		m_text.setString(a_text);
+	}
+};
 class TickButton : public Button
 {
 public:
-	TickButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT, std::string a_text = "enter text",
-		SoundType a_sound = SoundType::Button, sf::Vector2f a_scale = sf::Vector2f(3.0f, 3.0f),
-		sf::Vector2f a_size = sf::Vector2f(16.0f, 12.0f), std::string a_textureKey = "button_options",
-		std::string a_selectedTexture = "button_options_selected", std::string a_fontID = "default")
-		: Button(a_rm, a_pos, a_type, a_scale, a_size, a_text, a_textureKey, a_selectedTexture, a_sound, a_fontID)
+	TickButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT,
+		std::string a_text = "enter text", SoundType a_sound = SoundType::Button)
+		: Button(a_rm, a_pos, a_type, sf::Vector2f(3, 3), sf::Vector2f(16, 12), "button_options", "button_options_selected")
 	{
-
+		m_text.setString(a_text);
 	}
-
+};
+class TileButton : public Button
+{
+public:
+	TileButton(ResourceManager& a_rm, sf::Vector2f a_pos, TileType a_type, std::string a_textureKey = "0")
+		: Button(a_rm, a_pos, Press::TILE, sf::Vector2f(4, 4), sf::Vector2f(32, 16), a_textureKey, a_textureKey, SoundType::None)
+	{
+		m_tileType = a_type;
+	}
+	void setTileType(TileType type) { m_tileType = type; }
+	TileType getTileType() { return m_tileType; }
+protected:
+	TileType m_tileType = TileType::None;
 };

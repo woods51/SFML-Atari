@@ -154,29 +154,29 @@ void MenuState::render(sf::RenderWindow& a_window)
 void MenuState::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
-	Button* temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 100),
-		Press::BREAKOUT, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "Breakout");
+	// Breakout
+	Button* temp;
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 100), Press::BREAKOUT, "Breakout");
 	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(12, 10));
 	m_buttons.push_back(temp);
 
+	// Editor
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 136, (HEIGHT/2) - 100),
-		Press::EDITOR, sf::Vector2f(4, 4), sf::Vector2f(16, 16), "", "button_editor", "button_editor_selected");
+		Press::EDITOR, sf::Vector2f(4, 4), sf::Vector2f(16, 16), "button_editor", "button_editor_selected");
 	m_buttons.push_back(temp);
 
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 28),
-		Press::PONG, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "Pong", "button_menu");
+	// Pong
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 28), Press::PONG, "Pong");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64, 8));
 	m_buttons.push_back(temp);
 
 	// Options
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 44),
-		Press::OPTIONS, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "Options");
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 44), Press::OPTIONS, "Options");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20, 8));
 	m_buttons.push_back(temp);
 
 	// Quit
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 116),
-		Press::QUIT, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "Quit");
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 116), Press::QUIT, "Quit");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64, 8));
 	m_buttons.push_back(temp);
 

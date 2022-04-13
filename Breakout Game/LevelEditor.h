@@ -17,6 +17,7 @@ public:
 private:
 	std::vector<std::unique_ptr<Tile>> m_tileMap;
 	std::vector<Button*> m_buttons;
+	std::vector<TileButton*> m_tileButtons;
 	Button* m_pen;
 	Button* m_erase;
 

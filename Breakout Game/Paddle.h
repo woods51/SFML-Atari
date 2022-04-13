@@ -8,8 +8,11 @@ public:
 	Paddle(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH/2 - 160.0f, 640.0f),
 		sf::Vector2f a_size = sf::Vector2f(64.0f, 4.0f), sf::Vector2f a_scale = sf::Vector2f(5.0f, 5.0f),
 		std::string a_textureKey = "paddle")
-		: Tile(a_rm, a_pos, a_textureKey, a_size, a_scale)
+		: Tile(a_rm, a_pos, TileType::Default, a_textureKey)
 	{
+		m_shape.setSize(a_size);
+		m_shape.setScale(a_scale);
+
 		m_defaultPos = a_pos;
 		m_currentDir = Direction::Idle;
 		m_IsMovingLeft = false;
