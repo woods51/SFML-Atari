@@ -8,7 +8,7 @@ OptionsState::OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf
 }
 OptionsState::~OptionsState()
 {
-	for (const auto& b : m_buttons)
+	for (auto& b : m_buttons)
 	{
 		delete b;
 	}
@@ -224,4 +224,23 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	//Volume Text
 	setDefaultText(a_rm, m_volumeText, 40, sf::Vector2f((WIDTH / 2) - 100, 100));
 	m_volumeText.setString("Volume");
+}
+void OptionsState::fixVolume(int& a_volume)
+{
+	if (a_volume < 0)
+		a_volume = 0;
+	else if (a_volume > 100)
+		a_volume = 100;
+	return;
+}
+void OptionsState::adjustVolumeText(int& a_volume, sf::Text& a_text)
+{
+	float posY = a_text.getPosition().y;
+	if (a_volume == 100)
+		a_text.setPosition((WIDTH / 2) - 50, posY);
+	else if (a_volume < 10)
+		a_text.setPosition((WIDTH / 2) - 15, posY);
+	else
+		a_text.setPosition((WIDTH / 2) - 35, posY);
+	return;
 }

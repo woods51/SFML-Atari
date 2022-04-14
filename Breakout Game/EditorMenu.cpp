@@ -1,24 +1,24 @@
-#include "PauseState.h"
+#include "EditorMenu.h"
 
-PauseState::PauseState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
+EditorMenu::EditorMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
 {
 	m_frameTexture = a_frameTexture;
 	m_frameSprite.setTexture(m_frameTexture);
 
 	generateUI(a_rm);
 }
-PauseState::~PauseState()
+EditorMenu::~EditorMenu()
 {
 	for (auto& b : m_buttons)
 	{
 		delete b;
 	}
 }
-void PauseState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
+void EditorMenu::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
 
 }
-void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void EditorMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
 	// Button Selector Update
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
@@ -102,14 +102,14 @@ void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm,
 		}
 	}
 }
-void PauseState::update(sf::Time a_dt, ResourceManager& a_rm)
+void EditorMenu::update(sf::Time a_dt, ResourceManager& a_rm)
 {
 
 }
-void PauseState::render(sf::RenderWindow& a_window)
+void EditorMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
-	
+
 	a_window.draw(m_frameSprite);
 	a_window.draw(m_overlay);
 
@@ -122,31 +122,22 @@ void PauseState::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
-void PauseState::generateUI(ResourceManager& a_rm)
+void EditorMenu::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
 	// Resume
-	Button* temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 140),
-		Press::RESUME, "Resume");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(29.0f, 8.0f));
-	m_buttons.push_back(temp);
-	
+	Button* temp;
+
 	// Options
 	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 68),
-		Press::OPTIONS, "Options");
+		Press::SAVE, "SAVE");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	// Main Menu
 	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4),
-		Press::MAINMENU, "MainMenu");
+		Press::BACK, "BACK");
 	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(15.0f, 12.0f));
-	m_buttons.push_back(temp);
-
-	// Quit
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 76),
-		Press::QUIT, "Quit");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
 
 	//UI

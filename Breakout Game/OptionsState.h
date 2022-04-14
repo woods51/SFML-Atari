@@ -37,24 +37,7 @@ private:
 		a_text.setPosition(a_pos);
 	}
 
-	void fixVolume(int& a_volume)
-	{
-		if (a_volume < 0)
-			a_volume = 0;
-		else if (a_volume > 100)
-			a_volume = 100;
-		return;
-	}
-	void adjustVolumeText(int& a_volume, sf::Text& a_text)
-	{
-		float posY = a_text.getPosition().y;
-		if (a_volume == 100)
-			a_text.setPosition((WIDTH / 2) - 50, posY);
-		else if (a_volume < 10)
-			a_text.setPosition((WIDTH / 2) - 15, posY);
-		else
-			a_text.setPosition((WIDTH / 2) - 35, posY);
-		return;
-	}
+	void fixVolume(int& a_volume);
+	void adjustVolumeText(int& a_volume, sf::Text& a_text);
 	void generateUI(ResourceManager&);
 };

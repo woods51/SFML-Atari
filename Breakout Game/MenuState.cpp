@@ -6,7 +6,7 @@ MenuState::MenuState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 }
 MenuState::~MenuState()
 {
-	for (const auto& b : m_buttons)
+	for (auto& b : m_buttons)
 	{
 		delete b;
 	}
