@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include "State.h"
 #include "Tile.h"
 #include "PauseState.h"

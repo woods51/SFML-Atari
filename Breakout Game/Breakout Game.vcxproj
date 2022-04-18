@@ -151,6 +151,7 @@
     <ClCompile Include="BreakoutMenu.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="LoadMenu.cpp" />
+    <ClCompile Include="PongBall.cpp" />
     <ClCompile Include="SaveMenu.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
@@ -162,13 +163,13 @@
     <ClCompile Include="BreakoutState.cpp" />
     <ClCompile Include="PongState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="State.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h" />
     <ClInclude Include="BreakoutMenu.h" />
     <ClInclude Include="LoadMenu.h" />
+    <ClInclude Include="PongBall.h" />
     <ClInclude Include="SaveMenu.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="OptionsState.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="LevelEditor.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Button.h" />
   </ItemGroup>

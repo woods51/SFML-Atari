@@ -1,7 +1,8 @@
 #pragma once
+#include "stdafx.h"
 #include "State.h"
-#include "OptionsState.h"
 #include "BreakoutState.h"
+#include "OptionsState.h"
 #include "LevelEditor.h"
 #include "LoadMenu.h"
 

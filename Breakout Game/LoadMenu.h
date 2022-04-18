@@ -1,9 +1,8 @@
 #pragma once
+#include "stdafx.h"
+#include "Tile.h"
 #include "State.h"
 #include "OptionsState.h"
-#include <fstream>
-#include <sstream>
-#include <iostream>
 
 class LoadMenu : public State
 {

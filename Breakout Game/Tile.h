@@ -1,22 +1,6 @@
 #pragma once
-
-#include <SFML\Graphics.hpp>
+#include "stdafx.h"
 #include "ResourceManager.h"
-#include <cmath>
-#include <iostream>
-
-enum class TileType
-{
-	Default,
-	Lock,
-	Lock2,
-	Special,
-	Special2,
-	Special3,
-	Wall,
-	Blank,
-	None
-};
 
 class Tile
 {
@@ -77,22 +61,4 @@ protected:
 	sf::Texture* m_firstTexture;
 	sf::Texture* m_secondTexture;
 	sf::Texture* m_thirdTexture;
-};
-
-enum class Direction
-{
-	Left,
-	Right,
-	Up,
-	Down,
-	Idle
-};
-enum class Surface
-{
-	Top,
-	Bottom,
-	Left,
-	Right,
-	Corner,
-	None
 };

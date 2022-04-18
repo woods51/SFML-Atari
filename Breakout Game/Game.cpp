@@ -33,8 +33,6 @@ void Game::run()
 
 	while (window.isOpen())
 	{
-		//system("pause");
-		
 		m_states.at(m_states.size() - 1)->eventHandler(window, rm, m_states);
 
 		deltaTime = deltaClock.restart();

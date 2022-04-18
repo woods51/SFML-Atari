@@ -352,8 +352,6 @@ bool LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
 			if (!parseTileData(a_rm, line))
 			{
 				// Error Loading File
-				// Cancel Load
-				//std::cout << "Error line " << i << std::endl;
 				std::string temp = "Error reading line (" + std::to_string(i) + ") of file. Load Canceled.";
 				m_loadError.setString(temp);
 				return false;
@@ -361,7 +359,6 @@ bool LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
 			i++;
 		}
 		// Successful Load
-		//std::cout << "Successful Load" << std::endl;
 		m_loadError.setString("");
 		inputFile.close();
 	}

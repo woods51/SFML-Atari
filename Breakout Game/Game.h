@@ -1,24 +1,21 @@
 #pragma once
+#include "stdafx.h"
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <vector>
-#include <iostream>
-
+#include "ResourceManager.h"
 #include "State.h"
-#include "BreakoutState.h"
 #include "MenuState.h"
-#include "PauseState.h"
+#include "BreakoutMenu.h"
+#include "BreakoutState.h"
 #include "PongState.h"
 #include "LevelEditor.h"
+#include "OptionsState.h"
+#include "PauseState.h"
 #include "SaveMenu.h"
 #include "LoadMenu.h"
-#include "BreakoutMenu.h"
 
 #include "Tile.h"
 #include "Ball.h"
 #include "Paddle.h"
-#include "ResourceManager.h"
 #include "Button.h"
 
 class Game

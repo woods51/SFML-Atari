@@ -1,8 +1,8 @@
 #pragma once
-
+#include "stdafx.h"
 #include "State.h"
 #include "PauseState.h"
-#include "Ball.h"
+#include "PongBall.h"
 #include "Paddle.h"
 
 class PongState : public State

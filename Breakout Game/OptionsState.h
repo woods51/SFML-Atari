@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include "BreakoutState.h"
 
 class OptionsState : public State

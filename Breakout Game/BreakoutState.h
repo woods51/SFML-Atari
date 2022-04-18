@@ -1,5 +1,5 @@
 #pragma once
-
+#include "stdafx.h"
 #include "State.h"
 #include "PauseState.h"
 #include "LoadMenu.h"
@@ -32,7 +32,6 @@ private:
 	void resetBalls(ResourceManager& a_rm);
 
 	std::vector<std::unique_ptr<Tile>> m_tileMap;
-	//std::vector<Tile*>
 	std::vector<Button*> m_buttons;
 	std::vector<std::unique_ptr<Ball>> m_balls;
 
@@ -40,7 +39,6 @@ private:
 	int m_livesRemaining;
 	sf::Text m_livesText;
 
-	std::string m_wallTile = "tile_06";
 	sf::Sprite m_border;
 	sf::Text m_scoreText;
 	sf::Text m_level;

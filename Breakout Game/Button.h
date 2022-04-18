@@ -1,8 +1,6 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <iostream>
+#include "stdafx.h"
 #include "ResourceManager.h"
-#include "Tile.h"
 
 class Button
 {

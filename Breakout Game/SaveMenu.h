@@ -1,8 +1,7 @@
 #pragma once
+#include "stdafx.h"
 #include "State.h"
 #include "OptionsState.h"
-#include <fstream>
-#include <iostream>
 
 class SaveMenu : public State
 {

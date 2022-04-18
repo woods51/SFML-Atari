@@ -1,6 +1,5 @@
 #pragma once
-
-#include <SFML/Graphics.hpp>
+#include "stdafx.h"
 #include "ResourceManager.h"
 #include "Button.h"
 

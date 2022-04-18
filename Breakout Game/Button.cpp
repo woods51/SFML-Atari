@@ -1,4 +1,3 @@
-#pragma once
 #include "Button.h"
 
 Button::~Button()

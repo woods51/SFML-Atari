@@ -1,13 +1,5 @@
 #pragma once
-
-#include <SFML\Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <filesystem>
-#include <string>
-
-#define WIDTH 1280
-#define HEIGHT 720
-#define MULTIPLIER 25
+#include "stdafx.h"
 
 class ResourceManager
 {
@@ -38,50 +30,4 @@ private:
 	sf::Sound m_buttonSound;
 	sf::Sound m_ballSound;
 
-};
-
-enum class Press {
-	DEFAULT,
-	OTHER,
-	START,
-	MAINMENU,
-	QUIT,
-	BACK,
-	PAUSE,
-	RESUME,
-	OPTIONS,
-	SAVE,
-	LOAD,
-	PONG,
-	BREAKOUT,
-	EDITOR,
-	EDIT,
-	GAMESELECT,
-	BALLCOLOR,
-	NEXT,
-	PREVIOUS,
-	LEVEL,
-	RELOAD,
-
-	BUTTON_UP,
-	BUTTON_DOWN,
-	BALL_UP,
-	BALL_DOWN,
-	BUTTON_UP_X,
-	BUTTON_DOWN_X,
-	BALL_UP_X,
-	BALL_DOWN_X,
-
-	TILE,
-	PEN,
-	ERASE,
-	DESELECT
-};
-
-enum class Sound {
-	Button,
-	Ball,
-	Win,
-	Fail,
-	None
 };

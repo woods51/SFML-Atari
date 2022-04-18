@@ -2,8 +2,7 @@
 
 PongState::PongState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
-	m_ball = new PongBall(a_rm, sf::Vector2f(WIDTH/2, HEIGHT/2));
-	m_ball->setStartVelocity(sf::Vector2f(12, 6));
+	m_ball = new PongBall(a_rm);
 	m_ball->setScalar(1.25f);
 	m_paddleP1 = new Paddle(a_rm, sf::Vector2f(100, HEIGHT/2 - 80), sf::Vector2f(4, 32), sf::Vector2f(5,5), "paddle_pong_02");
 	m_paddleP2 = new Paddle(a_rm, sf::Vector2f(WIDTH - 120, HEIGHT/2 - 80), sf::Vector2f(4, 32), sf::Vector2f(5, 5), "paddle_pong_03");
