@@ -24,12 +24,14 @@ private:
 	std::vector<std::string> m_levels;
 	sf::Sprite m_overlay;
 
+	sf::Font m_defaultFont;
 	bool m_isValid = false;
 	int m_currentPage = 1;
 	int m_maxPages = 1;
 	sf::Text m_pageNumber;
 	sf::Sprite m_levelSelector;
 	sf::Text m_selectedLevel;
+	sf::Text m_loadError;
 
 	void generateUI(ResourceManager& a_rm);
 	void loadPage(int start, int end);
@@ -37,7 +39,7 @@ private:
 	void nextPage();
 	void previousPage();
 	void loadFiles();
-	void loadMap(ResourceManager& a_rm, std::string a_path);
+	bool loadMap(ResourceManager& a_rm, std::string a_path);
 	bool parseTileData(ResourceManager& a_rm, std::string a_line);
 	TileType getTileType(int a_type);
 };

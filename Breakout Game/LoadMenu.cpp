@@ -75,12 +75,15 @@ void LoadMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, s
 							loadFiles();
 							loadFirstPage();
 							break;
-						case Press::START:
+						case Press::LOAD:
 							if (!m_isValid)
 							{
 								break;
 							}
-							loadMap(a_rm, m_selectedLevel.getString().toAnsiString());
+							if (!loadMap(a_rm, m_selectedLevel.getString().toAnsiString()))
+							{
+								break;
+							}
 							a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_tileMap));
 							break;
 								
@@ -147,6 +150,8 @@ void LoadMenu::render(sf::RenderWindow& a_window)
 
 	a_window.draw(m_pageNumber);
 	a_window.draw(m_selectedLevel);
+	a_window.draw(m_loadError);
+
 	// Render UI
 	for (const auto& b : m_buttons)
 	{
@@ -183,10 +188,10 @@ void LoadMenu::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
 	m_buttons.push_back(temp);
 
-	// Play Level
+	// Load
 	temp = new Button(a_rm, sf::Vector2f(WIDTH/2 + 220, 150),
-		Press::START, sf::Vector2f(8, 12), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
-	temp->setString("PLAY");
+		Press::LOAD, sf::Vector2f(8, 12), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
+	temp->setString("LOAD");
 	temp->setDefaultText(a_rm, 50, temp->getShape().getPosition() + sf::Vector2f(40, 20));
 	m_buttons.push_back(temp);
 
@@ -200,19 +205,26 @@ void LoadMenu::generateUI(ResourceManager& a_rm)
 	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 
 	// Text
+	m_defaultFont = *a_rm.getFont("default");
 	// Page Number
-	m_pageNumber.setFont(*a_rm.getFont("default"));
+	m_pageNumber.setFont(m_defaultFont);
 	m_pageNumber.setCharacterSize(40);
 	m_pageNumber.setPosition(sf::Vector2f((WIDTH / 2) - 14, (HEIGHT / 2) - 210));
 	m_pageNumber.setFillColor(sf::Color::White);
 	m_pageNumber.setString(std::to_string(m_currentPage));
 
 	// Selected Level
-	m_selectedLevel.setFont(*a_rm.getFont("default"));
+	m_selectedLevel.setFont(m_defaultFont);
 	m_selectedLevel.setCharacterSize(25);
 	m_selectedLevel.setPosition(sf::Vector2f((WIDTH / 2) - 120, (HEIGHT / 2) - 250));
 	m_selectedLevel.setFillColor(sf::Color::White);
 	m_selectedLevel.setString("");
+
+	// Load Error
+	m_loadError.setFont(m_defaultFont);
+	m_loadError.setCharacterSize(20);
+	m_loadError.setPosition(sf::Vector2f(WIDTH / 2 - 300, HEIGHT / 2 + 250));
+	m_loadError.setFillColor(sf::Color::Red);
 
 	int posY = HEIGHT / 2 - 100;
 	for (int i = 0; i < 5; i++)
@@ -303,7 +315,7 @@ void LoadMenu::loadFiles()
 	if (m_levels.size() % 5 != 0)
 		m_maxPages++;
 }
-void LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
+bool LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
 {
 	std::string line;
 	std::string path = "SavedLevels/" + a_path + ".csv";
@@ -318,15 +330,19 @@ void LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
 			{
 				// Error Loading File
 				// Cancel Load
-				std::cout << "Error line " << i << std::endl;
+				//std::cout << "Error line " << i << std::endl;
+				std::string temp = "Error reading line (" + std::to_string(i) + ") of file. Load Canceled.";
+				m_loadError.setString(temp);
+				return false;
 			}
 			i++;
 		}
 		// Successful Load
-		std::cout << "Successful Load" << std::endl;
+		//std::cout << "Successful Load" << std::endl;
+		m_loadError.setString("");
 		inputFile.close();
 	}
-
+	return true;
 }
 bool LoadMenu::parseTileData(ResourceManager& a_rm, std::string a_line)
 {

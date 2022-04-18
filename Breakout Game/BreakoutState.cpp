@@ -266,6 +266,9 @@ void BreakoutState::render(sf::RenderWindow& a_window)
 		a_window.draw(m_startText);
 		switch (m_currentLevel)
 		{
+		case 0:
+			a_window.draw(m_startText);
+			break;
 		case 1:
 			a_window.draw(m_secondLevelText);
 			break;
