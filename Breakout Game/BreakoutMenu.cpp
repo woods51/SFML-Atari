@@ -182,7 +182,7 @@ void BreakoutMenu::generateUI(ResourceManager& a_rm)
 
 	// generate text UI
 	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
-	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title"));
+	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title_1"));
 	m_breakoutText.setScale(sf::Vector2f(6, 6));
 
 	// background
