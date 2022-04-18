@@ -48,14 +48,11 @@ void LevelEditor::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm
 							a_states.push_back(std::make_unique<PauseState>(a_rm, a_window, m_frameTexture));
 							break;
 
-						/*case Press::TILE:
-							delete m_selectedTile;
-							m_selectedTile = new Tile(a_rm);
-							m_selectedTile->updateTile(a_rm, b->getTileType(), b->getTextureKey());
-				
-							m_selectorTile.setPosition(b->getPosition());
-							m_previewTile.setTexture(*a_rm.getTexture(b->getTextureKey()));
-							break;*/
+						case Press::SAVE:
+							m_frameTexture.create(winSize.x, winSize.y);
+							m_frameTexture.update(a_window);
+							a_states.push_back(std::make_unique<SaveMenu>(a_rm, a_window, m_frameTexture, m_tileMap));
+							break;
 
 						case Press::DESELECT:
 							delete m_selectedTile;
@@ -124,7 +121,6 @@ void LevelEditor::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm
 			{
 				lock_click = false;
 			}
-			
 			break;
 
 		case sf::Event::KeyPressed:
@@ -255,8 +251,12 @@ void LevelEditor::generateButtons(ResourceManager& a_rm)
 		Press::DESELECT, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "button_deselect", "button_deselect");
 	m_buttons.push_back(temp);
 
-	temp = new Button(a_rm, sf::Vector2f(WIDTH / 2 - 20, 10),
+	temp = new Button(a_rm, sf::Vector2f(WIDTH / 2 - 56, 10),
 		Press::PAUSE, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16, 16), "button_pause", "button_pause_selected");
+	m_buttons.push_back(temp);
+
+	temp = new Button(a_rm, sf::Vector2f(WIDTH / 2 + 8, 10),
+		Press::SAVE, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16, 16), "button_save", "button_save_selected");
 	m_buttons.push_back(temp);
 }
 void LevelEditor::generateTileButtons(ResourceManager& a_rm)
@@ -288,9 +288,9 @@ void LevelEditor::generateTileButtons(ResourceManager& a_rm)
 							"tile_09_lock2", "tile_10_lock2", "tile_11_lock2" })
 	{
 		if (i > 3)
-			temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::LOCK, key);
+			temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::Lock, key);
 		else
-			temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::LOCK2, key);
+			temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::Lock2, key);
 
 		m_tileButtons.push_back(temp);
 		posY_offset += 64;
@@ -338,7 +338,7 @@ void LevelEditor::generateTileMap(ResourceManager& a_rm)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Blank));
+			m_tileMap.push_back(new Tile(a_rm, sf::Vector2f(posX, posY), TileType::Blank));
 			posX += 128.0f;
 		}
 		posX = 0;
@@ -348,6 +348,10 @@ void LevelEditor::generateTileMap(ResourceManager& a_rm)
 
 LevelEditor::~LevelEditor()
 {
+	for (auto& t : m_tileMap)
+	{
+		delete t;
+	}
 	for (auto& b : m_buttons)
 	{
 		delete b;

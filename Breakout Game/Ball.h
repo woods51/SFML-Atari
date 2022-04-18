@@ -136,7 +136,7 @@ public:
 	sf::Vector2f getStartVelocity() const { return m_startVel; }
 
 	// Returns true if ball is active
-	inline bool getActive() const { return m_active; }
+	inline bool isActive() const { return m_active; }
 
 	// Sets velocity scalar
 	void setScalar(float a_scalar) { m_scalar = a_scalar; }
@@ -152,12 +152,28 @@ public:
 
 	// Sets start velocity
 	void setStartVelocity(sf::Vector2f vel) { m_startVel = vel; }
-
+	/*
 	// Sets deactive
 	void deactivate() { m_active = false; freeze(); }
 
 	// Sets active
-	void activate() { if (!m_active) m_velocity = m_startVel; m_active = true; }
+	void activate()
+	{
+		if (!m_active)
+			m_velocity = m_startVel;
+		m_active = true;
+	}*/
+	void isActive(bool a_state)
+	{
+		if (a_state == true || !m_active)
+		{
+			m_velocity = m_startVel;
+		}
+		else if (a_state == false)
+			freeze();
+
+		m_active = a_state;
+	}
 
 	bool isColliding() const { return m_isColliding; }
 

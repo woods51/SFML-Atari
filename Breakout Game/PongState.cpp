@@ -29,7 +29,7 @@ void PongState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 		m_paddleP2->m_IsMovingDown = a_isPressed;
 
 	if (a_key == sf::Keyboard::Space)
-		m_ball->activate();
+		m_ball->isActive(true);
 }
 
 void PongState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
@@ -137,7 +137,7 @@ void PongState::handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm)
 			{
 				m_ball->handlePaddle(contact, paddle->getDirection());
 				paddle->isColliding(true);
-				a_rm.playSound(SoundType::Ball);
+				a_rm.playSound(Sound::Ball);
 			}
 		}
 		else
@@ -167,7 +167,7 @@ void PongState::render(sf::RenderWindow& a_window)
 		a_window.draw(b->getText());
 	}
 
-	if (!m_ball->getActive())
+	if (!m_ball->isActive())
 	{
 		a_window.draw(m_startText);
 	}

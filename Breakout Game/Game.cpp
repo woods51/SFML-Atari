@@ -10,13 +10,15 @@ void Game::run()
 
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "SFML Atari");
 	window.setFramerateLimit(240);
-
+	sf::Texture temp;
 	//m_states.push_back(std::make_unique<BreakoutState>(rm, window));
-	//m_states.push_back(std::make_unique<LevelEditor>(rm, window));
 	m_states.push_back(std::make_unique<MenuState>(rm, window));
+	//m_states.push_back(std::make_unique<LoadMenu>(rm, window, temp));
+	//m_states.push_back(std::make_unique<LevelEditor>(rm, window));
+	//m_states.push_back(std::make_unique<EditorMenu>(rm, window));
 	//m_states.push_back(std::make_unique<PauseState>(rm, window));
 	//m_states.push_back(std::make_unique<PongState>(rm, window));
-	//sf::Texture temp;
+	
 	//m_states.push_back(std::make_unique<OptionsState>(rm, window, temp));
 
 	// Turning off console errors

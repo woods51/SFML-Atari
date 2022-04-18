@@ -8,8 +8,8 @@
 enum class TileType
 {
 	Default,
-	LOCK,
-	LOCK2,
+	Lock,
+	Lock2,
 	Special,
 	Special2,
 	Special3,
@@ -63,6 +63,8 @@ public:
 	void updateTile(ResourceManager& a_rm, TileType a_type, std::string a_textureKey);
 
 	void setTile(ResourceManager& a_rm, TileType a_type, std::string a_textureKey);
+
+	void reset();
 
 protected:
 	TileType m_type;

@@ -2,6 +2,7 @@
 #include "State.h"
 #include "Tile.h"
 #include "PauseState.h"
+#include "SaveMenu.h"
 
 class LevelEditor : public State
 {
@@ -15,7 +16,7 @@ public:
 
 	~LevelEditor();
 private:
-	std::vector<std::unique_ptr<Tile>> m_tileMap;
+	std::vector<Tile*> m_tileMap;
 	std::vector<Button*> m_buttons;
 	std::vector<TileButton*> m_tileButtons;
 	Button* m_pen;

@@ -1,32 +1,59 @@
 #include "BreakoutState.h"
 
+// Regular Game
 BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
-	m_ball = new Ball(a_rm);
+	m_balls.push_back(std::make_unique<Ball>(a_rm));
 	m_paddle = new Paddle(a_rm);
+	m_livesRemaining = 5;
+	m_isCustom = false;
 
-	generateLevel1(a_rm);
 	generateUI(a_rm);
+	generateLevel1(a_rm);
 }
+// Custom Level
+BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<Tile*>& a_tileMap)
+{
+	m_balls.push_back(std::make_unique<Ball>(a_rm));
+	m_paddle = new Paddle(a_rm);
+	m_livesRemaining = 5;
+	m_isCustom = true;
 
+	generateUI(a_rm);
+	generateLevel(a_rm, a_tileMap);
+}
 void BreakoutState::update(sf::Time a_dt, ResourceManager& a_rm)
 {
-	// Check color flag
-	if (m_colorFlag)
-	{
-		m_colorFlag = false;
-		m_ball->toggleColor(a_rm);
-	}
-
 	// Physics
-	handleBallPhysics(a_dt, a_rm);
-	m_ball->move(a_rm, a_dt);
-	m_paddle->move(a_dt);
+	if (m_gameStarted)
+	{
+		handleBallPhysics(a_dt, a_rm);
+		for (auto& ball : m_balls)
+			ball->move(a_rm, a_dt);
+
+		bool flag = false;
+		for (auto& ball : m_balls)
+		{
+			if (ball->isActive())
+				flag = true;
+		}
+		if (!flag)
+		{
+			// Remove Lives
+			m_livesRemaining -= 1;
+			if (m_livesRemaining == -1)
+			{
+				// GAME OVER
+			}
+			resetBalls(a_rm);
+			m_balls[0]->isActive(true);
+		}
+		m_paddle->move(a_dt);
+	}
 	
 	if (m_completeFlag)
 	{
 		levelComplete(a_rm);
-		m_ball->deactivate();
 	}
 	updateUI();
 }
@@ -34,61 +61,88 @@ void BreakoutState::handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm)
 {
 	// Handling Ball Physics
 	Surface contact = Surface::None;
-	sf::Vector2f ballPos = m_ball->getPosition();
-	sf::Vector2f ballDiagPos = m_ball->getDiagonalPosition();
 
 	m_completeFlag = true;
 
-	// Collision with a tile
-	bool flag = false;
-	for (const auto& tile : m_tileMap)
-	{
-		sf::Vector2f tileDiagPos = tile->getDiagonalPosition();
-		if (tile->isActive() && tile->isDestructable())
-			m_completeFlag = false;
-
-		if (!tile->isActive() || tileDiagPos.y < ballPos.y)
-			continue;
-		
-		contact = m_ball->collision(tile->getPosition(), tileDiagPos);
-		if (contact != Surface::None)
-		{
-			if (!m_ball->isColliding())
-				m_ball->handleTile(contact);
-
-			if (tile->isDestructable())
-			{
-				tile->handleBall();
-				m_score++;
-			}
-			flag = true;
-			m_ball->isColliding(true);
-			a_rm.playSound(SoundType::Ball);
-		}
-	}
-	
+	// Collisions
 
 	// Collision with paddle
 	sf::Vector2f paddlePos = m_paddle->getPosition();
 	sf::Vector2f paddleDiagPos = m_paddle->getDiagonalPosition();
 
-	contact = m_ball->collision(paddlePos, paddleDiagPos);
-	if (contact != Surface::None)
+	for (int i = 0; i < m_balls.size(); i++)
 	{
-		if (!flag && !m_paddle->isColliding())
+		bool flag = false;
+
+		// Collision with a tile
+		for (const auto& tile : m_tileMap)
 		{
-			m_ball->handlePaddle(contact, m_paddle->getDirection());
-			m_ball->isColliding(true);
-			m_paddle->isColliding(true);
-			a_rm.playSound(SoundType::Ball);
+			sf::Vector2f tileDiagPos = tile->getDiagonalPosition();
+			if (tile->isActive() && tile->isDestructable())
+				m_completeFlag = false;
+
+			if (!tile->isActive() || tileDiagPos.y < m_balls[i]->getPosition().y)
+				continue;
+			contact = m_balls[i]->collision(tile->getPosition(), tileDiagPos);
+			if (contact != Surface::None && !m_balls[i]->isColliding())
+			{
+				m_balls[i]->handleTile(contact);
+
+				if (tile->isDestructable())
+				{
+					tile->handleBall();
+					switch (tile->getTileType())
+					{
+					case TileType::Special:
+						m_balls.push_back(std::make_unique<Ball>(a_rm, m_balls[i]->getPosition()));
+						m_balls[m_balls.size() - 1]->isActive(true);
+						break;
+
+					case TileType::Special2:
+						for (int j = 0; j < 2; j++)
+						{
+							m_balls.push_back(std::make_unique<Ball>(a_rm, m_balls[i]->getPosition()));
+							m_balls[m_balls.size() - 1]->isActive(true);
+						}
+						break;
+
+					case TileType::Special3:
+						for (int j = 0; j < 3; j++)
+						{
+							m_balls.push_back(std::make_unique<Ball>(a_rm, m_balls[i]->getPosition()));
+							m_balls[m_balls.size() - 1]->isActive(true);
+						}
+						break;
+
+					default:
+						break;
+					}
+
+					m_score++;
+				}
+				flag = true;
+				m_balls[i]->isColliding(true);
+				a_rm.playSound(Sound::Ball);
+			}
 		}
+		contact = m_balls[i]->collision(paddlePos, paddleDiagPos);
+		if (contact != Surface::None)
+		{
+			flag = true;
+			if (!m_paddle->isColliding() && !m_balls[i]->isColliding())
+			{
+				m_balls[i]->handlePaddle(contact, m_paddle->getDirection());
+				m_balls[i]->isColliding(true);
+				a_rm.playSound(Sound::Ball);
+			}
+
+		}
+		else
+			m_paddle->isColliding(false);
+
+		if (!flag)
+			m_balls[i]->isColliding(false);
 	}
-	else
-		m_paddle->isColliding(false);
-
-	if (!flag)
-		m_ball->isColliding(false);
-
 }
 void BreakoutState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
@@ -98,8 +152,12 @@ void BreakoutState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 	else if (a_key == sf::Keyboard::D || a_key == sf::Keyboard::Right)
 		m_paddle->m_IsMovingRight = a_isPressed;
 
-	else if (a_key == sf::Keyboard::Space)
-		m_ball->activate();
+	else if (a_key == sf::Keyboard::Space && !m_gameStarted)
+	{
+		m_balls[0]->isActive(true);
+		m_gameStarted = true;
+	}
+		
 }
 void BreakoutState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
@@ -130,7 +188,8 @@ void BreakoutState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_
 						case Press::DEFAULT:
 							break;
 						case Press::BALLCOLOR:
-							m_colorFlag = true;
+							for (auto& ball : m_balls)
+								ball->toggleColor(a_rm);
 							break;
 						case Press::PAUSE:
 							m_frameTexture.create(winSize.x, winSize.y);
@@ -155,7 +214,6 @@ void BreakoutState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_
 			if (event.key.code == sf::Keyboard::B)
 			{
 				levelComplete(a_rm);
-				m_ball->deactivate();
 			}
 				
 			inputHandler(event.key.code, true);
@@ -188,7 +246,9 @@ void BreakoutState::render(sf::RenderWindow& a_window)
 		a_window.draw(temp);
 	}
 	// Render Ball & Paddle
-	a_window.draw(m_ball->getShape());
+	for (const auto& ball : m_balls)
+		if (ball->isActive())
+			a_window.draw(ball->getShape());
 	a_window.draw(m_paddle->getShape());
 
 	// Render UI
@@ -200,8 +260,8 @@ void BreakoutState::render(sf::RenderWindow& a_window)
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
 	}
-	
-	if (!m_ball->getActive())
+	a_window.draw(m_livesText);
+	if (!m_gameStarted)
 	{
 		a_window.draw(m_startText);
 		switch (m_currentLevel)
@@ -223,59 +283,73 @@ void BreakoutState::updateUI()
 {
 	m_scoreText.setString("Score: " + std::to_string(m_score));
 	m_level.setString("Level " + std::to_string(m_currentLevel + 1));
+	m_livesText.setString("Lives: " + std::to_string(m_livesRemaining));
+}
+void setDefaultText(sf::Text& a_text, sf::Font& a_font, int a_size, sf::Vector2f a_pos, sf::Color a_fill = sf::Color::White)
+{
+	a_text.setFont(a_font);
+	a_text.setCharacterSize(a_size);
+	a_text.setPosition(a_pos);
+	a_text.setFillColor(a_fill);
 }
 void BreakoutState::generateUI(ResourceManager& a_rm)
 {
+	m_defaultFont = *a_rm.getFont("default");
+
 	// generate all text UI -> textUI
-	m_scoreText.setFont(*a_rm.getFont("default"));
-	m_scoreText.setFillColor(sf::Color::White);
-	m_scoreText.setCharacterSize(35);
-	m_scoreText.setPosition(5, 670);
+	setDefaultText(m_scoreText, m_defaultFont, 35, sf::Vector2f(5, 670));
 
-	m_startText.setFont(*a_rm.getFont("default"));
-	m_startText.setFillColor(sf::Color::White);
-	m_startText.setCharacterSize(30);
+	setDefaultText(m_livesText, m_defaultFont, 25, sf::Vector2f(100, 630));
+
+	setDefaultText(m_startText, m_defaultFont, 30, sf::Vector2f(WIDTH / 2 - 250, 500));
 	m_startText.setString("Press space to start.");
-	m_startText.setPosition(WIDTH / 2 - 250, 500);
 
-	m_secondLevelText.setFont(*a_rm.getFont("default"));
-	m_secondLevelText.setFillColor(sf::Color::White);
-	m_secondLevelText.setCharacterSize(30);
+	setDefaultText(m_secondLevelText, m_defaultFont, 30, sf::Vector2f(WIDTH / 2 - 350, 450));
 	m_secondLevelText.setString("Black bricks cannot be broken!");
-	m_secondLevelText.setPosition(WIDTH / 2 - 350, 450);
 
-	m_thirdLevelText.setFont(*a_rm.getFont("default"));
-	m_thirdLevelText.setFillColor(sf::Color::White);
-	m_thirdLevelText.setCharacterSize(30);
+	setDefaultText(m_thirdLevelText, m_defaultFont, 30, sf::Vector2f(WIDTH / 2 - 360, 450));
 	m_thirdLevelText.setString("Purple bricks must be hit twice!");
-	m_thirdLevelText.setPosition(WIDTH / 2 - 360, 450);
 
-	m_level.setFont(*a_rm.getFont("default"));
-	m_level.setFillColor(sf::Color::White);
-	m_level.setCharacterSize(35);
+	setDefaultText(m_level, m_defaultFont, 35, sf::Vector2f(WIDTH / 2 - 90, HEIGHT - 50));
 	m_level.setString("Level 1");
-	m_level.setPosition(WIDTH / 2 - 90, HEIGHT-50);
 
 	// generate all sprite UI / text -> spriteUI
 	m_border.setTexture(*a_rm.getTexture("border"));
 	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
 
 	// Buttons
-	Button* temp = new Button(a_rm, sf::Vector2f(WIDTH - 110, HEIGHT - 55),
-		Press::BALLCOLOR, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "button_ball", "button_ball_selected");
+	Button* temp;
+	temp = new Button(a_rm, sf::Vector2f(WIDTH - 110, HEIGHT - 55), Press::BALLCOLOR, sf::Vector2f(3, 3),
+		sf::Vector2f(16, 16), "button_ball", "button_ball_selected");
 	m_buttons.push_back(temp);
-	temp = new Button(a_rm, sf::Vector2f(WIDTH - 55, HEIGHT - 55),
-		Press::PAUSE, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "button_pause", "button_pause_selected");
+
+	temp = new Button(a_rm, sf::Vector2f(WIDTH - 55, HEIGHT - 55), Press::PAUSE, sf::Vector2f(3, 3),
+		sf::Vector2f(16, 16), "button_pause", "button_pause_selected");
 	m_buttons.push_back(temp);
+}
+void BreakoutState::resetBalls(ResourceManager& a_rm)
+{
+	// deletes unique pointers
+	m_balls.clear();
+
+	m_balls.push_back(std::make_unique<Ball>(a_rm));
 }
 void BreakoutState::levelComplete(ResourceManager& a_rm)
 {
+	m_gameStarted = false;
 	m_completeFlag = false;
-	m_currentLevel++;
+	
+	resetBalls(a_rm);
 
-	m_ball->reset();
+	m_balls[0]->isActive(false);
 	m_paddle->reset();
-	m_ball->freeze();
+
+	if (m_isCustom)
+	{
+		resetLevel();
+		return;
+	}
+	m_currentLevel++;
 
 	switch (m_currentLevel)
 	{
@@ -291,6 +365,32 @@ void BreakoutState::levelComplete(ResourceManager& a_rm)
 	default:
 		generateLevel1(a_rm);
 		break;
+	}
+}
+void BreakoutState::resetLevel()
+{
+	for (auto& tile : m_tileMap)
+	{
+		tile->reset();
+	}
+}
+void BreakoutState::generateLevel(ResourceManager& a_rm, std::vector<Tile*>& a_tileMap)
+{
+	m_tileMap.clear();
+	std::string key;
+	for (auto& tile : a_tileMap)
+	{
+		key = tile->getTextureKey();
+
+		if (key.find("_lock2"))
+		{
+			key = key.substr(0, key.size() - 6);
+		}
+		else if (key.find("_lock"))
+		{
+			key = key.substr(0, key.size() - 5);
+		}
+		m_tileMap.push_back(std::make_unique<Tile>(a_rm, tile->getPosition(), tile->getTileType(), tile->getTextureKey()));
 	}
 }
 void BreakoutState::generateLevel1(ResourceManager& a_rm)
@@ -322,7 +422,8 @@ void BreakoutState::generateLevel2(ResourceManager& a_rm)
 		{
 			if (textureKey == "tile_03" && (i < 3 || i > 6))
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall, "tile_wall"));
+				//m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall, "tile_wall"));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Special, "tile_wall"));
 			}
 			else
 			{
@@ -352,7 +453,7 @@ void BreakoutState::generateLevel3(ResourceManager& a_rm)
 			}
 			else if ((j == 4 || j == 5) && i == 4)
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::LOCK2, "tile_11"));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Lock2, "tile_11"));
 			}
 			else
 			{
@@ -367,7 +468,8 @@ void BreakoutState::generateLevel3(ResourceManager& a_rm)
 }
 BreakoutState::~BreakoutState()
 {
-	delete m_ball;
+	m_balls.clear();
+
 	delete m_paddle;
 
 	for (auto& b : m_buttons)

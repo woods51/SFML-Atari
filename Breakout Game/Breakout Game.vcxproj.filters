@@ -57,7 +57,13 @@
     <ClCompile Include="LevelEditor.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="EditorMenu.cpp">
+    <ClCompile Include="SaveMenu.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadMenu.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakoutMenu.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,7 +107,13 @@
     <ClInclude Include="LevelEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EditorMenu.h">
+    <ClInclude Include="SaveMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakoutMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

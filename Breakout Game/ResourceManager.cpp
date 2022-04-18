@@ -104,29 +104,29 @@ sf::SoundBuffer* ResourceManager::getSound(std::string soundKey)
 
 	return m_sounds[soundKey];
 }
-unsigned int ResourceManager::getVolume(enum class SoundType a_sound)
+unsigned int ResourceManager::getVolume(enum class Sound a_sound)
 {
 	switch (a_sound)
 	{
-	case SoundType::Button:
-		return m_buttonSound.getVolume();
+	case Sound::Button:
+		return (unsigned int)m_buttonSound.getVolume();
 		break;
-	case SoundType::Ball:
-		return m_ballSound.getVolume();
+	case Sound::Ball:
+		return (unsigned int)m_ballSound.getVolume();
 		break;
 	default:
 		break;
 	}
 	return 0;
 }
-void ResourceManager::playSound(enum class SoundType a_sound)
+void ResourceManager::playSound(enum class Sound a_sound)
 {
 	switch (a_sound)
 	{
-	case SoundType::Button:
+	case Sound::Button:
 		m_buttonSound.play();
 		break;
-	case SoundType::Ball:
+	case Sound::Ball:
 		m_ballSound.play();
 		break;
 	default:
@@ -134,7 +134,7 @@ void ResourceManager::playSound(enum class SoundType a_sound)
 	}
 	return;
 }
-void ResourceManager::setVolume(enum class SoundType a_sound, int a_volume)
+void ResourceManager::setVolume(enum class Sound a_sound, int a_volume)
 {
 	if (a_volume < 0)
 	{
@@ -147,11 +147,11 @@ void ResourceManager::setVolume(enum class SoundType a_sound, int a_volume)
 		
 	switch (a_sound)
 	{
-	case SoundType::Button:
-		m_buttonSound.setVolume(a_volume);
+	case Sound::Button:
+		m_buttonSound.setVolume((float)a_volume);
 		break;
-	case SoundType::Ball:
-		m_ballSound.setVolume(a_volume);
+	case Sound::Ball:
+		m_ballSound.setVolume((float)a_volume);
 		break;
 	default:
 		break;

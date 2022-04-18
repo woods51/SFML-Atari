@@ -35,12 +35,14 @@ void Ball::handleBorder(ResourceManager& a_rm)
 		m_velocity.y = -m_velocity.y;
 		hit = true;
 	}
-	else if (getDiagonalPosition().y >= HEIGHT/* - 60*/)
+	else if (getDiagonalPosition().y >= HEIGHT)
+	{
 		reset();
-
+		isActive(false);
+	}
+		
 	if (hit)
-		a_rm.playSound(SoundType::Ball);
-
+		a_rm.playSound(Sound::Ball);
 }
 void Ball::handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir)
 {
@@ -220,7 +222,7 @@ void PongBall::handleBorder(ResourceManager& a_rm)
 	}
 
 	if (hit)
-		a_rm.playSound(SoundType::Ball);
+		a_rm.playSound(Sound::Ball);
 }
 void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir)
 {

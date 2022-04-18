@@ -50,24 +50,19 @@ void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_texture
 	m_durability = 1;
 	m_isDestructable = true;
 
+	m_defaultTexture = a_textureKey;
 	m_firstTexture = a_rm.getTexture(a_textureKey);
 	sf::Texture* texture = m_firstTexture;
 	switch (a_type)
 	{
 	case TileType::Default:
 		break;
-	case TileType::Wall:
-		m_defaultTexture = a_textureKey;
-		m_firstTexture = a_rm.getTexture(m_defaultTexture);
-		texture = m_firstTexture;
-		m_isDestructable = false;
-		break;
-	case TileType::LOCK:
+	case TileType::Lock:
 		m_durability = 2;
 		m_secondTexture = a_rm.getTexture(a_textureKey + "_lock");
 		texture = m_secondTexture;
 		break;
-	case TileType::LOCK2:
+	case TileType::Lock2:
 		m_durability = 3;
 		m_secondTexture = a_rm.getTexture(a_textureKey + "_lock");
 		m_thirdTexture = a_rm.getTexture(a_textureKey + "_lock2");
@@ -88,10 +83,41 @@ void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_texture
 		m_firstTexture = a_rm.getTexture(m_defaultTexture);
 		texture = m_firstTexture;
 		break;
+	case TileType::Wall:
+		m_defaultTexture = a_textureKey;
+		m_firstTexture = a_rm.getTexture(m_defaultTexture);
+		texture = m_firstTexture;
+		m_isDestructable = false;
+		break;
 	case TileType::Blank:
 		m_defaultTexture = "tile_08";
 		m_firstTexture = a_rm.getTexture(m_defaultTexture);
 		texture = m_firstTexture;
+		break;
+	default:
+		break;
+	}
+	m_shape.setTexture(texture);
+}
+void Tile::reset()
+{
+	isActive(true);
+	m_durability = 1;
+	m_isDestructable = true;
+
+	sf::Texture* texture = m_firstTexture;
+	switch (m_type)
+	{
+	case TileType::Wall:
+		m_isDestructable = false;
+		break;
+	case TileType::Lock:
+		m_durability = 2;
+		texture = m_secondTexture;
+		break;
+	case TileType::Lock2:
+		m_durability = 3;
+		texture = m_thirdTexture;
 		break;
 	default:
 		break;

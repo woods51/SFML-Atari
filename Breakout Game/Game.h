@@ -11,6 +11,9 @@
 #include "PauseState.h"
 #include "PongState.h"
 #include "LevelEditor.h"
+#include "SaveMenu.h"
+#include "LoadMenu.h"
+#include "BreakoutMenu.h"
 
 #include "Tile.h"
 #include "Ball.h"
@@ -26,9 +29,6 @@ public:
 	};
 	void run();
 	void exitGame();
-
-	//ResourceManager rm;
-	//sf::RenderWindow* window ;
 
 private:
 	// Vector of smart pointers to game states

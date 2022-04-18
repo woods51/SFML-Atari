@@ -63,28 +63,28 @@ void OptionsState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 							a_states.pop_back();
 							break;
 						case Press::BUTTON_UP:
-							a_rm.setVolume(SoundType::Button, m_buttonVolumeNum++);
+							a_rm.setVolume(Sound::Button, m_buttonVolumeNum++);
 							break;
 						case Press::BUTTON_UP_X:
-							a_rm.setVolume(SoundType::Button, m_buttonVolumeNum+=10);
+							a_rm.setVolume(Sound::Button, m_buttonVolumeNum+=10);
 							break;
 						case Press::BUTTON_DOWN:
-							a_rm.setVolume(SoundType::Button, m_buttonVolumeNum--);
+							a_rm.setVolume(Sound::Button, m_buttonVolumeNum--);
 							break;
 						case Press::BUTTON_DOWN_X:
-							a_rm.setVolume(SoundType::Button, m_buttonVolumeNum-=10);
+							a_rm.setVolume(Sound::Button, m_buttonVolumeNum-=10);
 							break;
 						case Press::BALL_UP:
-							a_rm.setVolume(SoundType::Ball, m_ballVolumeNum++);
+							a_rm.setVolume(Sound::Ball, m_ballVolumeNum++);
 							break;
 						case Press::BALL_UP_X:
-							a_rm.setVolume(SoundType::Ball, m_ballVolumeNum += 10);
+							a_rm.setVolume(Sound::Ball, m_ballVolumeNum += 10);
 							break;
 						case Press::BALL_DOWN:
-							a_rm.setVolume(SoundType::Ball, m_ballVolumeNum--);
+							a_rm.setVolume(Sound::Ball, m_ballVolumeNum--);
 							break;
 						case Press::BALL_DOWN_X:
-							a_rm.setVolume(SoundType::Ball, m_ballVolumeNum -= 10);
+							a_rm.setVolume(Sound::Ball, m_ballVolumeNum -= 10);
 							break;
 						default:
 							break;
@@ -155,28 +155,28 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	// generate all buttons
 	// >
 	Button* temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) - 68), Press::BUTTON_UP, ">");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
 	// >>
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 66, (HEIGHT / 2) - 68), Press::BUTTON_UP_X, ">>");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(12.0f, 4.0f));
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(12, 4));
 	m_buttons.push_back(temp);
 	// <
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) - 68), Press::BUTTON_DOWN, "<");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
 	// <<
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 114, (HEIGHT / 2) - 68), Press::BUTTON_DOWN_X, "<<");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(9.0f, 4.0f));
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(9, 4));
 	m_buttons.push_back(temp);
 
 	//BACK
 	temp = new Button(a_rm, sf::Vector2f(75, 100),
-		Press::BACK, sf::Vector2f(4.0f, 6.0f), sf::Vector2f(32.0f, 8.0f), "button_menu", "button_menu_selected");
+		Press::BACK, sf::Vector2f(4, 6), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
 	temp->setString("BACK");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(16.0f, 10.0f));
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
 	m_buttons.push_back(temp);
 
 	//UI
@@ -185,7 +185,7 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 
 	//Text
 	//Button Volume Number
-	m_buttonVolumeNum = a_rm.getVolume(SoundType::Button);
+	m_buttonVolumeNum = a_rm.getVolume(Sound::Button);
 	setDefaultText(a_rm, m_buttonVolume, 40, sf::Vector2f((WIDTH / 2) - 35, (HEIGHT / 2) - 130));
 	m_buttonVolume.setString(std::to_string(m_buttonVolumeNum));
 
@@ -194,26 +194,26 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	m_buttonText.setString("Button");
 	
 	// >
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) + 92), Press::BALL_UP, ">", SoundType::Ball);
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) + 92), Press::BALL_UP, ">", Sound::Ball);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
 	// >>
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 66, (HEIGHT / 2) + 92), Press::BALL_UP_X, ">>", SoundType::Ball);
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 66, (HEIGHT / 2) + 92), Press::BALL_UP_X, ">>", Sound::Ball);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(12.0f, 4.0f));
 	m_buttons.push_back(temp);
 	// <
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) + 92), Press::BALL_DOWN, "<", SoundType::Ball);
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) + 92), Press::BALL_DOWN, "<", Sound::Ball);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
 	// <<
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 114, (HEIGHT / 2) + 92), Press::BALL_DOWN_X, "<<", SoundType::Ball);
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 114, (HEIGHT / 2) + 92), Press::BALL_DOWN_X, "<<", Sound::Ball);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(9.0f, 4.0f));
 	m_buttons.push_back(temp);
 
 	//Ball Volume Number
-	m_ballVolumeNum = a_rm.getVolume(SoundType::Ball);
+	m_ballVolumeNum = a_rm.getVolume(Sound::Ball);
 	setDefaultText(a_rm, m_ballVolume, 40, sf::Vector2f((WIDTH / 2) - 50, (HEIGHT / 2) + 30));
 	m_ballVolume.setString(std::to_string(m_ballVolumeNum));
 

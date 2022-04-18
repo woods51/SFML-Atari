@@ -23,9 +23,9 @@ public:
 	sf::Texture* getTexture(std::string textureKey);
 	sf::Font* getFont(std::string fontKey);
 	sf::SoundBuffer* getSound(std::string soundKey);
-	unsigned int getVolume(enum class SoundType a_sound);
-	void playSound(enum class SoundType a_sound);
-	void setVolume(enum class SoundType a_sound, int a_volume);
+	unsigned int getVolume(enum class Sound a_sound);
+	void playSound(enum class Sound a_sound);
+	void setVolume(enum class Sound a_sound, int a_volume);
 	
 private:
 	std::map<std::string, sf::Texture*> m_textures;
@@ -50,14 +50,18 @@ enum class Press {
 	PAUSE,
 	RESUME,
 	OPTIONS,
-	SAVEMENU,
 	SAVE,
 	LOAD,
 	PONG,
 	BREAKOUT,
 	EDITOR,
+	EDIT,
 	GAMESELECT,
 	BALLCOLOR,
+	NEXT,
+	PREVIOUS,
+	LEVEL,
+	RELOAD,
 
 	BUTTON_UP,
 	BUTTON_DOWN,
@@ -74,7 +78,7 @@ enum class Press {
 	DESELECT
 };
 
-enum class SoundType {
+enum class Sound {
 	Button,
 	Ball,
 	Win,

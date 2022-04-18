@@ -148,8 +148,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="BreakoutMenu.cpp" />
     <ClCompile Include="Button.cpp" />
-    <ClCompile Include="EditorMenu.cpp" />
+    <ClCompile Include="LoadMenu.cpp" />
+    <ClCompile Include="SaveMenu.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -165,7 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ball.h" />
-    <ClInclude Include="EditorMenu.h" />
+    <ClInclude Include="BreakoutMenu.h" />
+    <ClInclude Include="LoadMenu.h" />
+    <ClInclude Include="SaveMenu.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="OptionsState.h" />
     <ClInclude Include="Paddle.h" />

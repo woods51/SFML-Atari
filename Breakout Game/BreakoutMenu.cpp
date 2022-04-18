@@ -1,21 +1,22 @@
-#include "MenuState.h"
+#include "BreakoutMenu.h"
+#include "LevelEditor.h"
 
-MenuState::MenuState(ResourceManager& a_rm, sf::RenderWindow& a_window)
+BreakoutMenu::BreakoutMenu(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
 	generateUI(a_rm);
 }
-MenuState::~MenuState()
+BreakoutMenu::~BreakoutMenu()
 {
 	for (auto& b : m_buttons)
 	{
 		delete b;
 	}
 }
-void MenuState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
+void BreakoutMenu::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
 
 }
-void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void BreakoutMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
 	// Button Selector Update
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
@@ -56,7 +57,7 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 		{
 			b->setSelected(false);
 		}
-			
+
 	}
 
 	// Handle Events
@@ -83,19 +84,16 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 						switch (b->OnClick(a_rm))
 						{
 						case Press::BREAKOUT:
-							a_states.push_back(std::make_unique<BreakoutMenu>(a_rm, a_window));
+							a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window));
 							break;
 						case Press::EDITOR:
 							a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
 							break;
-						case Press::PONG:
-							a_states.push_back(std::make_unique<PongState>(a_rm, a_window));
+						case Press::LOAD:
+							a_states.push_back(std::make_unique<LoadMenu>(a_rm, a_window));
 							break;
-						case Press::OPTIONS:
-							a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, m_frameTexture));
-							break;
-						case Press::QUIT:
-							a_window.close();
+						case Press::BACK:
+							a_states.pop_back();
 							break;
 						default:
 							break;
@@ -127,11 +125,11 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 		}
 	}
 }
-void MenuState::update(sf::Time a_dt, ResourceManager& a_rm)
+void BreakoutMenu::update(sf::Time a_dt, ResourceManager& a_rm)
 {
 
 }
-void MenuState::render(sf::RenderWindow& a_window)
+void BreakoutMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 
@@ -141,60 +139,38 @@ void MenuState::render(sf::RenderWindow& a_window)
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
 	}
-	if (m_breakoutFlag)
-		a_window.draw(m_breakoutText);
-	else if (m_editorFlag)
-		a_window.draw(m_editorText);
-	else if (m_pongFlag)
-		a_window.draw(m_pongText);
-	else
-		a_window.draw(m_atariText);
+	a_window.draw(m_breakoutText);
 
 	a_window.display();
 }
-void MenuState::generateUI(ResourceManager& a_rm)
+void BreakoutMenu::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
 	// Breakout
 	Button* temp;
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 100), Press::BREAKOUT, "Breakout");
-	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(12, 10));
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 28), Press::BREAKOUT, "Play Game");
+	temp->setDefaultText(a_rm, 30, temp->getShape().getPosition() + sf::Vector2f(13, 13));
 	m_buttons.push_back(temp);
 
 	// Editor
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 136, (HEIGHT/2) - 100),
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 136, (HEIGHT / 2) - 28),
 		Press::EDITOR, sf::Vector2f(4, 4), sf::Vector2f(16, 16), "button_editor", "button_editor_selected");
 	m_buttons.push_back(temp);
 
-	// Pong
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 28), Press::PONG, "Pong");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64, 8));
+	// Load
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 44), Press::LOAD, "Load Level");
+	temp->setDefaultText(a_rm, 28, temp->getShape().getPosition() + sf::Vector2f(14, 14));
 	m_buttons.push_back(temp);
 
-	// Options
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 44), Press::OPTIONS, "Options");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20, 8));
-	m_buttons.push_back(temp);
-
-	// Quit
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 116), Press::QUIT, "Quit");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64, 8));
+	// Back
+	temp = new Button(a_rm, sf::Vector2f(75, 100),
+		Press::BACK, sf::Vector2f(4, 6), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
+	temp->setString("BACK");
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
 	m_buttons.push_back(temp);
 
 	// generate text UI
 	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
 	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title"));
 	m_breakoutText.setScale(sf::Vector2f(6, 6));
-
-	m_editorText.setPosition((WIDTH / 2) - 350, 140);
-	m_editorText.setTexture(*a_rm.getTexture("level_editor_title"));
-	m_editorText.setScale(sf::Vector2f(5, 5));
-
-	m_pongText.setPosition((WIDTH / 2) - 144, 130);
-	m_pongText.setTexture(*a_rm.getTexture("pong_title"));
-	m_pongText.setScale(sf::Vector2f(6, 6));
-
-	m_atariText.setPosition((WIDTH / 2) - 295, 140);
-	m_atariText.setTexture(*a_rm.getTexture("sfml_atari_title"));
-	m_atariText.setScale(sf::Vector2f(5, 5));
 }
