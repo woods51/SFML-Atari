@@ -1,8 +1,11 @@
 #include "LoadMenu.h"
 
-LoadMenu::LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window)
+LoadMenu::LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2)
 {
-	//m_frameSprite.setTexture(a_frameTexture);
+	m_background = a_background;
+	m_background2 = a_background2;
+	m_background->setPosition(m_background->getPosition() + sf::Vector2f(0.25f, 0));
+	m_background2->setPosition(m_background2->getPosition() + sf::Vector2f(0.25f, 0));
 
 	generateUI(a_rm);
 
@@ -140,15 +143,28 @@ void LoadMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, s
 void LoadMenu::update(sf::Time a_dt, ResourceManager& a_rm)
 {
 	m_pageNumber.setString(std::to_string(m_currentPage));
+
+	m_background->setPosition(m_background->getPosition() + sf::Vector2f(0.25f, 0));
+	if (m_background->getPosition().x == 3200)
+	{
+		m_background->setPosition(sf::Vector2f(-3200, 0));
+	}
+	m_background2->setPosition(m_background2->getPosition() + sf::Vector2f(0.25f, 0));
+	if (m_background2->getPosition().x == 3200)
+	{
+		m_background2->setPosition(sf::Vector2f(-3200, 0));
+	}
 }
 void LoadMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 
-	//a_window.draw(m_frameSprite);
+	a_window.draw(*m_background);
+	a_window.draw(*m_background2);
 	a_window.draw(m_overlay);
 
 	a_window.draw(m_pageNumber);
+	a_window.draw(m_levelText);
 	a_window.draw(m_selectedLevel);
 	a_window.draw(m_loadError);
 
@@ -219,6 +235,13 @@ void LoadMenu::generateUI(ResourceManager& a_rm)
 	m_selectedLevel.setPosition(sf::Vector2f((WIDTH / 2) - 120, (HEIGHT / 2) - 250));
 	m_selectedLevel.setFillColor(sf::Color::White);
 	m_selectedLevel.setString("");
+
+	// Level
+	m_levelText = m_selectedLevel;
+	m_levelText.setCharacterSize(20);
+	m_levelText.setPosition(sf::Vector2f((WIDTH / 2) - 240, (HEIGHT / 2) - 245));
+	m_levelText.setString("LEVEL: ");
+
 
 	// Load Error
 	m_loadError.setFont(m_defaultFont);

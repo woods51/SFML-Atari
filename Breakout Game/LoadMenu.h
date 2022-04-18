@@ -8,7 +8,7 @@
 class LoadMenu : public State
 {
 public:
-	LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window);
+	LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite*, sf::Sprite*);
 
 	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) override;
@@ -23,8 +23,11 @@ private:
 	std::vector<Button*> m_levelButtons;
 	std::vector<std::string> m_levels;
 	sf::Sprite m_overlay;
+	sf::Sprite* m_background;
+	sf::Sprite* m_background2;
 
 	sf::Font m_defaultFont;
+	sf::Text m_levelText;
 	bool m_isValid = false;
 	int m_currentPage = 1;
 	int m_maxPages = 1;

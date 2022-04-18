@@ -5,6 +5,7 @@ class OptionsState : public State
 {
 public:
 	OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture);
+	OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2);
 
 	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) override;
@@ -15,8 +16,9 @@ public:
 
 private:
 	std::vector<Button*> m_buttons;
-	sf::Sprite m_frameSprite;
 	sf::Sprite m_overlay;
+	sf::Sprite* m_background = nullptr;
+	sf::Sprite* m_background2 = nullptr;
 
 	sf::Text m_buttonText;
 	sf::Text m_buttonVolume;

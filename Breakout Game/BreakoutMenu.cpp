@@ -90,7 +90,7 @@ void BreakoutMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 							a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
 							break;
 						case Press::LOAD:
-							a_states.push_back(std::make_unique<LoadMenu>(a_rm, a_window));
+							a_states.push_back(std::make_unique<LoadMenu>(a_rm, a_window, &m_background,&m_background2));
 							break;
 						case Press::BACK:
 							a_states.pop_back();
@@ -127,18 +127,29 @@ void BreakoutMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 }
 void BreakoutMenu::update(sf::Time a_dt, ResourceManager& a_rm)
 {
-
+	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.25f, 0));
+	if (m_background.getPosition().x == 3200)
+	{
+		m_background.setPosition(sf::Vector2f(-3200, 0));
+	}
+	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.25f, 0));
+	if (m_background2.getPosition().x == 3200)
+	{
+		m_background2.setPosition(sf::Vector2f(-3200, 0));
+	}
 }
 void BreakoutMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
-
+	a_window.draw(m_background);
+	a_window.draw(m_background2);
 	// Render UI
 	for (const auto& b : m_buttons)
 	{
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
 	}
+
 	a_window.draw(m_breakoutText);
 
 	a_window.display();
@@ -173,4 +184,12 @@ void BreakoutMenu::generateUI(ResourceManager& a_rm)
 	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
 	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title"));
 	m_breakoutText.setScale(sf::Vector2f(6, 6));
+
+	// background
+	m_frameTexture = *a_rm.getTexture("background_breakout");
+
+	m_background.setTexture(m_frameTexture);
+	m_background.setScale(40, 40);
+	m_background2 = m_background;
+	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
 }

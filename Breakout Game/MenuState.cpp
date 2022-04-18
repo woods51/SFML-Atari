@@ -92,7 +92,7 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 							a_states.push_back(std::make_unique<PongState>(a_rm, a_window));
 							break;
 						case Press::OPTIONS:
-							a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, m_frameTexture));
+							a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, &m_background, &m_background2));
 							break;
 						case Press::QUIT:
 							a_window.close();
@@ -129,11 +129,23 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 }
 void MenuState::update(sf::Time a_dt, ResourceManager& a_rm)
 {
-
+	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.25f, 0));
+	if (m_background.getPosition().x == 3200)
+	{
+		m_background.setPosition(sf::Vector2f(-3200, 0));
+	}
+	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.25f, 0));
+	if (m_background2.getPosition().x == 3200)
+	{
+		m_background2.setPosition(sf::Vector2f(-3200, 0));
+	}
 }
 void MenuState::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
+
+	a_window.draw(m_background);
+	a_window.draw(m_background2);
 
 	// Render UI
 	for (const auto& b : m_buttons)
@@ -197,4 +209,12 @@ void MenuState::generateUI(ResourceManager& a_rm)
 	m_atariText.setPosition((WIDTH / 2) - 295, 140);
 	m_atariText.setTexture(*a_rm.getTexture("sfml_atari_title"));
 	m_atariText.setScale(sf::Vector2f(5, 5));
+
+	// background
+	m_frameTexture = *a_rm.getTexture("background_breakout_1");
+
+	m_background.setTexture(m_frameTexture);
+	m_background.setScale(40, 40);
+	m_background2 = m_background;
+	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
 }

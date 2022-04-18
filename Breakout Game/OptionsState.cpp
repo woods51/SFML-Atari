@@ -2,7 +2,16 @@
 
 OptionsState::OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
 {
-	m_frameSprite.setTexture(a_frameTexture);
+	m_background = new sf::Sprite(a_frameTexture);
+
+	generateUI(a_rm);
+}
+OptionsState::OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2)
+{
+	m_background = a_background;
+	m_background2 = a_background2;
+	m_background->setPosition(m_background->getPosition() + sf::Vector2f(0.25f, 0));
+	m_background2->setPosition(m_background2->getPosition() + sf::Vector2f(0.25f, 0));
 
 	generateUI(a_rm);
 }
@@ -12,6 +21,9 @@ OptionsState::~OptionsState()
 	{
 		delete b;
 	}
+
+	delete m_background;
+	delete m_background2;
 }
 void OptionsState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
@@ -125,13 +137,29 @@ void OptionsState::update(sf::Time a_dt, ResourceManager& a_rm)
 	fixVolume(m_ballVolumeNum);
 	m_ballVolume.setString(std::to_string(m_ballVolumeNum));
 	adjustVolumeText(m_ballVolumeNum, m_ballVolume);
+
+	if (m_background2 != nullptr)
+	{
+		m_background->setPosition(m_background->getPosition() + sf::Vector2f(0.25f, 0));
+		if (m_background->getPosition().x == 3200)
+		{
+			m_background->setPosition(sf::Vector2f(-3200, 0));
+		}
+		m_background2->setPosition(m_background2->getPosition() + sf::Vector2f(0.25f, 0));
+		if (m_background2->getPosition().x == 3200)
+		{
+			m_background2->setPosition(sf::Vector2f(-3200, 0));
+		}
+	}
 	
 }
 void OptionsState::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 
-	a_window.draw(m_frameSprite);
+	a_window.draw(*m_background);
+	if (m_background2 != nullptr)
+		a_window.draw(*m_background2);
 	a_window.draw(m_overlay);
 
 	a_window.draw(m_buttonText);

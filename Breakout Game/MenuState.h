@@ -24,6 +24,8 @@ private:
 	sf::Sprite m_editorText;
 	sf::Sprite m_pongText;
 	sf::Texture m_frameTexture;
+	sf::Sprite m_background;
+	sf::Sprite m_background2;
 
 	bool m_breakoutFlag = false;
 	bool m_pongFlag = false;
