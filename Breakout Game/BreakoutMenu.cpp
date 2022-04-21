@@ -6,6 +6,7 @@ BreakoutMenu::BreakoutMenu(ResourceManager& a_rm, sf::RenderWindow& a_window)
 }
 BreakoutMenu::~BreakoutMenu()
 {
+	// Free Allocated Memory
 	for (auto& b : m_buttons)
 	{
 		delete b;
@@ -15,21 +16,205 @@ void BreakoutMenu::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
 
 }
+
 void BreakoutMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
-	// Button Selector Update
+	sf::Event event;
+	sf::Vector2u winSize = a_window.getSize();
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
 
+	buttonSelectUpdate(a_window, a_rm, mousePosition);
+
+	// Handle Events
+	while (a_window.pollEvent(event))
+	{
+		switch (event.type)
+		{
+		case sf::Event::MouseButtonPressed:
+
+			// Left Mouse Click
+			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
+			{
+				lock_click = true;
+
+				for (auto b : m_buttons)
+				{
+					sf::Vector2f b_pos = b->getPosition();
+					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
+
+					// Button Pressed
+					if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
+						mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
+					{
+						switch (b->OnClick(a_rm))
+						{
+						case Press::BREAKOUT:
+							a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_lives[m_livesIndex]));
+							break;
+						case Press::EDITOR:
+							a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
+							break;
+						case Press::LOAD:
+							a_states.push_back(std::make_unique<LoadMenu>(a_rm, a_window, &m_background,&m_background2, m_lives[m_livesIndex]));
+							break;
+						case Press::BACK:
+							a_states.pop_back();
+							break;
+						case Press::BUTTON_UP:
+							if (++m_livesIndex > 5)
+								m_livesIndex = 0;
+							break;
+						case Press::BUTTON_DOWN:
+							if (--m_livesIndex < 0)
+								m_livesIndex = 5;
+							break;
+						default:
+							break;
+						}
+					}
+				}
+			}
+			break;
+
+		case sf::Event::MouseButtonReleased:
+			if (event.mouseButton.button == sf::Mouse::Left && lock_click)
+				lock_click = false;
+			break;
+
+		case sf::Event::Closed:
+			a_window.close();
+			break;
+		}
+	}
+}
+void BreakoutMenu::update(sf::Time a_dt, ResourceManager& a_rm)
+{
+	m_livesValue.setString(std::to_string(m_lives[m_livesIndex]));
+	switch (m_livesIndex)
+	{
+	case 0:
+		setDefaultText(a_rm, m_livesValue, 40, sf::Vector2f(WIDTH / 2 - 14, HEIGHT / 2 + 120));
+		break;
+	case 1:
+	case 2:
+		setDefaultText(a_rm, m_livesValue, 40, sf::Vector2f(WIDTH / 2 - 16, HEIGHT / 2 + 120));
+		break;
+	case 3:
+	case 4:
+		setDefaultText(a_rm, m_livesValue, 40, sf::Vector2f(WIDTH / 2 - 30, HEIGHT / 2 + 120));
+		break;
+	case 5:
+		setDefaultText(a_rm, m_livesValue, 40, sf::Vector2f(WIDTH / 2 - 36, HEIGHT / 2 + 120));
+		break;
+	default:
+		break;
+	}
+
+	// Update Backgrounds
+	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.25f, 0));
+	if (m_background.getPosition().x == 3200)
+	{
+		m_background.setPosition(sf::Vector2f(-3200, 0));
+	}
+	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.25f, 0));
+	if (m_background2.getPosition().x == 3200)
+	{
+		m_background2.setPosition(sf::Vector2f(-3200, 0));
+	}
+}
+void BreakoutMenu::render(sf::RenderWindow& a_window)
+{
+	a_window.clear(sf::Color::Black);
+
+	// Render Backgrounds
+	a_window.draw(m_background);
+	a_window.draw(m_background2);
+
+	// Render UI
+	for (const auto& b : m_buttons)
+	{
+		a_window.draw(b->getShape());
+		a_window.draw(b->getText());
+	}
+
+	// Render Text
+	a_window.draw(m_livesText);
+	a_window.draw(m_livesValue);
+	a_window.draw(m_breakoutText);
+
+	a_window.display();
+}
+void BreakoutMenu::generateUI(ResourceManager& a_rm)
+{
+	// Generate Buttons
+	Button* temp;
+
+	// Play
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 68), Press::BREAKOUT, "Play Game");
+	temp->setDefaultText(a_rm, 30, temp->getShape().getPosition() + sf::Vector2f(13, 13));
+	m_buttons.push_back(temp);
+
+	// Load
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4), Press::LOAD, "Load Level");
+	temp->setDefaultText(a_rm, 28, temp->getShape().getPosition() + sf::Vector2f(14, 14));
+	m_buttons.push_back(temp);
+
+	// Editor
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 136, (HEIGHT / 2) - 32),
+		Press::EDITOR, sf::Vector2f(4, 4), sf::Vector2f(16, 16), "button_editor", "button_editor_selected");
+	m_buttons.push_back(temp);
+
+	// Back
+	temp = new Button(a_rm, sf::Vector2f(75, 100), Press::BACK, sf::Vector2f(4, 6),
+		sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
+	temp->setString("BACK");
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
+	m_buttons.push_back(temp);
+
+	// >
+	temp = new TickButton(a_rm, sf::Vector2f(WIDTH/2 +6, (HEIGHT / 2) +170), Press::BUTTON_UP, ">");
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
+	m_buttons.push_back(temp);
+
+	// <
+	temp = new TickButton(a_rm, sf::Vector2f(WIDTH/2 -54, (HEIGHT / 2) +170), Press::BUTTON_DOWN, "<");
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
+	m_buttons.push_back(temp);
+
+	//Lives Value
+	setDefaultText(a_rm, m_livesValue, 40, sf::Vector2f(WIDTH/2 -16, HEIGHT/2 +120));
+	m_livesValue.setString(m_lives[m_livesIndex]);
+
+	//Lives Text
+	setDefaultText(a_rm, m_livesText, 22, sf::Vector2f(WIDTH/2 - 46, HEIGHT/2 +100));
+	m_livesText.setString("LIVES");
+
+	// Generate Text
+	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
+	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title_1"));
+	m_breakoutText.setScale(sf::Vector2f(6, 6));
+
+	// Generate Backgrounds
+	m_frameTexture = *a_rm.getTexture("background_breakout");
+
+	m_background.setTexture(m_frameTexture);
+	m_background.setScale(40, 40);
+	m_background2 = m_background;
+	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
+}
+void BreakoutMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
+{
 	for (auto b : m_buttons)
 	{
 		sf::Vector2f b_pos = b->getPosition();
 		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
 
-		if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
-			mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
+		// Mouse is over button
+		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
+			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
 		{
-			b->setSelected(true);
+			b->isSelected(true);
 			switch (b->getButtonType())
 			{
 			case Press::BREAKOUT:
@@ -53,142 +238,6 @@ void BreakoutMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 			}
 		}
 		else
-		{
-			b->setSelected(false);
-		}
-
+			b->isSelected(false);
 	}
-
-	// Handle Events
-	sf::Event event;
-	sf::Vector2u winSize = a_window.getSize();
-	while (a_window.pollEvent(event))
-	{
-		switch (event.type)
-		{
-		case sf::Event::MouseButtonPressed:
-			// Left Mouse Click
-			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
-			{
-				lock_click = true;
-
-				for (auto b : m_buttons)
-				{
-					sf::Vector2f b_pos = b->getPosition();
-					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
-
-					if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
-						mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
-					{
-						switch (b->OnClick(a_rm))
-						{
-						case Press::BREAKOUT:
-							a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window));
-							break;
-						case Press::EDITOR:
-							a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
-							break;
-						case Press::LOAD:
-							a_states.push_back(std::make_unique<LoadMenu>(a_rm, a_window, &m_background,&m_background2));
-							break;
-						case Press::BACK:
-							a_states.pop_back();
-							break;
-						default:
-							break;
-						}
-					}
-				}
-			}
-			break;
-
-		case sf::Event::MouseButtonReleased:
-			if (event.mouseButton.button == sf::Mouse::Left && lock_click)
-				lock_click = false;
-			break;
-
-		case sf::Event::KeyPressed:
-			inputHandler(event.key.code, true);
-			break;
-
-		case sf::Event::Resized:
-			break;
-
-		case sf::Event::KeyReleased:
-			inputHandler(event.key.code, false);
-			break;
-
-		case sf::Event::Closed:
-			a_window.close();
-			break;
-		}
-	}
-}
-void BreakoutMenu::update(sf::Time a_dt, ResourceManager& a_rm)
-{
-	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.25f, 0));
-	if (m_background.getPosition().x == 3200)
-	{
-		m_background.setPosition(sf::Vector2f(-3200, 0));
-	}
-	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.25f, 0));
-	if (m_background2.getPosition().x == 3200)
-	{
-		m_background2.setPosition(sf::Vector2f(-3200, 0));
-	}
-}
-void BreakoutMenu::render(sf::RenderWindow& a_window)
-{
-	a_window.clear(sf::Color::Black);
-	a_window.draw(m_background);
-	a_window.draw(m_background2);
-	// Render UI
-	for (const auto& b : m_buttons)
-	{
-		a_window.draw(b->getShape());
-		a_window.draw(b->getText());
-	}
-
-	a_window.draw(m_breakoutText);
-
-	a_window.display();
-}
-void BreakoutMenu::generateUI(ResourceManager& a_rm)
-{
-	// generate all buttons
-	// Breakout
-	Button* temp;
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 28), Press::BREAKOUT, "Play Game");
-	temp->setDefaultText(a_rm, 30, temp->getShape().getPosition() + sf::Vector2f(13, 13));
-	m_buttons.push_back(temp);
-
-	// Editor
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 136, (HEIGHT / 2) - 28),
-		Press::EDITOR, sf::Vector2f(4, 4), sf::Vector2f(16, 16), "button_editor", "button_editor_selected");
-	m_buttons.push_back(temp);
-
-	// Load
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 44), Press::LOAD, "Load Level");
-	temp->setDefaultText(a_rm, 28, temp->getShape().getPosition() + sf::Vector2f(14, 14));
-	m_buttons.push_back(temp);
-
-	// Back
-	temp = new Button(a_rm, sf::Vector2f(75, 100),
-		Press::BACK, sf::Vector2f(4, 6), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
-	temp->setString("BACK");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
-	m_buttons.push_back(temp);
-
-	// generate text UI
-	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
-	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title_1"));
-	m_breakoutText.setScale(sf::Vector2f(6, 6));
-
-	// background
-	m_frameTexture = *a_rm.getTexture("background_breakout");
-
-	m_background.setTexture(m_frameTexture);
-	m_background.setScale(40, 40);
-	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
 }

@@ -1,41 +1,68 @@
 #pragma once
 #include "stdafx.h"
 #include "ResourceManager.h"
-#include "Button.h"
 
 class State
 {
 public:
+    // Default Constructor for State class
 	State() {
 
 	}
 
-	virtual void inputHandler(sf::Keyboard::Key, bool) = 0;
-	virtual void eventHandler(sf::RenderWindow&, ResourceManager&, std::vector<std::unique_ptr<State>>&) = 0;
-	virtual void update(sf::Time, ResourceManager&) = 0;
-	virtual void render(sf::RenderWindow&) = 0;
+    ////////////////////////////////////////////////////////////
+    /// \brief Handles keyboard inputs
+    ///
+    /// This function handles any keyboard inputs,
+    /// it will handle both key pressed down and released events.
+    /// This function is called every frame.
+    /// 
+    /// \param a_key		--> Position of Tile
+    /// \param a_isPressed	--> True if key pressed, False if released
+    ////////////////////////////////////////////////////////////
+	virtual void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) = 0;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Pop the event on top of the event queue, if any, and return it
+    /// \brief Handles sfml window events
     ///
-    /// This function is not blocking: if there's no pending event then
-    /// it will return false and leave \a event unmodified.
-    /// Note that more than one event may be present in the event queue,
-    /// thus you should always call this function in a loop
-    /// to make sure that you process every pending event.
-    /// \code
-    /// sf::Event event;
-    /// while (window.pollEvent(event))
-    /// {
-    ///    // process event...
-    /// }
-    /// \endcode
-    ///
-    /// \param event Event to be returned
-    ///
-    /// \return True if an event was returned, or false if the event queue was empty
-    ///
-    /// \see waitEvent
-    ///
+    /// This function handles any window events that occur
+    /// in the render window. This function calls the inputHandler
+    /// and also handles any mouse events.
+    /// This function is called every frame.
+    /// 
+    /// \param a_window --> RenderWindow
+    /// \param a_rm          --> ResourceManager
+    /// \param a_states     --> Vector of game states
     ////////////////////////////////////////////////////////////
+	virtual void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) = 0;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Updates game elements
+    ///
+    /// This function updates all gameplay elements in its state.
+    /// This function is called every frame.
+    /// 
+    /// \param a_dt  --> deltaTime
+    /// \param a_rm --> ResourceManager
+    ////////////////////////////////////////////////////////////
+	virtual void update(sf::Time a_dt, ResourceManager& a_rm) = 0;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Draws objects to RenderWindow.
+    ///
+    /// This function draws objects to the RenderWindow.
+    /// This function is called every frame.
+    /// 
+    /// \param a_window --> RenderWindow
+    ////////////////////////////////////////////////////////////
+	virtual void render(sf::RenderWindow& a_window) = 0;
+
+    void setDefaultText(ResourceManager& a_rm, sf::Text& a_text, unsigned int a_charSize,
+        sf::Vector2f a_pos, std::string a_font = "default", sf::Color fill = sf::Color::White)
+    {
+        a_text.setFont(*a_rm.getFont(a_font));
+        a_text.setFillColor(fill);
+        a_text.setCharacterSize(a_charSize);
+        a_text.setPosition(a_pos);
+    }
 };

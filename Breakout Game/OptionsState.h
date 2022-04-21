@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "BreakoutState.h"
+#include "Button.h"
 
 class OptionsState : public State
 {
@@ -42,5 +43,5 @@ private:
 
 	void fixVolume(int& a_volume);
 	void adjustVolumeText(int& a_volume, sf::Text& a_text);
-	void generateUI(ResourceManager&);
+	void generateUI(ResourceManager& a_rm);
 };

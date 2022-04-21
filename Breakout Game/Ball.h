@@ -134,9 +134,12 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Sets isActive state
 	///
+	/// This function sets isActive state and makes adjustments
+	/// to velocity and position according to state.
+	/// 
 	/// \param a_isActive	--> State
 	////////////////////////////////////////////////////////////
-	inline void isActive(bool a_isActive) { m_isActive = a_isActive; }
+	void isActive(bool a_isActive);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Sets velocity scalar

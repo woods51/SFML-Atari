@@ -16,26 +16,18 @@ Press Button::OnClick(ResourceManager& a_rm)
 
 	return m_buttonType;
 }
-void Button::setSelected(bool isSelected)
+void Button::isSelected(bool a_isSelected)
 {
-	if (isSelected)
+	if (a_isSelected && !m_isSelected)
 	{
-		if (!m_selected)
-		{
-			m_shape.setTexture(m_textureSelect);
-			m_selected = true;
-			return;
-		}
+		m_shape.setTexture(m_textureSelect);
+		m_isSelected = true;
 		return;
 	}
-	else
+	else if (!a_isSelected && m_isSelected)
 	{
-		if (m_selected)
-		{
-			m_shape.setTexture(m_texture);
-			m_selected = false;
-			return;
-		}
+		m_shape.setTexture(m_texture);
+		m_isSelected = false;
 		return;
 	}
 }

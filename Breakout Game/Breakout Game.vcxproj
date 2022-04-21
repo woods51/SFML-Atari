@@ -150,6 +150,7 @@
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="BreakoutMenu.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="LoadMenu.cpp" />
     <ClCompile Include="PongBall.cpp" />
     <ClCompile Include="SaveMenu.cpp" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="Ball.h" />
     <ClInclude Include="BreakoutMenu.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="LoadMenu.h" />
     <ClInclude Include="PongBall.h" />
     <ClInclude Include="SaveMenu.h" />

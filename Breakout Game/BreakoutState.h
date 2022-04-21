@@ -5,12 +5,13 @@
 #include "LoadMenu.h"
 #include "Ball.h"
 #include "Paddle.h"
+#include "GameOver.h"
 
 class BreakoutState : public State
 {
 public:
-	BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window);
-	BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<Tile*>& a_tileMap);
+	BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, unsigned int a_lives);
+	BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<Tile*>& a_tileMap, unsigned int a_lives);
 
 	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) override;
@@ -21,6 +22,7 @@ public:
 	void generateLevel1(ResourceManager& a_rm);
 	void generateLevel2(ResourceManager& a_rm);
 	void generateLevel3(ResourceManager& a_rm);
+	void generateLevel4(ResourceManager& a_rm);
 
 	~BreakoutState();
 private:
@@ -45,10 +47,12 @@ private:
 	sf::Text m_startText;
 	sf::Text m_secondLevelText;
 	sf::Text m_thirdLevelText;
+	sf::Text m_fourthLevelText;
 	sf::Texture m_frameTexture;
 	sf::Font m_defaultFont;
 	int m_currentLevel = 0;
 	bool m_gameStarted = false;
+	bool m_gameOver = false;
 	bool m_completeFlag = false;
 	bool m_isCustom = false;
 	int m_score = 0;

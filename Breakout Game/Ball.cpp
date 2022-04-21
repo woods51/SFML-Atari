@@ -5,11 +5,13 @@ void Ball::move(ResourceManager& a_rm, sf::Time a_dt)
 	m_shape.move(m_velocity.x * a_dt.asSeconds() * MULTIPLIER, m_velocity.y * a_dt.asSeconds() * MULTIPLIER);
 	handleBorder(a_rm);
 
+	// Update Direction
 	if (m_velocity.x < 0)
 		m_direction = Direction::Left;
 	else
 		m_direction = Direction::Right;
 }
+
 void Ball::handleBorder(ResourceManager& a_rm)
 {
 	bool hitFlag = false;
@@ -34,6 +36,8 @@ void Ball::handleBorder(ResourceManager& a_rm)
 		m_velocity.y = -m_velocity.y;
 		hitFlag = true;
 	}
+
+	// Ball falls out of playable area
 	else if (getDiagonalPosition().y >= HEIGHT)
 	{
 		m_velocity = sf::Vector2f(0, 0);
@@ -43,31 +47,31 @@ void Ball::handleBorder(ResourceManager& a_rm)
 	if (hitFlag)
 		a_rm.playSound(Sound::Ball);
 }
+
 void Ball::handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir)
 {
-	// Collision with side of Paddle
 	if (a_surface == Surface::Left || a_surface == Surface::Right)
 		m_velocity.x = -m_velocity.x;
 
-	// Collision with top of Paddle
 	else if (a_surface == Surface::Top)
 	{
+		// Moving in same direction
 		if (m_direction == a_paddleDir)
 			m_velocity = sf::Vector2f(m_velocity.x * m_scalar, -m_velocity.y * m_scalar);
 
+		// Not moving
 		else if (a_paddleDir == Direction::Idle)
 			m_velocity.y = -m_velocity.y;
 
+		// Moving in opposite directions
 		else
 			m_velocity = sf::Vector2f(-m_velocity.x * m_scalar, -m_velocity.y);
 	}
 
-	// Collision with corner of Paddle
 	else if (a_surface == Surface::Corner)
 		m_velocity.y = -m_velocity.y;
-	
-	return;
 }
+
 void Ball::handleTile(enum class Surface a_surface)
 {
 	float scalar = 1.05f;
@@ -84,22 +88,30 @@ void Ball::handleTile(enum class Surface a_surface)
 
 enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDiagPos) const
 {
+	// Get Positions
 	sf::Vector2f tile_pos = a_tilePos;
 	sf::Vector2f tile_diagonal_pos = a_tileDiagPos;
 
 	sf::Vector2f pos = m_shape.getPosition();
 	sf::Vector2f diagonal_pos = getDiagonalPosition();
 
-	// Tile			Ball
-	// p1	p2		       b_top
-	// p3	p4		b_left	     b_right
-	//                    b_bottom
+	/*
+	Data point visualization
+	
+	Tile		Ball
+	p1	p2		       b_top
+			    b_left	     b_right
+	p3	p4            b_bottom
 
+	*/
+
+	// Generate tile data points
 	sf::Vector2i p1((int)tile_pos.x, (int)tile_pos.y);
 	sf::Vector2i p2((int)tile_diagonal_pos.x, (int)tile_pos.y);
 	sf::Vector2i p3((int)tile_pos.x, (int)tile_diagonal_pos.y);
 	sf::Vector2i p4((int)tile_diagonal_pos.x, (int)tile_diagonal_pos.y);
 
+	// Generate Ball data points
 	sf::Vector2i b_top((int)pos.x + ((int)diagonal_pos.x - (int)pos.x) / 2, (int)pos.y);
 	sf::Vector2i b_bottom((int)pos.x + ((int)diagonal_pos.x - (int)pos.x) / 2, (int)diagonal_pos.y);
 	sf::Vector2i b_left((int)pos.x, (int)pos.y + ((int)diagonal_pos.y - (int)pos.y) / 2);
@@ -108,7 +120,7 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 	sf::Vector2i vertex = b_top + ((b_bottom - b_top) / 2);
 	float radius = m_shape.getRadius();
 
-	// Determine if any side of tile collides with ball
+	// Check for side collision
 	int i = 0;
 	for (auto b : { b_top, b_bottom, b_left, b_right })
 	{
@@ -129,7 +141,8 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 		}
 		i++;
 	}
-	// Determine if any corner of tile collides with ball
+
+	// Check for corner collision
 	for (auto p : { p1, p2, p3, p4 })
 	{
 		double dist = vectorDistance(p, vertex);
@@ -141,6 +154,7 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 	}
 	return Surface::None;
 }
+
 void Ball::toggleColor(ResourceManager& a_rm)
 {
 	if (++m_colorIndex > 5)
@@ -153,7 +167,19 @@ sf::Vector2f Ball::getDiagonalPosition() const
 	return sf::Vector2f(m_shape.getPosition().x + m_shape.getGlobalBounds().width,
 		m_shape.getPosition().y + m_shape.getGlobalBounds().height);
 }
+void Ball::isActive(bool a_isActive)
+{
+	if (a_isActive || !a_isActive)
+		m_velocity = m_startVel;
 
+	else if (!a_isActive)
+	{
+		m_shape.setPosition(m_startPos);
+		m_velocity = sf::Vector2f(0, 0);
+	}
+
+	m_isActive = a_isActive;
+}
 double Ball::vectorDistance(const sf::Vector2i& a_p1, const sf::Vector2i& a_p2) const
 {
 	return (double)sqrt(pow((a_p2.x - a_p1.x), 2) + pow((a_p2.y - a_p1.y), 2));
@@ -162,7 +188,7 @@ double Ball::vectorDistance(const sf::Vector2i& a_p1, const sf::Vector2i& a_p2) 
 void Ball::reset()
 {
 	m_shape.setPosition(m_startPos);
-	m_velocity = sf::Vector2f(velocityRNG(), -m_speed);;
+	m_velocity = sf::Vector2f(velocityRNG(), -m_speed);
 }
 
 float Ball::velocityRNG()

@@ -1,22 +1,22 @@
 #include "BreakoutState.h"
 
 // Regular Game
-BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window)
+BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, unsigned int a_lives)
 {
 	m_balls.push_back(std::make_unique<Ball>(a_rm));
 	m_paddle = new Paddle(a_rm);
-	m_livesRemaining = 5;
+	m_livesRemaining = a_lives;
 	m_isCustom = false;
 
 	generateUI(a_rm);
 	generateLevel1(a_rm);
 }
 // Custom Level
-BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<Tile*>& a_tileMap)
+BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<Tile*>& a_tileMap, unsigned int a_lives)
 {
 	m_balls.push_back(std::make_unique<Ball>(a_rm));
 	m_paddle = new Paddle(a_rm);
-	m_livesRemaining = 5;
+	m_livesRemaining = a_lives;
 	m_isCustom = true;
 
 	generateUI(a_rm);
@@ -25,11 +25,12 @@ BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, 
 void BreakoutState::update(sf::Time a_dt, ResourceManager& a_rm)
 {
 	// Physics
-	if (m_gameStarted)
+	if (m_gameStarted && !m_gameOver)
 	{
 		handleBallPhysics(a_dt, a_rm);
 		for (auto& ball : m_balls)
-			ball->move(a_rm, a_dt);
+			if (ball->isActive())
+				ball->move(a_rm, a_dt);
 
 		bool flag = false;
 		for (auto& ball : m_balls)
@@ -41,9 +42,10 @@ void BreakoutState::update(sf::Time a_dt, ResourceManager& a_rm)
 		{
 			// Remove Lives
 			m_livesRemaining -= 1;
-			if (m_livesRemaining == -1)
+			if (m_livesRemaining == 0)
 			{
-				// GAME OVER
+				m_gameOver = true;
+				return;
 			}
 			resetBalls(a_rm);
 			m_balls[0]->isActive(true);
@@ -70,8 +72,11 @@ void BreakoutState::handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm)
 	sf::Vector2f paddlePos = m_paddle->getPosition();
 	sf::Vector2f paddleDiagPos = m_paddle->getDiagonalPosition();
 
-	for (int i = 0; i < m_balls.size(); i++)
+	for (unsigned int i = 0; i < m_balls.size(); i++)
 	{
+		if (!m_balls[i]->isActive())
+			continue;
+
 		bool flag = false;
 
 		// Collision with a tile
@@ -164,6 +169,16 @@ void BreakoutState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_
 	sf::Event event;
 	static bool lock_click = false;
 	sf::Vector2u winSize = a_window.getSize();
+
+	// Initiate GameOver State
+	if (m_gameOver)
+	{
+		m_frameTexture.create(winSize.x, winSize.y);
+		m_frameTexture.update(a_window);
+		a_states.push_back(std::make_unique<GameOver>(a_rm, a_window, m_frameTexture, m_score));
+		return;
+	}
+
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
@@ -275,6 +290,9 @@ void BreakoutState::render(sf::RenderWindow& a_window)
 		case 2:
 			a_window.draw(m_thirdLevelText);
 			break;
+		case 3:
+			a_window.draw(m_fourthLevelText);
+			break;
 		default:
 			break;
 		}
@@ -288,32 +306,28 @@ void BreakoutState::updateUI()
 	m_level.setString("Level " + std::to_string(m_currentLevel + 1));
 	m_livesText.setString("Lives: " + std::to_string(m_livesRemaining));
 }
-void setDefaultText(sf::Text& a_text, sf::Font& a_font, int a_size, sf::Vector2f a_pos, sf::Color a_fill = sf::Color::White)
-{
-	a_text.setFont(a_font);
-	a_text.setCharacterSize(a_size);
-	a_text.setPosition(a_pos);
-	a_text.setFillColor(a_fill);
-}
 void BreakoutState::generateUI(ResourceManager& a_rm)
 {
 	m_defaultFont = *a_rm.getFont("default");
 
 	// generate all text UI -> textUI
-	setDefaultText(m_scoreText, m_defaultFont, 35, sf::Vector2f(5, 670));
+	setDefaultText(a_rm, m_scoreText, 35, sf::Vector2f(16, 670));
 
-	setDefaultText(m_livesText, m_defaultFont, 25, sf::Vector2f(100, 630));
+	setDefaultText(a_rm, m_livesText, 25, sf::Vector2f(WIDTH - 284, 675));
 
-	setDefaultText(m_startText, m_defaultFont, 30, sf::Vector2f(WIDTH / 2 - 250, 500));
+	setDefaultText(a_rm, m_startText, 30, sf::Vector2f(WIDTH / 2 - 250, 500));
 	m_startText.setString("Press space to start.");
 
-	setDefaultText(m_secondLevelText, m_defaultFont, 30, sf::Vector2f(WIDTH / 2 - 350, 450));
-	m_secondLevelText.setString("Black bricks cannot be broken!");
+	setDefaultText(a_rm, m_secondLevelText, 30, sf::Vector2f(WIDTH / 2 - 344, 450));
+	m_secondLevelText.setString("Wall tiles cannot be broken!");
 
-	setDefaultText(m_thirdLevelText, m_defaultFont, 30, sf::Vector2f(WIDTH / 2 - 360, 450));
-	m_thirdLevelText.setString("Purple bricks must be hit twice!");
+	setDefaultText(a_rm, m_thirdLevelText, 30, sf::Vector2f(WIDTH / 2 - 370, 450));
+	m_thirdLevelText.setString("Special tiles spawn extra balls!");
 
-	setDefaultText(m_level, m_defaultFont, 35, sf::Vector2f(WIDTH / 2 - 90, HEIGHT - 50));
+	setDefaultText(a_rm, m_fourthLevelText, 25, sf::Vector2f(WIDTH / 2 - 330, 450));
+	m_fourthLevelText.setString("Locked tiles have more durability!");
+
+	setDefaultText(a_rm, m_level, 35, sf::Vector2f(WIDTH / 2 - 90, HEIGHT - 50));
 	m_level.setString("Level 1");
 
 	// generate all sprite UI / text -> spriteUI
@@ -365,6 +379,9 @@ void BreakoutState::levelComplete(ResourceManager& a_rm)
 	case 2:
 		generateLevel3(a_rm);
 		break;
+	case 3:
+		generateLevel4(a_rm);
+		break;
 	default:
 		generateLevel1(a_rm);
 		break;
@@ -402,11 +419,11 @@ void BreakoutState::generateLevel1(ResourceManager& a_rm)
 	float posX = 0;
 	float posY = 64;
 	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
-	for (auto const& textureKey : keys)
+	for (auto const& key : keys)
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, textureKey));
+			m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, key));
 			posX += 128;
 		}
 		posX = 0;
@@ -419,18 +436,17 @@ void BreakoutState::generateLevel2(ResourceManager& a_rm)
 	float posX = 0;
 	float posY = 64;
 	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
-	for (auto const& textureKey : keys)
+	for (auto const& key : keys)
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			if (textureKey == "tile_03" && (i < 3 || i > 6))
+			if (key == "tile_03" && (i < 3 || i > 6))
 			{
-				//m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall, "tile_wall"));
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Special, "tile_wall"));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall, "tile_wall"));
 			}
 			else
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, textureKey));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, key));
 			}
 				
 			posX += 128;
@@ -439,30 +455,72 @@ void BreakoutState::generateLevel2(ResourceManager& a_rm)
 		posY += 64;
 	}
 }
+
 void BreakoutState::generateLevel3(ResourceManager& a_rm)
 {
 	m_tileMap.clear();
 	float posX = 0;
 	float posY = 64;
-	int counter = 9;
 	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_04", "tile_05" };
-	for (int i = 0; i < 5; i++)
+	for (auto const& key : keys)
 	{
-		for (int j = 0; j < 10; j++)
+		for (int i = 0; i < 10; i++)
 		{
-			if ((j == i || j == counter) && i != 4)
+			if ((key == "tile_02" && (i == 1 || i == 8)) || (key == "tile_04" && (i == 3 || i == 5)))
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Special));
+			}
+			else if (key == "tile_04" && (i == 0 || i == 9))
 			{
 				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall, "tile_wall"));
 			}
-			else if ((j == 4 || j == 5) && i == 4)
+			else
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Lock2, "tile_11"));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, key));
+			}
+
+			posX += 128;
+		}
+		posX = 0;
+		posY += 64;
+	}
+}
+void BreakoutState::generateLevel4(ResourceManager& a_rm)
+{
+	m_tileMap.clear();
+	float posX = 0;
+	float posY = 64;
+	int counter = 9;
+	std::string keys[5] = { "tile_01", "tile_02", "tile_03", "tile_09", "tile_10" };
+	for (auto const& key : keys)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if ((key == "tile_02" && (j == 0 || j == 9)) || (key == "tile_09" && (j == 4 || j == 5)))
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Special));
+			}
+			else if (key == "tile_03" && (j == 0 || j == 9 || (j > 2 && j < 7)))
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Wall, "tile_wall"));
+			}
+			else if (key == "tile_09" && (j == 3 || j == 6))
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Lock2, key));
+			}
+			else if (key == "tile_10" && (j == 3 || j == 6))
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Lock, key));
+			}
+			else if (key == "tile_10" && (j == 4 || j == 5))
+			{
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Lock2, key));
 			}
 			else
 			{
-				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, keys[i]));
+				m_tileMap.push_back(std::make_unique<Tile>(a_rm, sf::Vector2f(posX, posY), TileType::Default, key));
 			}
-			posX += 128;	
+			posX += 128;
 		}
 		posX = 0;
 		posY += 64;

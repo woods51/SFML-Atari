@@ -64,24 +64,24 @@ void LevelEditor::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm
 						case Press::PEN:
 							if (b->isSelected())
 							{
-								b->setSelected(false);
+								b->isSelected(false);
 								// Handle actions
 								break;
 							}
-							b->setSelected(true);
-							m_erase->setSelected(false);
+							b->isSelected(true);
+							m_erase->isSelected(false);
 							// Handle actions
 							break;
 
 						case Press::ERASE:
 							if (b->isSelected())
 							{
-								b->setSelected(false);
+								b->isSelected(false);
 								// Handle actions
 								break;
 							}
-							b->setSelected(true);
-							m_pen->setSelected(false);
+							b->isSelected(true);
+							m_pen->isSelected(false);
 							// Handle actions
 							break;
 

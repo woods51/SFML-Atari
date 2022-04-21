@@ -29,7 +29,7 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 		if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
 			mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
 		{
-			b->setSelected(true);
+			b->isSelected(true);
 			switch (b->getButtonType())
 			{
 			case Press::BREAKOUT:
@@ -54,7 +54,7 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 		}
 		else
 		{
-			b->setSelected(false);
+			b->isSelected(false);
 		}
 			
 	}

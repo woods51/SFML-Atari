@@ -4,6 +4,7 @@
 #include "Tile.h"
 #include "PauseState.h"
 #include "SaveMenu.h"
+#include "Button.h"
 
 class LevelEditor : public State
 {

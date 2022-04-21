@@ -33,8 +33,8 @@ public:
 
 	Press OnClick(ResourceManager& a_rm);
 
-	void setSelected(bool isSelected);
-	bool isSelected() { return m_selected; }
+	void isSelected(bool isSelected);
+	inline bool isSelected() { return m_isSelected; }
 
 	const enum class Press getButtonType() const { return m_buttonType; }
 	sf::Vector2f getDiagonalPosition() const;
@@ -48,6 +48,8 @@ public:
 	void setFillColor(const sf::Color& color) { m_text.setFillColor(color); }
 	void setCharacterSize(unsigned int size) { m_text.setCharacterSize(size); }
 	void setPosition(sf::Vector2f pos) { m_text.setPosition(pos); }
+	inline void isPressed(bool a_isPressed) { m_isPressed = a_isPressed; }
+	inline bool isPressed() { return m_isPressed; }
 	
 	std::string getTextureKey() { return m_textureKey; }
 
@@ -59,8 +61,8 @@ protected:
 	std::string m_textureKey;
 	sf::Texture* m_texture;
 	sf::Texture* m_textureSelect;
-	bool m_pressedDown = false;
-	bool m_selected = false;
+	bool m_isPressed = false;
+	bool m_isSelected = false;
 	sf::RectangleShape m_shape;
 	Press m_buttonType = Press::DEFAULT;
 	Sound m_sound = Sound::None;

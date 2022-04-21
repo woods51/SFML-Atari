@@ -56,11 +56,11 @@ void SaveMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, s
 							break;
 						case Press::EDIT:
 							m_isTyping = true;
-							b->setSelected(m_isTyping);
+							b->isSelected(m_isTyping);
 							break;
 						case Press::SAVE:
 							m_isTyping = false;
-							m_editButton->setSelected(m_isTyping);
+							m_editButton->isSelected(m_isTyping);
 							
 							if (!m_isSaving && m_isFileValid)
 							{

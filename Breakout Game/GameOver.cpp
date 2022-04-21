@@ -1,24 +1,25 @@
-#include "PauseState.h"
+#include "GameOver.h"
 
-PauseState::PauseState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
+GameOver::GameOver(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture, unsigned int a_score)
 {
+	m_score = a_score;
 	m_frameTexture = a_frameTexture;
 	m_frameSprite.setTexture(m_frameTexture);
 
 	generateUI(a_rm);
 }
-PauseState::~PauseState()
+GameOver::~GameOver()
 {
 	for (auto& b : m_buttons)
 	{
 		delete b;
 	}
 }
-void PauseState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
+void GameOver::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
 
 }
-void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void GameOver::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
 {
 	// Button Selector Update
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
@@ -102,16 +103,20 @@ void PauseState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm,
 		}
 	}
 }
-void PauseState::update(sf::Time a_dt, ResourceManager& a_rm)
+void GameOver::update(sf::Time a_dt, ResourceManager& a_rm)
 {
 
 }
-void PauseState::render(sf::RenderWindow& a_window)
+void GameOver::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
-	
+
 	a_window.draw(m_frameSprite);
 	a_window.draw(m_overlay);
+
+	a_window.draw(m_scoreText);
+	a_window.draw(m_scoreValue);
+	a_window.draw(m_gameText);
 
 	// Render UI
 	for (const auto& b : m_buttons)
@@ -122,25 +127,16 @@ void PauseState::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
-void PauseState::generateUI(ResourceManager& a_rm)
+void GameOver::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
 	// Resume
-	Button* temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 140),
-		Press::RESUME, "Resume");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(29.0f, 8.0f));
-	m_buttons.push_back(temp);
-	
-	// Options
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 68),
-		Press::OPTIONS, "Options");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(20.0f, 8.0f));
-	m_buttons.push_back(temp);
+	Button* temp;
 
 	// Main Menu
 	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4),
-		Press::MAINMENU, "MainMenu");
-	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(15.0f, 12.0f));
+		Press::MAINMENU, "Menu");
+	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(64.0f, 12.0f));
 	m_buttons.push_back(temp);
 
 	// Quit
@@ -152,4 +148,15 @@ void PauseState::generateUI(ResourceManager& a_rm)
 	//UI
 	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
 	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
+
+	//Text
+	setDefaultText(a_rm, m_scoreText, 30, sf::Vector2f(WIDTH / 2 - 180, HEIGHT / 2 -60));
+	m_scoreText.setString("SCORE:");
+
+	setDefaultText(a_rm, m_scoreValue, 60, sf::Vector2f(WIDTH / 2 -16, HEIGHT / 2 - 80));
+	m_scoreValue.setString(std::to_string(m_score));
+
+	setDefaultText(a_rm, m_gameText, 100, sf::Vector2f(WIDTH / 2 - 418, HEIGHT / 2 - 200), "default", sf::Color::Red);
+	m_gameText.setString("GAME OVER");
+
 }

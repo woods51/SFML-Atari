@@ -38,7 +38,7 @@ public:
 private:
 	
 	enum class Direction m_currentDir;
-	float m_speed = 12.0f;
+	float m_speed = 16.0f;
 	bool m_isColliding = false;
 
 	sf::Vector2f m_defaultPos;
