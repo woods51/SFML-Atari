@@ -6,6 +6,7 @@ GameOver::GameOver(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Textur
 	m_frameTexture = a_frameTexture;
 	m_frameSprite.setTexture(m_frameTexture);
 
+	a_rm.playSound(Sound::GameOver);
 	generateUI(a_rm);
 }
 GameOver::~GameOver()
@@ -61,18 +62,13 @@ void GameOver::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, s
 					{
 						switch (b->OnClick(a_rm))
 						{
-						case Press::RESUME:
-							a_states.pop_back();
-							break;
-						case Press::OPTIONS:
-							a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, m_frameTexture));
-							break;
 						case Press::MAINMENU:
 							for (unsigned int i = 0; i < a_states.size(); i++)
 								a_states.pop_back();
 							break;
 						case Press::QUIT:
 							a_window.close();
+							break;
 						default:
 							break;
 						}
@@ -130,7 +126,6 @@ void GameOver::render(sf::RenderWindow& a_window)
 void GameOver::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
-	// Resume
 	Button* temp;
 
 	// Main Menu

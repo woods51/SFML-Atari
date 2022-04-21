@@ -66,8 +66,6 @@ void BreakoutState::handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm)
 
 	m_completeFlag = true;
 
-	// Collisions
-
 	// Collision with paddle
 	sf::Vector2f paddlePos = m_paddle->getPosition();
 	sf::Vector2f paddleDiagPos = m_paddle->getDiagonalPosition();
@@ -353,6 +351,7 @@ void BreakoutState::resetBalls(ResourceManager& a_rm)
 }
 void BreakoutState::levelComplete(ResourceManager& a_rm)
 {
+	a_rm.playSound(Sound::LevelComplete);
 	m_gameStarted = false;
 	m_completeFlag = false;
 	

@@ -37,5 +37,4 @@ private:
 	sf::Texture m_frameTexture;
 	sf::Sprite m_frameSprite;
 	sf::Sprite m_overlay;
-
 };

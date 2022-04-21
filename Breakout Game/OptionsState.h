@@ -24,11 +24,15 @@ private:
 
 	sf::Text m_buttonText;
 	sf::Text m_buttonVolume;
-	int m_buttonVolumeNum;
 
 	sf::Text m_ballText;
 	sf::Text m_ballVolume;
-	int m_ballVolumeNum;
+
+	sf::Text m_gameText;
+	sf::Text m_gameVolume;
+
+	sf::Text m_levelText;
+	sf::Text m_levelVolume;
 
 	sf::Text m_volumeText;
 
@@ -41,7 +45,6 @@ private:
 		a_text.setPosition(a_pos);
 	}
 
-	void fixVolume(int& a_volume);
-	void adjustVolumeText(int& a_volume, sf::Text& a_text);
+	void adjustVolumeText(int a_volume, sf::Text& a_text, bool a_left);
 	void generateUI(ResourceManager& a_rm);
 };

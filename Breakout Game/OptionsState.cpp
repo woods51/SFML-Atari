@@ -75,28 +75,28 @@ void OptionsState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 							a_states.pop_back();
 							break;
 						case Press::BUTTON_UP:
-							a_rm.setVolume(Sound::Button, m_buttonVolumeNum++);
-							break;
-						case Press::BUTTON_UP_X:
-							a_rm.setVolume(Sound::Button, m_buttonVolumeNum+=10);
+							a_rm.setVolume(Sound::Button, true);
 							break;
 						case Press::BUTTON_DOWN:
-							a_rm.setVolume(Sound::Button, m_buttonVolumeNum--);
-							break;
-						case Press::BUTTON_DOWN_X:
-							a_rm.setVolume(Sound::Button, m_buttonVolumeNum-=10);
+							a_rm.setVolume(Sound::Button, false);
 							break;
 						case Press::BALL_UP:
-							a_rm.setVolume(Sound::Ball, m_ballVolumeNum++);
-							break;
-						case Press::BALL_UP_X:
-							a_rm.setVolume(Sound::Ball, m_ballVolumeNum += 10);
+							a_rm.setVolume(Sound::Ball, true);
 							break;
 						case Press::BALL_DOWN:
-							a_rm.setVolume(Sound::Ball, m_ballVolumeNum--);
+							a_rm.setVolume(Sound::Ball, false);
 							break;
-						case Press::BALL_DOWN_X:
-							a_rm.setVolume(Sound::Ball, m_ballVolumeNum -= 10);
+						case Press::GAME_UP:
+							a_rm.setVolume(Sound::GameOver, true);
+							break;
+						case Press::GAME_DOWN:
+							a_rm.setVolume(Sound::GameOver, false);
+							break;
+						case Press::LEVEL_UP:
+							a_rm.setVolume(Sound::LevelComplete, true);
+							break;
+						case Press::LEVEL_DOWN:
+							a_rm.setVolume(Sound::LevelComplete, false);
 							break;
 						default:
 							break;
@@ -130,13 +130,21 @@ void OptionsState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 }
 void OptionsState::update(sf::Time a_dt, ResourceManager& a_rm)
 {
-	fixVolume(m_buttonVolumeNum);
-	m_buttonVolume.setString(std::to_string(m_buttonVolumeNum));
-	adjustVolumeText(m_buttonVolumeNum, m_buttonVolume);
+	int volume = a_rm.getVolume(Sound::Button);
+	m_buttonVolume.setString(std::to_string(volume));
+	adjustVolumeText(volume, m_buttonVolume, true);
 
-	fixVolume(m_ballVolumeNum);
-	m_ballVolume.setString(std::to_string(m_ballVolumeNum));
-	adjustVolumeText(m_ballVolumeNum, m_ballVolume);
+	volume = a_rm.getVolume(Sound::Ball);
+	m_ballVolume.setString(std::to_string(volume));
+	adjustVolumeText(volume, m_ballVolume, true);
+
+	volume = a_rm.getVolume(Sound::GameOver);
+	m_gameVolume.setString(std::to_string(volume));
+	adjustVolumeText(volume, m_gameVolume, false);
+
+	volume = a_rm.getVolume(Sound::LevelComplete);
+	m_levelVolume.setString(std::to_string(volume));
+	adjustVolumeText(volume, m_levelVolume, false);
 
 	if (m_background2 != nullptr)
 	{
@@ -168,6 +176,12 @@ void OptionsState::render(sf::RenderWindow& a_window)
 	a_window.draw(m_ballText);
 	a_window.draw(m_ballVolume);
 
+	a_window.draw(m_gameText);
+	a_window.draw(m_gameVolume);
+
+	a_window.draw(m_levelText);
+	a_window.draw(m_levelVolume);
+
 	a_window.draw(m_volumeText);
 	// Render UI
 	for (const auto& b : m_buttons)
@@ -181,24 +195,7 @@ void OptionsState::render(sf::RenderWindow& a_window)
 void OptionsState::generateUI(ResourceManager& a_rm)
 {
 	// generate all buttons
-	// >
-	Button* temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) - 68), Press::BUTTON_UP, ">");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
-	m_buttons.push_back(temp);
-
-	// >>
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 66, (HEIGHT / 2) - 68), Press::BUTTON_UP_X, ">>");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(12, 4));
-	m_buttons.push_back(temp);
-	// <
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) - 68), Press::BUTTON_DOWN, "<");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
-	m_buttons.push_back(temp);
-
-	// <<
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 114, (HEIGHT / 2) - 68), Press::BUTTON_DOWN_X, "<<");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(9, 4));
-	m_buttons.push_back(temp);
+	Button* temp;
 
 	//BACK
 	temp = new Button(a_rm, sf::Vector2f(75, 100),
@@ -207,68 +204,99 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
 	m_buttons.push_back(temp);
 
+	// BUTTON
+	// >
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 - 100, (HEIGHT / 2) - 68), Press::BUTTON_UP, ">");
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
+	m_buttons.push_back(temp);
+
+	// <
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 - 100, (HEIGHT / 2) - 68), Press::BUTTON_DOWN, "<");
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
+	m_buttons.push_back(temp);
+
+	// BALL
+	// >
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 - 100, (HEIGHT / 2) + 92), Press::BALL_UP, ">", Sound::Ball);
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
+	m_buttons.push_back(temp);
+
+	// <
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 - 100, (HEIGHT / 2) + 92), Press::BALL_DOWN, "<", Sound::Ball);
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
+	m_buttons.push_back(temp);
+
+	// Game
+	// >
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 + 100, (HEIGHT / 2) - 68), Press::GAME_UP, ">", Sound::GameOver);
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
+	m_buttons.push_back(temp);
+
+	// <
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 + 100, (HEIGHT / 2) - 68), Press::GAME_DOWN, "<", Sound::GameOver);
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
+	m_buttons.push_back(temp);
+
+	// Level
+	// >
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 + 100, (HEIGHT / 2) + 92), Press::LEVEL_UP, ">", Sound::LevelComplete);
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
+	m_buttons.push_back(temp);
+
+	// <
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 + 100, (HEIGHT / 2) + 92), Press::LEVEL_DOWN, "<", Sound::LevelComplete);
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
+	m_buttons.push_back(temp);
+
 	//UI
 	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
 	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 
 	//Text
 	//Button Volume Number
-	m_buttonVolumeNum = a_rm.getVolume(Sound::Button);
-	setDefaultText(a_rm, m_buttonVolume, 40, sf::Vector2f((WIDTH / 2) - 35, (HEIGHT / 2) - 130));
-	m_buttonVolume.setString(std::to_string(m_buttonVolumeNum));
+	setDefaultText(a_rm, m_buttonVolume, 40, sf::Vector2f((WIDTH / 2) - 35 - 100, (HEIGHT / 2) - 130));
 
 	//Button Text
-	setDefaultText(a_rm, m_buttonText, 22, sf::Vector2f((WIDTH/2) - 55, 200));
+	setDefaultText(a_rm, m_buttonText, 22, sf::Vector2f((WIDTH/2) - 55 - 100, 200));
 	m_buttonText.setString("Button");
 	
-	// >
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) + 92), Press::BALL_UP, ">", Sound::Ball);
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
-	m_buttons.push_back(temp);
-
-	// >>
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 66, (HEIGHT / 2) + 92), Press::BALL_UP_X, ">>", Sound::Ball);
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(12.0f, 4.0f));
-	m_buttons.push_back(temp);
-	// <
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) + 92), Press::BALL_DOWN, "<", Sound::Ball);
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
-	m_buttons.push_back(temp);
-
-	// <<
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 114, (HEIGHT / 2) + 92), Press::BALL_DOWN_X, "<<", Sound::Ball);
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(9.0f, 4.0f));
-	m_buttons.push_back(temp);
-
 	//Ball Volume Number
-	m_ballVolumeNum = a_rm.getVolume(Sound::Ball);
-	setDefaultText(a_rm, m_ballVolume, 40, sf::Vector2f((WIDTH / 2) - 50, (HEIGHT / 2) + 30));
-	m_ballVolume.setString(std::to_string(m_ballVolumeNum));
+	setDefaultText(a_rm, m_ballVolume, 40, sf::Vector2f((WIDTH / 2) - 50 - 100, (HEIGHT / 2) + 30));
 
 	//Ball Text
-	setDefaultText(a_rm, m_ballText, 22, sf::Vector2f((WIDTH / 2) - 35, (HEIGHT / 2)));
+	setDefaultText(a_rm, m_ballText, 22, sf::Vector2f((WIDTH / 2) - 35 - 100, (HEIGHT / 2)));
 	m_ballText.setString("Ball");
+
+	//Game Volume Number
+	setDefaultText(a_rm, m_gameVolume, 40, sf::Vector2f((WIDTH / 2) - 35 + 100, (HEIGHT / 2) - 130));
+
+	//Game Text
+	setDefaultText(a_rm, m_gameText, 22, sf::Vector2f((WIDTH / 2) - 37 + 100, 200));
+	m_gameText.setString("Game");
+
+	//Level Volume Number
+	setDefaultText(a_rm, m_levelVolume, 40, sf::Vector2f((WIDTH / 2) - 50 + 100, (HEIGHT / 2) + 30));
+
+	//Level Text
+	setDefaultText(a_rm, m_levelText, 22, sf::Vector2f((WIDTH / 2) - 44 + 100, (HEIGHT / 2)));
+	m_levelText.setString("Level");
 
 	//Volume Text
 	setDefaultText(a_rm, m_volumeText, 40, sf::Vector2f((WIDTH / 2) - 100, 100));
 	m_volumeText.setString("Volume");
 }
-void OptionsState::fixVolume(int& a_volume)
+void OptionsState::adjustVolumeText(int a_volume, sf::Text& a_text, bool a_left)
 {
-	if (a_volume < 0)
-		a_volume = 0;
-	else if (a_volume > 100)
-		a_volume = 100;
-	return;
-}
-void OptionsState::adjustVolumeText(int& a_volume, sf::Text& a_text)
-{
+	int offset = (WIDTH / 2) - 100;
+	if (!a_left)
+		offset = (WIDTH / 2) + 100;
+
 	float posY = a_text.getPosition().y;
 	if (a_volume == 100)
-		a_text.setPosition((WIDTH / 2) - 50, posY);
+		a_text.setPosition(offset - 50, posY);
 	else if (a_volume < 10)
-		a_text.setPosition((WIDTH / 2) - 15, posY);
+		a_text.setPosition(offset - 15, posY);
 	else
-		a_text.setPosition((WIDTH / 2) - 35, posY);
+		a_text.setPosition(offset - 35, posY);
 	return;
 }

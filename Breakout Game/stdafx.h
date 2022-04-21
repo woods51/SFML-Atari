@@ -10,7 +10,6 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-//#include <Windows.h>
 
 #define WIDTH 1280
 #define HEIGHT 720
@@ -77,6 +76,11 @@ enum class Press {
 	BALL_UP_X,
 	BALL_DOWN_X,
 
+	GAME_UP,
+	GAME_DOWN,
+	LEVEL_UP,
+	LEVEL_DOWN,
+
 	TILE,
 	PEN,
 	ERASE,
@@ -85,7 +89,7 @@ enum class Press {
 enum class Sound {
 	Button,
 	Ball,
-	Win,
-	Fail,
+	GameOver,
+	LevelComplete,
 	None
 };

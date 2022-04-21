@@ -77,12 +77,10 @@ void ResourceManager::loadSounds()
 		m_sounds[name] = temp;
 		printf("Added %s at sounds[%s].\n", soundPath.c_str(), name.c_str());
 	}
-	m_buttonSound.setBuffer(*getSound("button_click"));
-	m_buttonSound.setVolume(100);
 
-	m_ballSound.setBuffer(*getSound("ball_tap"));
-	m_buttonSound.setVolume(75);
+	generateSounds();
 }
+
 sf::Texture* ResourceManager::getTexture(std::string textureKey)
 {
 	if (m_textures.find(textureKey) == m_textures.end())
@@ -106,57 +104,100 @@ sf::SoundBuffer* ResourceManager::getSound(std::string soundKey)
 }
 unsigned int ResourceManager::getVolume(enum class Sound a_sound)
 {
+	unsigned int volume = 0;
 	switch (a_sound)
 	{
 	case Sound::Button:
-		return (unsigned int)m_buttonSound.getVolume();
+		volume = (unsigned int)m_buttonPress.getVolume();
 		break;
 	case Sound::Ball:
-		return (unsigned int)m_ballSound.getVolume();
+		volume = (unsigned int)m_ballBounce.getVolume();
+		break;
+	case Sound::GameOver:
+		volume = (unsigned int)m_gameOver.getVolume();
+		break;
+	case Sound::LevelComplete:
+		volume = (unsigned int)m_levelComplete.getVolume();
 		break;
 	default:
 		break;
 	}
-	return 0;
+	return volume;
 }
 void ResourceManager::playSound(enum class Sound a_sound)
 {
 	switch (a_sound)
 	{
 	case Sound::Button:
-		m_buttonSound.play();
+		m_buttonPress.play();
 		break;
 	case Sound::Ball:
-		m_ballSound.play();
+		m_ballBounce.play();
+		break;
+	case Sound::GameOver:
+		m_gameOver.play();
+		break;
+	case Sound::LevelComplete:
+		m_levelComplete.play();
 		break;
 	default:
 		break;
 	}
 	return;
 }
-void ResourceManager::setVolume(enum class Sound a_sound, int a_volume)
+void ResourceManager::generateSounds()
 {
-	if (a_volume < 0)
-	{
-		a_volume = 0;
-	}
-	else if (a_volume > 100)
-	{
-		a_volume = 100;
-	}
-		
+	m_buttonPress.setBuffer(*getSound("button_click"));
+	m_buttonPress.setVolume(100);
+
+	m_ballBounce.setBuffer(*getSound("ball_tap"));
+	m_ballBounce.setVolume(70);
+
+	m_gameOver.setBuffer(*getSound("game_over"));
+	m_gameOver.setVolume(50);
+
+	m_levelComplete.setBuffer(*getSound("level_complete"));
+	m_levelComplete.setVolume(50);
+}
+void ResourceManager::setVolume(enum class Sound a_sound, bool a_increase)
+{
+	float value = 10.001f;
+	if (!a_increase)
+		value = -9.901f;
+
 	switch (a_sound)
 	{
 	case Sound::Button:
-		m_buttonSound.setVolume((float)a_volume);
+		adjustVolume(m_buttonPress, value);
 		break;
 	case Sound::Ball:
-		m_ballSound.setVolume((float)a_volume);
+		adjustVolume(m_ballBounce, value);
+		break;
+	case Sound::GameOver:
+		adjustVolume(m_gameOver, value);
+		break;
+	case Sound::LevelComplete:
+		adjustVolume(m_levelComplete, value);
 		break;
 	default:
 		break;
 	}
 	return;
+}
+void ResourceManager::adjustVolume(sf::Sound& a_sound, float a_value)
+{
+	float volume = a_sound.getVolume();
+
+	if (volume + a_value < 0)
+		volume = 0.0f;
+
+	else if (volume + a_value > 100)
+		volume = 100.0f;
+
+	else
+		volume += a_value;
+
+	a_sound.setVolume(volume);
 }
 ResourceManager::~ResourceManager()
 {

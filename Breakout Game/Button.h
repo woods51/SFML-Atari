@@ -82,7 +82,7 @@ class TickButton : public Button
 public:
 	TickButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT,
 		std::string a_text = "enter text", Sound a_sound = Sound::Button)
-		: Button(a_rm, a_pos, a_type, sf::Vector2f(3, 3), sf::Vector2f(16, 12), "button_options", "button_options_selected")
+		: Button(a_rm, a_pos, a_type, sf::Vector2f(3, 3), sf::Vector2f(16, 12), "button_options", "button_options_selected", a_sound)
 	{
 		m_text.setString(a_text);
 	}
