@@ -1,11 +1,11 @@
 #pragma once
-#include "stdafx.h"
-#include "State.h"
-#include "PauseState.h"
-#include "LoadMenu.h"
-#include "Ball.h"
-#include "Paddle.h"
-#include "GameOver.h"
+#include "../../stdafx.h"
+#include "../State.h"
+#include "../Menus/PauseState.h"
+#include "../Menus/LoadMenu.h"
+#include "../Menus/GameOver.h"
+#include "../../GameObjects/Ball.h"
+#include "../../GameObjects/Paddle.h"
 
 class BreakoutState : public State
 {

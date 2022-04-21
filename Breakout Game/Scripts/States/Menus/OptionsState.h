@@ -1,7 +1,7 @@
 #pragma once
-#include "stdafx.h"
-#include "BreakoutState.h"
-#include "Button.h"
+#include "../../stdafx.h"
+#include "../Games/BreakoutState.h"
+#include "../../GameObjects/Button.h"
 
 class OptionsState : public State
 {
@@ -35,15 +35,6 @@ private:
 	sf::Text m_levelVolume;
 
 	sf::Text m_volumeText;
-
-	void setDefaultText(ResourceManager& a_rm, sf::Text& a_text, unsigned int a_charSize,
-		sf::Vector2f a_pos, std::string a_font = "default", sf::Color fill = sf::Color::White)
-	{
-		a_text.setFont(*a_rm.getFont(a_font));
-		a_text.setFillColor(fill);
-		a_text.setCharacterSize(a_charSize);
-		a_text.setPosition(a_pos);
-	}
 
 	void adjustVolumeText(int a_volume, sf::Text& a_text, bool a_left);
 	void generateUI(ResourceManager& a_rm);

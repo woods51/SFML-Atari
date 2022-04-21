@@ -1,10 +1,10 @@
 #pragma once
-#include "stdafx.h"
-#include "State.h"
-#include "Tile.h"
-#include "PauseState.h"
-#include "SaveMenu.h"
-#include "Button.h"
+#include "../../stdafx.h"
+#include "../State.h"
+#include "../Menus/PauseState.h"
+#include "../Menus/SaveMenu.h"
+#include "../../GameObjects/Tile.h"
+#include "../../GameObjects/Button.h"
 
 class LevelEditor : public State
 {
@@ -42,13 +42,4 @@ private:
 	void generateUI(ResourceManager& a_rm);
 	void generateButtons(ResourceManager& a_rm);
 	void generateTileButtons(ResourceManager& a_rm);
-
-	void setDefaultText(ResourceManager& a_rm, sf::Text& a_text, unsigned int a_charSize,
-		sf::Vector2f a_pos, std::string a_font = "default", sf::Color fill = sf::Color::White)
-	{
-		a_text.setFont(*a_rm.getFont(a_font));
-		a_text.setFillColor(fill);
-		a_text.setCharacterSize(a_charSize);
-		a_text.setPosition(a_pos);
-	}
 };

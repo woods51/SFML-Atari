@@ -1,10 +1,10 @@
 #pragma once
-#include "stdafx.h"
-#include "State.h"
+#include "../../stdafx.h"
+#include "../State.h"
 #include "BreakoutMenu.h"
 #include "OptionsState.h"
-#include "PongState.h"
-#include "LevelEditor.h"
+#include "../Games/PongState.h"
+#include "../Games/LevelEditor.h"
 
 class MenuState : public State
 {

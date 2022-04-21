@@ -1,9 +1,9 @@
 #pragma once
-#include "stdafx.h"
-#include "State.h"
-#include "PauseState.h"
-#include "PongBall.h"
-#include "Paddle.h"
+#include "../../stdafx.h"
+#include "../State.h"
+#include "../Menus/PauseState.h"
+#include "../../GameObjects/PongBall.h"
+#include "../../GameObjects/Paddle.h"
 
 class PongState : public State
 {

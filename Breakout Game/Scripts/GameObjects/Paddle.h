@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "Tile.h"
 
 class Paddle : public Tile

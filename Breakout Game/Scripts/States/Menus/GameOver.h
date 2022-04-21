@@ -1,8 +1,8 @@
 #pragma once
-#include "stdafx.h"
-#include "State.h"
+#include "../../stdafx.h"
+#include "../State.h"
 #include "OptionsState.h"
-#include "Button.h"
+#include "../../GameObjects/Button.h"
 
 class GameOver : public State
 {

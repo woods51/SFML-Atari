@@ -1,6 +1,6 @@
 #pragma once
-#include "stdafx.h"
-#include "State.h"
+#include "../../stdafx.h"
+#include "../State.h"
 #include "OptionsState.h"
 
 class SaveMenu : public State

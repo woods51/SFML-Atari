@@ -1,4 +1,4 @@
-#include "Ball.h"
+#include "./Ball.h"
 
 void Ball::move(ResourceManager& a_rm, sf::Time a_dt)
 {
