@@ -23,6 +23,12 @@ public:
 	void generateLevel2(ResourceManager& a_rm);
 	void generateLevel3(ResourceManager& a_rm);
 	void generateLevel4(ResourceManager& a_rm);
+	void generateLevel5(ResourceManager& a_rm);
+	void generateLevel6(ResourceManager& a_rm);
+	void generateLevel7(ResourceManager& a_rm);
+	void generateLevel8(ResourceManager& a_rm);
+	void generateLevel9(ResourceManager& a_rm);
+	void generateLevel10(ResourceManager& a_rm);
 
 	~BreakoutState();
 private:
