@@ -40,6 +40,49 @@ public:
 	////////////////////////////////////////////////////////////
 	~LevelEditor();
 private:
+
+	////////////////////////////////////////////////////////////
+	/// \brief Handles and checks for any button events.
+	///
+	/// This function works in part with the eventHandler to
+	/// compute whether the user has clicked a button when
+	/// a left mouse button is triggered.
+	/// 
+	/// \param a_rm		--> ResourceManager
+	/// \param a_window	--> RenderWindow
+	/// \param a_states		--> Vector of game states
+	/// \param a_mousePosition	--> Current mouse position
+	/// \param a_lockClick	--> Mouse click lock
+	////////////////////////////////////////////////////////////
+	void handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
+		sf::Vector2f a_mousePosition, bool a_lockClick);
+
+	////////////////////////////////////////////////////////////
+	/// \brief Handles and checks for any tile button events.
+	///
+	/// This function works in part with the eventHandler to
+	/// compute whether the user has clicked a tile button when
+	/// a left mouse button is triggered.
+	/// 
+	/// \param a_rm		--> ResourceManager
+	/// \param a_window	--> RenderWindow
+	/// \param a_mousePosition	--> Current mouse position
+	////////////////////////////////////////////////////////////
+	void handleTileButtonEvents(ResourceManager& a_rm, sf::Vector2f a_mousePosition);
+
+	////////////////////////////////////////////////////////////
+	/// \brief Handles selection overlay for tiles
+	///
+	/// This function works in part with the eventHandler to
+	/// change each tile texture based on its selection status.
+	/// If the mouse is hovering over the current tile it will
+	/// have its selection state set to true, otherwise false.
+	/// 
+	/// \param a_rm		--> ResourceManager
+	/// \param a_mousePosition	--> Current mouse position
+	/// \param a_lockClick	--> Mouse click lock
+	////////////////////////////////////////////////////////////
+	void handleTileSelection(ResourceManager& a_rm, sf::Vector2f a_mousePosition, bool a_lockClick);
 	
 	////////////////////////////////////////////////////////////
 	/// \brief Generates initial tile map.
@@ -80,21 +123,7 @@ private:
 	////////////////////////////////////////////////////////////
 	void generateTileButtons(ResourceManager& a_rm);
 
-	////////////////////////////////////////////////////////////
-	/// \brief Updates user interfaces.
-	///
-	/// This function updates user interfaces.
-	/// 
-	/// \param a_rm	--> ResourceManager
-	////////////////////////////////////////////////////////////
-	void updateUI(ResourceManager& a_rm);
-
-	void handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
-		sf::Vector2f a_mousePosition, bool a_lockClick);
-	void handleTileButtonEvents(ResourceManager& a_rm, sf::Vector2f a_mousePosition);
-	void handleTileSelection(ResourceManager& a_rm, sf::Vector2f a_mousePosition, bool a_lockClick);
-
-	// Tile Map
+	// Tile map
 	std::vector<Tile*> m_tileMap;
 	
 	// Buttons & UI
@@ -110,10 +139,10 @@ private:
 	sf::Sprite m_previewTile;
 	sf::Sprite m_selectorTile;
 	
-	// Text Objects
+	// Text objects
 	sf::Text m_toolsText;
-	sf::Text m_regularTile;
-	sf::Text m_lockedTile;
-	sf::Text m_specialTile;
-	sf::Text m_wallTile;
+	sf::Text m_regularText;
+	sf::Text m_lockedText;
+	sf::Text m_specialText;
+	sf::Text m_wallText;
 };

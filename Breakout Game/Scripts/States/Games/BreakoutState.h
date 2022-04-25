@@ -20,6 +20,14 @@ public:
 
 	~BreakoutState();
 private:
+
+	////////////////////////////////////////////////////////////
+	/// \brief Updates user interfaces.
+	///
+	/// This function updates user interfaces.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	////////////////////////////////////////////////////////////
 	void updateUI();
 	void generateUI(ResourceManager& a_rm);
 	void generateLevel(ResourceManager& a_rm, std::vector<Tile*>& a_tileMap);

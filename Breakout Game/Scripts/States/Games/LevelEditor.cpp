@@ -18,8 +18,6 @@ void LevelEditor::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window
 		switch (event.type)
 		{
 		case sf::Event::MouseButtonPressed:
-
-			// Left mouse click
 			if (event.mouseButton.button == sf::Mouse::Left && !lockClick)
 			{
 				lockClick = true;
@@ -36,17 +34,6 @@ void LevelEditor::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window
 			}
 			break;
 
-		case sf::Event::KeyPressed:
-			inputHandler(event.key.code, true);
-			break;
-
-		case sf::Event::Resized:
-			break;
-
-		case sf::Event::KeyReleased:
-			inputHandler(event.key.code, false);
-			break;
-
 		case sf::Event::Closed:
 			a_window.close();
 			break;
@@ -54,6 +41,49 @@ void LevelEditor::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window
 
 		handleTileSelection(a_rm, mousePosition, lockClick);
 	}
+}
+void LevelEditor::update(ResourceManager& a_rm, sf::Time a_dt) {}
+
+void LevelEditor::render(sf::RenderWindow& a_window)
+{
+	// Draw background
+	a_window.clear(sf::Color::Black);
+	a_window.draw(m_border);
+
+	// Draw tile map
+	for (const auto& tile : m_tileMap)
+	{
+		if (!tile->isActive())
+			continue;
+
+		sf::RectangleShape temp = tile->getShape();
+		a_window.draw(temp);
+	}
+
+	// Draw buttons
+	for (auto b : m_buttons)
+	{
+		a_window.draw(b->getShape());
+		a_window.draw(b->getText());
+	}
+	for (auto b : m_tileButtons)
+	{
+		a_window.draw(b->getShape());
+		a_window.draw(b->getText());
+	}
+
+	// Draw text
+	a_window.draw(m_regularText);
+	a_window.draw(m_lockedText);
+	a_window.draw(m_specialText);
+	a_window.draw(m_wallText);
+	a_window.draw(m_toolsText);
+
+	// Draw tile overlays
+	a_window.draw(m_selectorTile);
+	a_window.draw(m_previewTile);
+
+	a_window.display();
 }
 void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	sf::Vector2f a_mousePosition, bool lock_click)
@@ -72,6 +102,7 @@ void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_
 			{
 			case Press::DEFAULT:
 				break;
+
 			case Press::PAUSE:
 				m_frameTexture.create(windowSize.x, windowSize.y);
 				m_frameTexture.update(a_window);
@@ -166,84 +197,38 @@ void LevelEditor::handleTileSelection(ResourceManager& a_rm, sf::Vector2f a_mous
 		}
 	}
 }
-void LevelEditor::update(ResourceManager& a_rm, sf::Time a_dt)
-{
-	updateUI(a_rm);
-}
-void LevelEditor::render(sf::RenderWindow& a_window)
-{
-	a_window.clear(sf::Color::Black);
-	a_window.draw(m_border);
-
-	// Draw Tile Map
-	for (const auto& tile : m_tileMap)
-	{
-		if (!tile->isActive())
-			continue;
-
-		sf::RectangleShape temp = tile->getShape();
-		a_window.draw(temp);
-	}
-
-	// Draw Buttons
-	for (auto b : m_buttons)
-	{
-		a_window.draw(b->getShape());
-		a_window.draw(b->getText());
-	}
-	for (auto b : m_tileButtons)
-	{
-		a_window.draw(b->getShape());
-		a_window.draw(b->getText());
-	}
-
-	a_window.draw(m_regularTile);
-	a_window.draw(m_lockedTile);
-	a_window.draw(m_specialTile);
-	a_window.draw(m_wallTile);
-	a_window.draw(m_toolsText);
-
-	a_window.draw(m_selectorTile);
-	a_window.draw(m_previewTile);
-
-	a_window.display();
-}
-void LevelEditor::updateUI(ResourceManager& a_rm)
-{
-	
-}
 void LevelEditor::generateUI(ResourceManager& a_rm)
 {
-	// Generate Text Objects
-	setDefaultText(a_rm, m_toolsText, 22, sf::Vector2f(74, HEIGHT - 228));
-	m_toolsText.setString("Tools");
-	setDefaultText(a_rm, m_regularTile, 22, sf::Vector2f(334, HEIGHT - 228));
-	m_regularTile.setString("Regular Tiles");
-	setDefaultText(a_rm, m_lockedTile, 22, sf::Vector2f(660, HEIGHT - 228));
-	m_lockedTile.setString("Locked Tiles");
-	setDefaultText(a_rm, m_specialTile, 22, sf::Vector2f(975, HEIGHT - 108));
-	m_specialTile.setString("Special Tiles");
-	setDefaultText(a_rm, m_wallTile, 22, sf::Vector2f(1000, HEIGHT - 228));
-	m_wallTile.setString("Wall Tiles");
-
-	// Generate Border
+	// Generate border
 	m_border.setTexture(*a_rm.getTexture("border_editor"));
 	m_border.setScale(sf::Vector2f(40, 40));
 
-	// Set Tile Selector
+	// Generate text objects
+	setDefaultText(a_rm, m_toolsText, 22, sf::Vector2f(74, HEIGHT - 228));
+	m_toolsText.setString("Tools");
+	setDefaultText(a_rm, m_regularText, 22, sf::Vector2f(334, HEIGHT - 228));
+	m_regularText.setString("Regular Tiles");
+	setDefaultText(a_rm, m_lockedText, 22, sf::Vector2f(660, HEIGHT - 228));
+	m_lockedText.setString("Locked Tiles");
+	setDefaultText(a_rm, m_specialText, 22, sf::Vector2f(975, HEIGHT - 108));
+	m_specialText.setString("Special Tiles");
+	setDefaultText(a_rm, m_wallText, 22, sf::Vector2f(1000, HEIGHT - 228));
+	m_wallText.setString("Wall Tiles");
+
+	// Set tile selector
 	m_selectorTile.setTexture(*a_rm.getTexture("tile_selected"));
 	m_selectorTile.setScale(sf::Vector2f(4, 4));
 	m_selectorTile.setPosition(WIDTH, HEIGHT);
 	
-	// Set Preview Tile
+	// Set preview tile
 	m_previewTile.setTexture(*a_rm.getTexture("tile_selected"));
 	m_previewTile.setScale(sf::Vector2f(6, 6));
 	m_previewTile.setPosition(sf::Vector2f(24, HEIGHT - 120));
 
-	// Generate Buttons (Pen, Erase, Deselect, Pause)
+	// Generate buttons (Pen, Erase, Deselect, Pause)
 	generateButtons(a_rm);
 
-	// Generate Tile Buttons
+	// Generate tile buttons
 	generateTileButtons(a_rm);
 }
 void LevelEditor::generateButtons(ResourceManager& a_rm)
@@ -253,6 +238,7 @@ void LevelEditor::generateButtons(ResourceManager& a_rm)
 		Press::PEN, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "button_pen", "button_pen_selected");
 	m_pen = temp;
 	m_buttons.push_back(temp);
+
 	temp = new Button(a_rm, sf::Vector2f(96, HEIGHT - 192),
 		Press::ERASE, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16.0f, 16.0f), "button_eraser", "button_eraser_selected");
 	m_erase = temp;
@@ -278,9 +264,9 @@ void LevelEditor::generateTileButtons(ResourceManager& a_rm)
 	TileButton* temp;
 
 	// Generate Default Tiles
-	for (const auto& key : { "tile_03", "tile_02", "tile_01",
+	for (const auto& key : {"tile_03", "tile_02", "tile_01",
 							"tile_04", "tile_05", "tile_06",
-							"tile_09", "tile_10", "tile_11" })
+							"tile_09", "tile_10", "tile_11"})
 	{
 		temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::Default, key);
 		m_tileButtons.push_back(temp);
@@ -295,8 +281,8 @@ void LevelEditor::generateTileButtons(ResourceManager& a_rm)
 
 	// Generate Locked Tiles
 	i = 1;
-	for (const auto& key : { "tile_09_lock", "tile_10_lock", "tile_11_lock",
-							"tile_09_lock2", "tile_10_lock2", "tile_11_lock2" })
+	for (const auto& key : {"tile_09_lock", "tile_10_lock", "tile_11_lock",
+							"tile_09_lock2", "tile_10_lock2", "tile_11_lock2"})
 	{
 		if (i > 3)
 			temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::Lock, key);
@@ -316,7 +302,7 @@ void LevelEditor::generateTileButtons(ResourceManager& a_rm)
 	// Generate Special Tiles
 	i = 1;
 	posY_offset = 64;
-	for (const auto& key : { "tile_special", "tile_special2", "tile_special3" })
+	for (const auto& key : {"tile_special", "tile_special2", "tile_special3"})
 	{
 		TileType type = TileType::Special;
 		if (i == 2)
@@ -334,7 +320,7 @@ void LevelEditor::generateTileButtons(ResourceManager& a_rm)
 	// Generate Wall Tiles
 	posX_offset = WIDTH - 384;
 	posY_offset = 192;
-	for (const auto& key : { "tile_wall", "tile_wall2", "tile_wall3" })
+	for (const auto& key : {"tile_wall", "tile_wall2", "tile_wall3"})
 	{
 		temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::Wall, key);
 		m_tileButtons.push_back(temp);
