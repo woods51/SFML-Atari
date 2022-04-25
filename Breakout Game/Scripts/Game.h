@@ -1,7 +1,8 @@
 #pragma once
-#include "stdafx.h"
 
+#include "stdafx.h"
 #include "ResourceManager.h"
+
 #include "./States/State.h"
 #include "./States/Games/BreakoutState.h"
 #include "./States/Games/PongState.h"
@@ -26,9 +27,10 @@ public:
 		
 	};
 	void run();
-	void exitGame();
 
 private:
+	void exit();
+
 	// Vector of smart pointers to game states
 	std::vector<std::unique_ptr<State>> m_states;
 };

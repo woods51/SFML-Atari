@@ -29,7 +29,7 @@ void OptionsState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
 	
 }
-void OptionsState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void OptionsState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	// Button Selector Update
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
@@ -128,7 +128,7 @@ void OptionsState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 		}
 	}	
 }
-void OptionsState::update(sf::Time a_dt, ResourceManager& a_rm)
+void OptionsState::update(ResourceManager& a_rm , sf::Time a_dt)
 {
 	int volume = a_rm.getVolume(Sound::Button);
 	m_buttonVolume.setString(std::to_string(volume));

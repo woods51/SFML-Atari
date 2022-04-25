@@ -31,7 +31,7 @@ void PongState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 		m_ball->isActive(true);
 }
 
-void PongState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void PongState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;
 	static bool lock_click = false;
@@ -97,7 +97,7 @@ void PongState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 		}
 	}
 }
-void PongState::update(sf::Time a_dt, ResourceManager& a_rm)
+void PongState::update(ResourceManager& a_rm, sf::Time a_dt)
 {
 	// Check color flag
 	if (m_colorFlag)

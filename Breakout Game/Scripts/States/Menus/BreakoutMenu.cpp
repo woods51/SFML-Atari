@@ -17,7 +17,7 @@ void BreakoutMenu::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 
 }
 
-void BreakoutMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void BreakoutMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;
 	sf::Vector2u winSize = a_window.getSize();
@@ -88,7 +88,7 @@ void BreakoutMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_r
 		}
 	}
 }
-void BreakoutMenu::update(sf::Time a_dt, ResourceManager& a_rm)
+void BreakoutMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 {
 	m_livesValue.setString(std::to_string(m_lives[m_livesIndex]));
 	switch (m_livesIndex)

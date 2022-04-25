@@ -23,7 +23,7 @@ BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, 
 	generateUI(a_rm);
 	generateLevel(a_rm, a_tileMap);
 }
-void BreakoutState::update(sf::Time a_dt, ResourceManager& a_rm)
+void BreakoutState::update(ResourceManager& a_rm, sf::Time a_dt)
 {
 	// Physics
 	if (m_gameStarted && !m_gameOver)
@@ -163,7 +163,7 @@ void BreakoutState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 	}
 		
 }
-void BreakoutState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void BreakoutState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;
 	static bool lock_click = false;

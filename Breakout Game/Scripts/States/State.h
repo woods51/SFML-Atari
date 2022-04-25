@@ -30,11 +30,11 @@ public:
     /// and also handles any mouse events.
     /// This function is called every frame.
     /// 
-    /// \param a_window --> RenderWindow
     /// \param a_rm          --> ResourceManager
+    /// \param a_window --> RenderWindow
     /// \param a_states     --> Vector of game states
     ////////////////////////////////////////////////////////////
-	virtual void eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states) = 0;
+	virtual void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) = 0;
 
     ////////////////////////////////////////////////////////////
     /// \brief Updates game elements
@@ -42,10 +42,10 @@ public:
     /// This function updates all gameplay elements in its state.
     /// This function is called every frame.
     /// 
-    /// \param a_dt  --> deltaTime
     /// \param a_rm --> ResourceManager
+    /// \param a_dt  --> deltaTime
     ////////////////////////////////////////////////////////////
-	virtual void update(sf::Time a_dt, ResourceManager& a_rm) = 0;
+	virtual void update(ResourceManager& a_rm, sf::Time a_dt) = 0;
 
     ////////////////////////////////////////////////////////////
     /// \brief Draws objects to RenderWindow.

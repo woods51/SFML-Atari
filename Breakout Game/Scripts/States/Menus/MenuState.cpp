@@ -15,7 +15,7 @@ void MenuState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
 
 }
-void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void MenuState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	// Button Selector Update
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
@@ -127,7 +127,7 @@ void MenuState::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, 
 		}
 	}
 }
-void MenuState::update(sf::Time a_dt, ResourceManager& a_rm)
+void MenuState::update(ResourceManager& a_rm, sf::Time a_dt)
 {
 	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.25f, 0));
 	if (m_background.getPosition().x == 3200)

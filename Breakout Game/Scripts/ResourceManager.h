@@ -8,10 +8,6 @@ public:
 	ResourceManager();
 	~ResourceManager();
 
-	void loadTextures();
-	void loadFonts();
-	void loadSounds();
-
 	sf::Texture* getTexture(std::string textureKey);
 	sf::Font* getFont(std::string fontKey);
 	sf::SoundBuffer* getSound(std::string soundKey);
@@ -20,6 +16,10 @@ public:
 	void setVolume(enum class Sound a_sound, bool a_increase);
 	
 private:
+	void loadTextures();
+	void loadFonts();
+	void loadSounds();
+
 	void generateSounds();
 	void adjustVolume(sf::Sound& a_sound, float a_value);
 

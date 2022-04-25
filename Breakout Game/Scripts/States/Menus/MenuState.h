@@ -9,12 +9,12 @@
 class MenuState : public State
 {
 public:
-	MenuState(ResourceManager&, sf::RenderWindow&);
+	MenuState(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
-	void inputHandler(sf::Keyboard::Key, bool) override;
-	void eventHandler(sf::RenderWindow&, ResourceManager&, std::vector<std::unique_ptr<State>>&) override;
-	void update(sf::Time dt, ResourceManager&) override;
-	void render(sf::RenderWindow&) override;
+	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
+	void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) override;
+	void update(ResourceManager& a_rm, sf::Time a_dt) override;
+	void render(sf::RenderWindow& a_window) override;
 
 	~MenuState();
 
@@ -31,5 +31,5 @@ private:
 	bool m_breakoutFlag = false;
 	bool m_pongFlag = false;
 	bool m_editorFlag = false;
-	void generateUI(ResourceManager&);
+	void generateUI(ResourceManager& a_rm);
 };

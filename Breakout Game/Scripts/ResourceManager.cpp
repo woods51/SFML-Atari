@@ -2,7 +2,9 @@
 
 ResourceManager::ResourceManager()
 {
-
+	loadTextures();
+	loadFonts();
+	loadSounds();
 }
 void ResourceManager::loadTextures()
 {

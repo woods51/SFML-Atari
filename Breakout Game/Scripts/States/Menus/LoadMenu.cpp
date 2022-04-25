@@ -25,7 +25,7 @@ void LoadMenu::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 {
 
 }
-void LoadMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, std::vector<std::unique_ptr<State>>& a_states)
+void LoadMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
@@ -107,7 +107,7 @@ void LoadMenu::eventHandler(sf::RenderWindow& a_window, ResourceManager& a_rm, s
 		}
 	}
 }
-void LoadMenu::update(sf::Time a_dt, ResourceManager& a_rm)
+void LoadMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 {
 	m_pageNumber.setString(std::to_string(m_currentPage));
 
