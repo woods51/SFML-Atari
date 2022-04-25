@@ -22,7 +22,7 @@ void LevelEditor::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window
 			{
 				lockClick = true;
 
-				handleButtonEvents(a_rm, a_window, a_states, mousePosition, lockClick);
+				handleButtonEvents(a_rm, a_window, a_states, mousePosition);
 				handleTileButtonEvents(a_rm, mousePosition);
 			}
 			break;
@@ -46,8 +46,9 @@ void LevelEditor::update(ResourceManager& a_rm, sf::Time a_dt) {}
 
 void LevelEditor::render(sf::RenderWindow& a_window)
 {
-	// Draw background
 	a_window.clear(sf::Color::Black);
+
+	// Draw background
 	a_window.draw(m_border);
 
 	// Draw tile map
@@ -86,7 +87,7 @@ void LevelEditor::render(sf::RenderWindow& a_window)
 	a_window.display();
 }
 void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
-	sf::Vector2f a_mousePosition, bool lock_click)
+	const sf::Vector2f& a_mousePosition)
 {
 	sf::Vector2u windowSize = a_window.getSize();
 
@@ -148,7 +149,7 @@ void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_
 		}
 	}
 }
-void LevelEditor::handleTileButtonEvents(ResourceManager& a_rm, sf::Vector2f a_mousePosition)
+void LevelEditor::handleTileButtonEvents(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_tileButtons)
 	{
@@ -174,7 +175,7 @@ void LevelEditor::handleTileButtonEvents(ResourceManager& a_rm, sf::Vector2f a_m
 		}
 	}
 }
-void LevelEditor::handleTileSelection(ResourceManager& a_rm, sf::Vector2f a_mousePosition, bool a_lockClick)
+void LevelEditor::handleTileSelection(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition, const bool& a_lockClick)
 {
 	if (a_lockClick && (m_erase->isSelected() || (m_pen->isSelected() && m_selectedTile != nullptr)))
 	{

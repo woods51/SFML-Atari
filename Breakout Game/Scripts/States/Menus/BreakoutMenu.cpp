@@ -4,76 +4,25 @@ BreakoutMenu::BreakoutMenu(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
 	generateUI(a_rm);
 }
-BreakoutMenu::~BreakoutMenu()
-{
-	// Free Allocated Memory
-	for (auto& b : m_buttons)
-	{
-		delete b;
-	}
-}
-void BreakoutMenu::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
-{
-
-}
+void BreakoutMenu::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) {}
 
 void BreakoutMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;
-	sf::Vector2u winSize = a_window.getSize();
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
 
-	buttonSelectUpdate(a_window, a_rm, mousePosition);
+	buttonSelectUpdate(a_rm, mousePosition);
 
-	// Handle Events
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
 		{
 		case sf::Event::MouseButtonPressed:
-
-			// Left Mouse Click
 			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
 			{
 				lock_click = true;
-
-				for (auto b : m_buttons)
-				{
-					sf::Vector2f b_pos = b->getPosition();
-					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
-
-					// Button Pressed
-					if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
-						mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
-					{
-						switch (b->OnClick(a_rm))
-						{
-						case Press::BREAKOUT:
-							a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_lives[m_livesIndex]));
-							break;
-						case Press::EDITOR:
-							a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
-							break;
-						case Press::LOAD:
-							a_states.push_back(std::make_unique<LoadMenu>(a_rm, a_window, &m_background,&m_background2, m_lives[m_livesIndex]));
-							break;
-						case Press::BACK:
-							a_states.pop_back();
-							break;
-						case Press::BUTTON_UP:
-							if (++m_livesIndex > 5)
-								m_livesIndex = 0;
-							break;
-						case Press::BUTTON_DOWN:
-							if (--m_livesIndex < 0)
-								m_livesIndex = 5;
-							break;
-						default:
-							break;
-						}
-					}
-				}
+				handleButtonEvents(a_rm, a_window, a_states, mousePosition);
 			}
 			break;
 
@@ -90,6 +39,7 @@ void BreakoutMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_windo
 }
 void BreakoutMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 {
+	// Update level text position
 	m_livesValue.setString(std::to_string(m_lives[m_livesIndex]));
 	switch (m_livesIndex)
 	{
@@ -111,7 +61,7 @@ void BreakoutMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 		break;
 	}
 
-	// Update Backgrounds
+	// Update backgrounds
 	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.25f, 0));
 	if (m_background.getPosition().x == 3200)
 	{
@@ -138,16 +88,80 @@ void BreakoutMenu::render(sf::RenderWindow& a_window)
 		a_window.draw(b->getText());
 	}
 
+	// Render Title
+	a_window.draw(m_breakoutTitle);
+
 	// Render Text
 	a_window.draw(m_livesText);
 	a_window.draw(m_livesValue);
-	a_window.draw(m_breakoutText);
 
 	a_window.display();
 }
+BreakoutMenu::~BreakoutMenu()
+{
+	for (auto& b : m_buttons)
+	{
+		delete b;
+	}
+}
+void BreakoutMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
+	const sf::Vector2f& a_mousePosition)
+{
+	for (auto b : m_buttons)
+	{
+		sf::Vector2f b_pos = b->getPosition();
+		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
+
+		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
+			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
+		{
+			switch (b->OnClick(a_rm))
+			{
+			case Press::BREAKOUT:
+				a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_lives[m_livesIndex]));
+				break;
+			case Press::EDITOR:
+				a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
+				break;
+			case Press::LOAD:
+				a_states.push_back(std::make_unique<LoadMenu>(a_rm, a_window, &m_background, &m_background2, m_lives[m_livesIndex]));
+				break;
+			case Press::BACK:
+				a_states.pop_back();
+				break;
+			case Press::BUTTON_UP:
+				if (++m_livesIndex > 5)
+					m_livesIndex = 0;
+				break;
+			case Press::BUTTON_DOWN:
+				if (--m_livesIndex < 0)
+					m_livesIndex = 5;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+}
+void BreakoutMenu::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
+{
+	for (auto b : m_buttons)
+	{
+		sf::Vector2f b_pos = b->getPosition();
+		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
+
+		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
+			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
+		{
+			b->isSelected(true);
+		}
+		else
+			b->isSelected(false);
+	}
+}
 void BreakoutMenu::generateUI(ResourceManager& a_rm)
 {
-	// Generate Buttons
+	// Generate menu buttons
 	Button* temp;
 
 	// Play
@@ -172,28 +186,26 @@ void BreakoutMenu::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
 	m_buttons.push_back(temp);
 
-	// >
+	// Generate tick buttons
 	temp = new TickButton(a_rm, sf::Vector2f(WIDTH/2 +6, (HEIGHT / 2) +170), Press::BUTTON_UP, ">");
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
-	// <
 	temp = new TickButton(a_rm, sf::Vector2f(WIDTH/2 -54, (HEIGHT / 2) +170), Press::BUTTON_DOWN, "<");
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
-	//Lives Value
+	// Generate text
 	setDefaultText(a_rm, m_livesValue, 40, sf::Vector2f(WIDTH/2 -16, HEIGHT/2 +120));
 	m_livesValue.setString(m_lives[m_livesIndex]);
 
-	//Lives Text
 	setDefaultText(a_rm, m_livesText, 22, sf::Vector2f(WIDTH/2 - 46, HEIGHT/2 +100));
 	m_livesText.setString("LIVES");
 
-	// Generate Text
-	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
-	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title_1"));
-	m_breakoutText.setScale(sf::Vector2f(6, 6));
+	// Generate title
+	m_breakoutTitle.setPosition((WIDTH / 2) - 324, 130);
+	m_breakoutTitle.setTexture(*a_rm.getTexture("breakout_title_1"));
+	m_breakoutTitle.setScale(sf::Vector2f(6, 6));
 
 	// Generate Backgrounds
 	m_frameTexture = *a_rm.getTexture("background_breakout");
@@ -202,42 +214,4 @@ void BreakoutMenu::generateUI(ResourceManager& a_rm)
 	m_background.setScale(40, 40);
 	m_background2 = m_background;
 	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
-}
-void BreakoutMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
-{
-	for (auto b : m_buttons)
-	{
-		sf::Vector2f b_pos = b->getPosition();
-		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
-
-		// Mouse is over button
-		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
-			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
-		{
-			b->isSelected(true);
-			switch (b->getButtonType())
-			{
-			case Press::BREAKOUT:
-				m_breakoutFlag = true;
-				m_editorFlag = false;
-				m_pongFlag = false;
-				break;
-			case Press::EDITOR:
-				m_breakoutFlag = false;
-				m_editorFlag = true;
-				m_pongFlag = false;
-				break;
-			case Press::PONG:
-				m_breakoutFlag = false;
-				m_editorFlag = false;
-				m_pongFlag = true;
-				break;
-			default:
-				m_breakoutFlag = m_editorFlag = m_pongFlag = false;
-				break;
-			}
-		}
-		else
-			b->isSelected(false);
-	}
 }

@@ -52,10 +52,9 @@ private:
 	/// \param a_window	--> RenderWindow
 	/// \param a_states		--> Vector of game states
 	/// \param a_mousePosition	--> Current mouse position
-	/// \param a_lockClick	--> Mouse click lock
 	////////////////////////////////////////////////////////////
 	void handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
-		sf::Vector2f a_mousePosition, bool a_lockClick);
+		const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Handles and checks for any tile button events.
@@ -68,21 +67,20 @@ private:
 	/// \param a_window	--> RenderWindow
 	/// \param a_mousePosition	--> Current mouse position
 	////////////////////////////////////////////////////////////
-	void handleTileButtonEvents(ResourceManager& a_rm, sf::Vector2f a_mousePosition);
+	void handleTileButtonEvents(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Handles selection overlay for tiles
 	///
 	/// This function works in part with the eventHandler to
-	/// change each tile texture based on its selection status.
-	/// If the mouse is hovering over the current tile it will
-	/// have its selection state set to true, otherwise false.
+	/// change each tile on the tile map texture based on the current tool selected.
+	/// Allows user to draw onto tile map with provided pen tools.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_mousePosition	--> Current mouse position
 	/// \param a_lockClick	--> Mouse click lock
 	////////////////////////////////////////////////////////////
-	void handleTileSelection(ResourceManager& a_rm, sf::Vector2f a_mousePosition, bool a_lockClick);
+	void handleTileSelection(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition, const bool& a_lockClick);
 	
 	////////////////////////////////////////////////////////////
 	/// \brief Generates initial tile map.

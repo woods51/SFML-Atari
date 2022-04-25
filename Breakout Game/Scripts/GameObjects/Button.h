@@ -78,7 +78,11 @@ public:
 	inline bool isSelected() { return m_isSelected; }
 
 	////////////////////////////////////////////////////////////
-	/// \brief Sets isSelected state
+	/// \brief Sets isSelected state.
+	/// 
+	/// This function updates the isSelected state,
+	/// if selected the texture of the button will be changed to its selectedTexture.
+	/// Otherwise it will be returned to its original texture.
 	///
 	/// \param a_isSelected	--> State
 	////////////////////////////////////////////////////////////
