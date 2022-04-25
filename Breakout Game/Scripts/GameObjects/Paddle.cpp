@@ -27,10 +27,6 @@ void Paddle::move(sf::Time a_dt)
 
 	handleBorder();
 }
-void Paddle::reset()
-{
-	m_shape.setPosition(m_defaultPos);
-}
 void Paddle::handleBorder()
 {
 	if (getPosition().x < 0)

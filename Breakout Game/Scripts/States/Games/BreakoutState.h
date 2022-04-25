@@ -18,28 +18,20 @@ public:
 	void update(sf::Time a_dt, ResourceManager& a_rm) override;
 	void render(sf::RenderWindow& a_window) override;
 
-	void generateLevel(ResourceManager& a_rm, std::vector<Tile*>& a_tileMap);
-	void generateLevel1(ResourceManager& a_rm);
-	void generateLevel2(ResourceManager& a_rm);
-	void generateLevel3(ResourceManager& a_rm);
-	void generateLevel4(ResourceManager& a_rm);
-	void generateLevel5(ResourceManager& a_rm);
-	void generateLevel6(ResourceManager& a_rm);
-	void generateLevel7(ResourceManager& a_rm);
-	void generateLevel8(ResourceManager& a_rm);
-	void generateLevel9(ResourceManager& a_rm);
-	void generateLevel10(ResourceManager& a_rm);
-
 	~BreakoutState();
 private:
 	void updateUI();
 	void generateUI(ResourceManager& a_rm);
+	void generateLevel(ResourceManager& a_rm, std::vector<Tile*>& a_tileMap);
 	void levelComplete(ResourceManager& a_rm);
 	void resetLevel();
 	void handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm);
 	void resetBalls(ResourceManager& a_rm);
+	void loadFiles();
+	bool loadLevel(ResourceManager& a_rm, std::string a_path);
 
-	std::vector<std::unique_ptr<Tile>> m_tileMap;
+	std::vector<std::string> m_levels;
+	std::vector<Tile*> m_tileMap;
 	std::vector<Button*> m_buttons;
 	std::vector<std::unique_ptr<Ball>> m_balls;
 

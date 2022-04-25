@@ -1,6 +1,14 @@
 #pragma once
 #include "Ball.h"
 
+////////////////////////////////////////////////////////////
+/// \brief PongBall Class.
+///
+/// This class is inherites members from the Pong Class.
+/// This class create Pong Balls which handles movement,
+/// collisions and the screen border in unique ways.
+/// 
+////////////////////////////////////////////////////////////
 class PongBall : public Ball
 {
 public:
@@ -59,7 +67,7 @@ public:
 	////////////////////////////////////////////////////////////
 	void handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir) override;
 
-	// Returns player scores as vector (p1, p2)
+	// Returns player scores as sf::Vector2i (p1_score, p2_score)
 	sf::Vector2i getScores() const { return sf::Vector2i(m_scoreP1, m_scoreP2); };
 
 protected:

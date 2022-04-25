@@ -46,6 +46,7 @@ void Tile::updateTile(ResourceManager& a_rm, TileType a_type, std::string a_text
 }
 void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_textureKey)
 {
+	// Default Tile Setup
 	m_type = a_type;
 	m_durability = 1;
 	m_isDestructable = true;
@@ -53,6 +54,8 @@ void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_texture
 	m_defaultTexture = a_textureKey;
 	m_firstTexture = a_rm.getTexture(a_textureKey);
 	sf::Texture* texture = m_firstTexture;
+
+	// Handles durabbility and texture values based on TileType
 	switch (a_type)
 	{
 	case TileType::Default:
@@ -106,6 +109,8 @@ void Tile::reset()
 	m_isDestructable = true;
 
 	sf::Texture* texture = m_firstTexture;
+
+	// Properly handles resets for Wall and Locked tiles
 	switch (m_type)
 	{
 	case TileType::Wall:

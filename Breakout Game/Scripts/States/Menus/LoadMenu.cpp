@@ -278,12 +278,12 @@ void LoadMenu::loadFiles()
 {
 	m_levels.clear();
 	std::string name;
-	std::string texturePath;
+	std::string filePath;
 	std::string path = "SavedLevels/";
 
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
-		texturePath = file.path().string();
+		filePath = file.path().string();
 
 		name = file.path().filename().string();
 		name = name.substr(0, name.length() - 4);
@@ -297,6 +297,7 @@ void LoadMenu::loadFiles()
 }
 bool LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
 {
+	LevelLoader loader;
 	std::string line;
 	std::string path = "SavedLevels/" + a_path + ".csv";
 	std::ifstream inputFile(path);
@@ -306,7 +307,7 @@ bool LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
 	{
 		while (std::getline(inputFile, line))
 		{
-			if (!parseTileData(a_rm, line))
+			if (!loader.parseTileData(a_rm, line, m_tileMap))
 			{
 				// Error Loading File
 				std::string temp = "Error reading file.\nLine (" + std::to_string(i) + ")\nLoad Canceled.";
@@ -321,59 +322,7 @@ bool LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
 	}
 	return true;
 }
-bool LoadMenu::parseTileData(ResourceManager& a_rm, std::string a_line)
-{
-	Tile* temp;
-	TileType tileType = TileType::None;
-	int posX, posY, type;
-	std::string texture, error;
-	posX = posY = type = 0;
-	texture = error = "";
 
-	replace(a_line.begin(), a_line.end(), ',', ' ');
-	std::istringstream parser(a_line);
-	parser >> posX >> posY >> type >> texture >> error;
-
-	if (!error.empty())
-		return false;
-	
-	tileType = getTileType(type);
-
-	temp = new Tile(a_rm, sf::Vector2f(posX, posY), tileType, texture);
-
-	m_tileMap.push_back(temp);
-	return true;
-}
-TileType LoadMenu::getTileType(int a_type)
-{
-	switch (a_type)
-	{
-	case 0:
-		return TileType::Default;
-		break;
-	case 1:
-		return TileType::Lock;
-		break;
-	case 2:
-		return TileType::Lock2;
-		break;
-	case 3:
-		return TileType::Special;
-		break;
-	case 4:
-		return TileType::Special2;
-		break;
-	case 5:
-		return TileType::Special3;
-		break;
-	case 6:
-		return TileType::Wall;
-		break;
-	default:
-		return TileType::Blank;
-		break;
-	}
-}
 void LoadMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto& b : m_buttons)

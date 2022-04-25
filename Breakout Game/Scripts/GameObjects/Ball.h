@@ -2,6 +2,13 @@
 #include "../stdafx.h"
 #include "../ResourceManager.h"
 
+////////////////////////////////////////////////////////////
+/// \brief Ball Class.
+///
+/// This class is used to create ball objects, this class handles collisions,
+/// velocity changes and general movement.
+/// 
+////////////////////////////////////////////////////////////
 class Ball
 {
 public:

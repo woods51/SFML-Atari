@@ -93,6 +93,9 @@
     <ClCompile Include="Scripts\States\Menus\MenuState.cpp">
       <Filter>Resource Files\States\Menus</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\LevelLoader.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\GameObjects\Button.h">
@@ -151,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="Scripts\States\Menus\LoadMenu.h">
       <Filter>Header Files\States\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\LevelLoader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

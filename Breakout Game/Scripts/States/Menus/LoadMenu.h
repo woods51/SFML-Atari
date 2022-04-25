@@ -4,6 +4,7 @@
 #include "OptionsState.h"
 #include "../../GameObjects/Tile.h"
 #include "../../GameObjects/Button.h"
+#include "../../LevelLoader.h"
 
 class LoadMenu : public State
 {
@@ -46,8 +47,6 @@ private:
 	void previousPage();
 	void loadFiles();
 	bool loadMap(ResourceManager& a_rm, std::string a_path);
-	bool parseTileData(ResourceManager& a_rm, std::string a_line);
-	TileType getTileType(int a_type);
 
 	std::vector<Tile*> m_tileMap;
 	std::vector<Button*> m_buttons;

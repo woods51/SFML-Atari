@@ -2,9 +2,30 @@
 #include "../stdafx.h"
 #include "Tile.h"
 
+////////////////////////////////////////////////////////////
+/// \brief Paddle Class.
+///
+/// This class inherits from the members of the Tile Class,
+/// it is used to create a instance of a rectangular paddle object.
+/// Paddles and supports basic horizontal and vertical movement
+/// and tracks direction for tiles.
+/// 
+////////////////////////////////////////////////////////////
 class Paddle : public Tile
 {
 public:
+
+	////////////////////////////////////////////////////////////
+	/// \brief Constructor for the paddle class.
+	///
+	/// Constructs paddle object using provided parameters. Calls tile constructor.
+	/// 
+	/// \param a_rm		--> ResourceManager
+	/// \param a_pos		--> Position
+	/// \param a_size		--> Size
+	/// \param a_scale		--> Scale
+	/// \param a_textureKey	--> String key for texture
+	////////////////////////////////////////////////////////////
 	Paddle(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH/2 - 160.0f, 640.0f),
 		sf::Vector2f a_size = sf::Vector2f(64.0f, 4.0f), sf::Vector2f a_scale = sf::Vector2f(5.0f, 5.0f),
 		std::string a_textureKey = "paddle")
@@ -21,25 +42,52 @@ public:
 		m_IsMovingDown = false;
 	};
 
+	////////////////////////////////////////////////////////////
+	/// \brief Handles basic paddle movement
+	///
+	/// This functions handles paddle movement using the public isMoving variables,
+	/// this function also calls handlerBorder.
+	/// 
+	////////////////////////////////////////////////////////////
 	void move(sf::Time dt);
-	void reset();
 
-	void handleBorder();
+	////////////////////////////////////////////////////////////
+	/// \brief Returns paddle to inital state
+	///
+	/// This functions returns paddle to its initial position.
+	/// 
+	////////////////////////////////////////////////////////////
+	void reset() { m_shape.setPosition(m_defaultPos); }
 
-	// Sets current direction
-	void setDirection(enum class Direction direction) { m_currentDir = direction; }
-
+	////////////////////////////////////////////////////////////
+	/// \brief Sets Direction
+	///
+	/// \param a_direction --> Direction
+	////////////////////////////////////////////////////////////
+	void setDirection(Direction a_direction) { m_currentDir = a_direction; }
 
 	// Returns current direction
 	enum class Direction getDirection() const { return m_currentDir; }
 
+	// Movement Variables
 	bool m_IsMovingLeft, m_IsMovingRight, m_IsMovingUp, m_IsMovingDown;
 
-private:
+protected:
+
+	////////////////////////////////////////////////////////////
+	/// \brief Handles border collision
+	///
+	/// This functions handles paddle collision with the window borders
+	/// defined under WIDTH and HEIGHT. Prevents paddle from leaving viewable area.
+	/// 
+	////////////////////////////////////////////////////////////
+	void handleBorder();
 	
+	// Properties
+	sf::Vector2f m_defaultPos;
 	enum class Direction m_currentDir;
 	float m_speed = 16.0f;
-	bool m_isColliding = false;
 
-	sf::Vector2f m_defaultPos;
+	// States
+	bool m_isColliding = false;
 };

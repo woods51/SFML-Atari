@@ -1,29 +1,28 @@
 #include "Button.h"
 
-Button::~Button()
-{
-
-}
-
-sf::Vector2f Button::getDiagonalPosition() const
-{
-	return sf::Vector2f(m_shape.getPosition().x + m_shape.getGlobalBounds().width,
-		m_shape.getPosition().y + m_shape.getGlobalBounds().height);
-}
 Press Button::OnClick(ResourceManager& a_rm)
 {
 	a_rm.playSound(m_sound);
 
 	return m_buttonType;
 }
+sf::Vector2f Button::getDiagonalPosition() const
+{
+	return sf::Vector2f(m_shape.getPosition().x + m_shape.getGlobalBounds().width,
+		m_shape.getPosition().y + m_shape.getGlobalBounds().height);
+}
+
 void Button::isSelected(bool a_isSelected)
 {
+	// Select
 	if (a_isSelected && !m_isSelected)
 	{
 		m_shape.setTexture(m_textureSelect);
 		m_isSelected = true;
 		return;
 	}
+
+	// Un-Select
 	else if (!a_isSelected && m_isSelected)
 	{
 		m_shape.setTexture(m_texture);
