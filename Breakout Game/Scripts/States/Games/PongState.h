@@ -10,13 +10,25 @@ class PongState : public State
 public:
 	PongState(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
-	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) override;
 	void update(ResourceManager& a_window, sf::Time a_dt) override;
 	void render(sf::RenderWindow& a_window) override;
 
 	~PongState();
 private:
+
+	////////////////////////////////////////////////////////////
+	/// \brief Handles keyboard inputs
+	///
+	/// This function handles any keyboard inputs,
+	/// it will handle both key pressed down and released events.
+	/// This function is called every frame.
+	/// 
+	/// \param a_key		--> Position of Tile
+	/// \param a_isPressed	--> True if key pressed, False if released
+	////////////////////////////////////////////////////////////
+	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed);
+
 	void updateUI();
 	void handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm);
 	void generateUI(ResourceManager& a_rm);

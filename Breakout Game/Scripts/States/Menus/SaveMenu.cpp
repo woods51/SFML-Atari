@@ -8,24 +8,11 @@ SaveMenu::SaveMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Textur
 
 	generateUI(a_rm);
 }
-SaveMenu::~SaveMenu()
-{
-	for (auto& b : m_buttons)
-	{
-		delete b;
-	}
-}
-void SaveMenu::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
-{
-
-}
 void SaveMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
-	// Button Selector Update
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
 
-	// Handle Events
 	sf::Event event;
 	while (a_window.pollEvent(event))
 	{
@@ -36,64 +23,16 @@ void SaveMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, s
 			break;
 
 		case sf::Event::MouseButtonPressed:
-			// Left Mouse Click
 			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
 			{
 				lock_click = true;
-
-				for (auto b : m_buttons)
-				{
-					sf::Vector2f b_pos = b->getPosition();
-					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
-
-					if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
-						mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
-					{
-						switch (b->OnClick(a_rm))
-						{
-						case Press::BACK:
-							a_states.pop_back();
-							break;
-						case Press::EDIT:
-							m_isTyping = true;
-							b->isSelected(m_isTyping);
-							break;
-						case Press::SAVE:
-							m_isTyping = false;
-							m_editButton->isSelected(m_isTyping);
-							
-							if (!m_isSaving && m_isFileValid)
-							{
-								saveMap();
-							}
-							break;
-
-						case Press::QUIT:
-							a_window.close();
-							break;
-
-						default:
-							break;
-						}
-					}
-				}
+				handleButtonEvents(a_rm, a_window, a_states, mousePosition);
 			}
 			break;
 
 		case sf::Event::MouseButtonReleased:
 			if (event.mouseButton.button == sf::Mouse::Left && lock_click)
 				lock_click = false;
-			break;
-
-		case sf::Event::KeyPressed:
-			inputHandler(event.key.code, true);
-			break;
-
-		case sf::Event::Resized:
-			break;
-
-		case sf::Event::KeyReleased:
-			inputHandler(event.key.code, false);
 			break;
 
 		case sf::Event::Closed:
@@ -104,6 +43,7 @@ void SaveMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, s
 }
 void SaveMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 {
+	// Updates validity icon
 	if (m_isFileValid)
 		m_fileValid.setTexture(*a_rm.getTexture("icon_check"));
 	else
@@ -113,26 +53,77 @@ void SaveMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 
+	// Render backgrounds
 	a_window.draw(m_frameSprite);
 	a_window.draw(m_overlay);
 
-	// Render UI
+	// Render buttons
 	for (const auto& b : m_buttons)
 	{
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
 	}
 
-	a_window.draw(m_fileName);
+	// Render sprites
+	a_window.draw(m_typeLine);
 	a_window.draw(m_fileValid);
+
+	// Render text objects
+	a_window.draw(m_fileName);
 	a_window.draw(m_saveState);
-	a_window.draw(m_playerText);
+	
 	a_window.display();
+}
+SaveMenu::~SaveMenu()
+{
+	for (auto& b : m_buttons)
+	{
+		delete b;
+	}
+}
+void SaveMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
+	const sf::Vector2f& a_mousePosition)
+{
+	for (auto b : m_buttons)
+	{
+		sf::Vector2f b_pos = b->getPosition();
+		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
+
+		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
+			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
+		{
+			switch (b->OnClick(a_rm))
+			{
+			case Press::BACK:
+				a_states.pop_back();
+				break;
+
+			case Press::EDIT:
+				m_isTyping = true;
+				b->isSelected(m_isTyping);
+				break;
+
+			case Press::SAVE:
+				m_isTyping = false;
+				m_editButton->isSelected(m_isTyping);
+
+				if (!m_isSaving && m_isFileValid)
+					saveMap();
+				break;
+
+			case Press::QUIT:
+				a_window.close();
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
 }
 void SaveMenu::generateUI(ResourceManager& a_rm)
 {
-	// generate all buttons
-	// Resume
+	// Generate buttons
 	Button* temp;
 
 	// Edit
@@ -148,32 +139,58 @@ void SaveMenu::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(52.0f, 8.0f));
 	m_buttons.push_back(temp);
 
-	// Main Menu
+	// Back
 	temp = new Button(a_rm, sf::Vector2f(75, 100),
 		Press::BACK, sf::Vector2f(4.0f, 6.0f), sf::Vector2f(32.0f, 8.0f), "button_menu", "button_menu_selected");
 	temp->setString("BACK");
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(16.0f, 10.0f));
 	m_buttons.push_back(temp);
 
-	//UI
-	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
-	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
-
-	m_playerText.setTexture(*a_rm.getTexture("type_line"));
-	m_playerText.setScale(sf::Vector2f(4, 4));
-	m_playerText.setPosition(WIDTH / 2 - 32*4, 300);
-
-	m_fileName.setPosition(m_playerText.getPosition() + sf::Vector2f(16, -15));
-	m_fileName.setCharacterSize(20);
-	m_fileName.setFont(*a_rm.getFont("default"));
+	// Generate Sprites
+	m_typeLine.setTexture(*a_rm.getTexture("type_line"));
+	m_typeLine.setScale(sf::Vector2f(4, 4));
+	m_typeLine.setPosition(WIDTH / 2 - 32 * 4, 300);
 
 	m_fileValid.setTexture(*a_rm.getTexture("icon_cross"));
 	m_fileValid.setScale(3, 3);
-	m_fileValid.setPosition(sf::Vector2f(m_playerText.getPosition()) + sf::Vector2f(300, -10));
+	m_fileValid.setPosition(sf::Vector2f(m_typeLine.getPosition()) + sf::Vector2f(300, -10));
 
-	m_saveState.setPosition(sf::Vector2f(WIDTH / 2, HEIGHT / 2 + 300));
-	m_saveState.setCharacterSize(25);
-	m_saveState.setFont(*a_rm.getFont("default"));
+	// Generate text objects
+	setDefaultText(a_rm, m_fileName, 20, m_typeLine.getPosition() + sf::Vector2f(16, -15));
+	setDefaultText(a_rm, m_saveState, 25, sf::Vector2f(WIDTH / 2, HEIGHT / 2 + 300));
+
+	// Generate backgrounds
+	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
+	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
+}
+void SaveMenu::handleTextInput(sf::Uint32 a_unicode)
+{
+	if (!m_isTyping)
+		return;
+
+	// Unicode isn't a valid number or character
+	if (!(a_unicode >= 48 && a_unicode <= 58)
+		&& !(a_unicode >= 97 && a_unicode <= 122)
+		&& (a_unicode != 95) && (a_unicode != 8))
+		return;
+
+	// Handles backspace event
+	if (a_unicode == 8)
+	{
+		if (m_textInput.size() > 0)
+			m_textInput.pop_back();
+	}
+	else if (m_textInput.size() < 14)
+		m_textInput += a_unicode;
+
+	// Update file name
+	m_fileName.setString(m_textInput);
+
+	// Determine text validity
+	if (m_textInput.size() > 4)
+		m_isFileValid = true;
+	else
+		m_isFileValid = false;
 }
 void SaveMenu::saveMap()
 {
@@ -214,35 +231,8 @@ void SaveMenu::saveMap()
 	m_saveState.setString("Save Successful!");
 	m_saveState.setPosition(WIDTH / 2 - 160, HEIGHT / 2 - 160);
 	m_saveState.setFillColor(sf::Color::Green);
-	return;
 }
-void SaveMenu::handleTextInput(sf::Uint32 a_unicode)
-{
-	if (!m_isTyping)
-		return;
-	
-	// Unicode is valid number or character
-	if (!(a_unicode >= 48 && a_unicode <= 58) && !(a_unicode >= 97 && a_unicode <= 122) && (a_unicode != 95) && (a_unicode != 8))
-	{
-		return;
-	}
 
-	// Unicode for backspace
-	if (a_unicode == 8)
-	{
-		if (m_playerInput.size() > 0)
-			m_playerInput.pop_back();
-	}
-	else if (m_playerInput.size() < 14)
-		m_playerInput += a_unicode;
-	
-	m_fileName.setString(m_playerInput);
-
-	if (m_playerInput.size() > 4)
-		m_isFileValid = true;
-	else
-		m_isFileValid = false;
-}
 bool SaveMenu::verifyFileName(std::string a_fileName)
 {
 	bool isValid = true;

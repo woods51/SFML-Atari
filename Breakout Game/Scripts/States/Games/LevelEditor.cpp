@@ -6,8 +6,6 @@ LevelEditor::LevelEditor(ResourceManager& a_rm, sf::RenderWindow& a_window)
 	generateUI(a_rm);
 }
 
-void LevelEditor::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) {}
-
 void LevelEditor::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Event event;

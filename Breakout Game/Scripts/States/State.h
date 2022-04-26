@@ -11,18 +11,6 @@ public:
 	}
 
     ////////////////////////////////////////////////////////////
-    /// \brief Handles keyboard inputs
-    ///
-    /// This function handles any keyboard inputs,
-    /// it will handle both key pressed down and released events.
-    /// This function is called every frame.
-    /// 
-    /// \param a_key		--> Position of Tile
-    /// \param a_isPressed	--> True if key pressed, False if released
-    ////////////////////////////////////////////////////////////
-	virtual void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) = 0;
-
-    ////////////////////////////////////////////////////////////
     /// \brief Handles sfml window events
     ///
     /// This function handles any window events that occur

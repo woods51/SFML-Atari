@@ -15,7 +15,6 @@ OptionsState::OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf
 
 	generateUI(a_rm);
 }
-void OptionsState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) {}
 
 void OptionsState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
@@ -33,7 +32,6 @@ void OptionsState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_windo
 			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
 			{
 				lock_click = true;
-
 				handleButtonEvents(a_rm, a_window, a_states, mousePosition);
 			}
 			break;

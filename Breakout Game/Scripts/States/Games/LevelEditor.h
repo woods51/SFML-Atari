@@ -11,7 +11,6 @@
 ///
 /// This class inherits members from the State Class. The LevelEditor class
 /// is a Game State which allows the user to create custom tile maps and save them.
-/// User created levels can be accessed and played in the BreakoutState Load Menu.
 /// 
 ////////////////////////////////////////////////////////////
 class LevelEditor : public State
@@ -28,7 +27,6 @@ public:
 	////////////////////////////////////////////////////////////
 	LevelEditor(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
-	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) override;
 	void update(ResourceManager& a_rm, sf::Time dt) override;
 	void render(sf::RenderWindow& a_window) override;

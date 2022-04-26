@@ -16,10 +16,6 @@ GameOver::~GameOver()
 		delete b;
 	}
 }
-void GameOver::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
-{
-
-}
 void GameOver::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	// Button Selector Update
@@ -80,17 +76,6 @@ void GameOver::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, s
 		case sf::Event::MouseButtonReleased:
 			if (event.mouseButton.button == sf::Mouse::Left && lock_click)
 				lock_click = false;
-			break;
-
-		case sf::Event::KeyPressed:
-			inputHandler(event.key.code, true);
-			break;
-
-		case sf::Event::Resized:
-			break;
-
-		case sf::Event::KeyReleased:
-			inputHandler(event.key.code, false);
 			break;
 
 		case sf::Event::Closed:

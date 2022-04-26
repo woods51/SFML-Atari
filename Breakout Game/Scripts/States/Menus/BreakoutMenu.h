@@ -28,7 +28,6 @@ public:
 	////////////////////////////////////////////////////////////
 	BreakoutMenu(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
-	void inputHandler(sf::Keyboard::Key a_key, bool a_isPressed) override;
 	void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) override;
 
 	////////////////////////////////////////////////////////////
