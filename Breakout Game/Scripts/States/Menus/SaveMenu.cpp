@@ -70,7 +70,7 @@ void SaveMenu::render(sf::RenderWindow& a_window)
 
 	// Render text objects
 	a_window.draw(m_fileName);
-	a_window.draw(m_saveState);
+	a_window.draw(m_saveResult);
 	
 	a_window.display();
 }
@@ -98,6 +98,7 @@ void SaveMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 				a_states.pop_back();
 				break;
 
+			// Enable text editing
 			case Press::EDIT:
 				m_isTyping = true;
 				b->isSelected(m_isTyping);
@@ -157,7 +158,7 @@ void SaveMenu::generateUI(ResourceManager& a_rm)
 
 	// Generate text objects
 	setDefaultText(a_rm, m_fileName, 20, m_typeLine.getPosition() + sf::Vector2f(16, -15));
-	setDefaultText(a_rm, m_saveState, 25, sf::Vector2f(WIDTH / 2, HEIGHT / 2 + 300));
+	setDefaultText(a_rm, m_saveResult, 25, sf::Vector2f(WIDTH / 2, HEIGHT / 2 + 300));
 
 	// Generate backgrounds
 	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
@@ -196,19 +197,24 @@ void SaveMenu::saveMap()
 {
 	m_isSaving = true;
 	std::string levelName = m_fileName.getString().toAnsiString();
+
+	// Verify that filename doesn't overrite another
 	if (!(verifyFileName(levelName)))
 	{
-		m_saveState.setString("Save Failed: File already exists.");
-		m_saveState.setPosition(WIDTH / 2 -314, HEIGHT / 2 -160);
-		m_saveState.setFillColor(sf::Color::Red);
+		// Display save error
+		m_saveResult.setString("Save Failed: File already exists.");
+		m_saveResult.setPosition(WIDTH / 2 -314, HEIGHT / 2 -160);
+		m_saveResult.setFillColor(sf::Color::Red);
 		return;
 	}
 
 	std::ofstream outputFile;
-	std::string fileName = "SavedLevels/" + m_fileName.getString().toAnsiString() + ".csv";
+	std::string fileName = "SavedLevels/" + levelName + ".csv";
 	outputFile.open(fileName);
 
-	std::string buffer;
+	std::string fileBuffer;
+
+	// Save each tile property to buffer
 	for (const auto& tile : m_tileMap)
 	{
 		sf::Vector2f pos = tile->getPosition();
@@ -217,39 +223,45 @@ void SaveMenu::saveMap()
 			continue;
 
 		std::string texture = tile->getTextureKey();
+
+		// Handle locked texture cases
 		if (texture.find("_lock2") != std::string::npos)
 			texture = texture.substr(0, texture.size() - 6);
 
 		else if (texture.find("_lock") != std::string::npos)
 			texture = texture.substr(0, texture.size() - 5);
 
-		buffer += std::to_string((int)pos.x) + "," + std::to_string((int)pos.y) + "," + std::to_string((int)type) + "," + texture + "\n";
+		fileBuffer += std::to_string((int)pos.x) + "," + std::to_string((int)pos.y) + "," + std::to_string((int)type) + "," + texture + "\n";
 	}
-	outputFile << buffer;
+
+	// Write to file
+	outputFile << fileBuffer;
 	outputFile.close();
 	m_isSaving = false;
-	m_saveState.setString("Save Successful!");
-	m_saveState.setPosition(WIDTH / 2 - 160, HEIGHT / 2 - 160);
-	m_saveState.setFillColor(sf::Color::Green);
+
+	// Display save success
+	m_saveResult.setString("Save Successful!");
+	m_saveResult.setPosition(WIDTH / 2 - 160, HEIGHT / 2 - 160);
+	m_saveResult.setFillColor(sf::Color::Green);
 }
 
 bool SaveMenu::verifyFileName(std::string a_fileName)
 {
 	bool isValid = true;
+	std::string fileName = a_fileName + ".csv";
+	std::string path = "SavedLevels/";
 	std::string name;
 	std::string texturePath;
-	std::string path = "SavedLevels/";
+
+	// Search directory for matching file name
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
 		texturePath = file.path().string();
-
 		name = file.path().filename().string();
-		name = name.substr(0, name.length() - 4);
 
-		if (a_fileName == name)
-		{
+		if (fileName == name)
 			isValid = false;
-		}
+
 	}
 	return isValid;
 }

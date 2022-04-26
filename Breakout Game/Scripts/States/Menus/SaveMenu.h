@@ -51,7 +51,28 @@ private:
 	////////////////////////////////////////////////////////////
 	void handleTextInput(sf::Uint32 a_unicode);
 
+	////////////////////////////////////////////////////////////
+	/// \brief Writes and saves current tile map to file
+	///
+	/// This function parses tile data from m_tileMap into an output buffer,
+	/// this buffer is written to the output file, which name is specified by m_fileName.
+	/// Data outputted in a csv format and written to a
+	/// file in the /SavedLevels/ directory.
+	/// 
+	////////////////////////////////////////////////////////////
 	void saveMap();
+
+	////////////////////////////////////////////////////////////
+	/// \brief Verifies that file name doesn't exist.
+	///
+	/// This function verifies that the given file name doesn't
+	///	exist already in the /SavedLevels/ directory. A file name is
+	/// considered valid as long as a file with same name doesn't exist.
+	/// 
+	/// \param a_fileName	--> Ansi string file name
+	/// 
+	/// \returns True if a_fileName is valid, false otherwise
+	////////////////////////////////////////////////////////////
 	bool verifyFileName(std::string a_fileName);
 
 	// Loaded tile map
@@ -71,7 +92,7 @@ private:
 	sf::Sprite m_fileValid;
 
 	// Text objects
-	sf::Text m_saveState;
+	sf::Text m_saveResult;
 	sf::Text m_fileName;
 
 	// Text field

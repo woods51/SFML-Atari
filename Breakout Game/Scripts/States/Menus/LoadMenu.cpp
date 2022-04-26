@@ -11,84 +11,29 @@ LoadMenu::LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite
 
 	generateUI(a_rm);
 
-	loadFiles();
+	m_loader.loadFiles(m_loadPath, m_levels);
+	m_maxPages = m_levels.size() / 5;
+	if (m_levels.size() % 5 != 0)
+		m_maxPages++;
 	loadFirstPage();
-}
-LoadMenu::~LoadMenu()
-{
-	for (auto& b : m_buttons)
-	{
-		delete b;
-	}
 }
 void LoadMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
-	sf::Event event;
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
 
 	buttonSelectUpdate(a_window, a_rm, mousePosition);
 
-	// Handle Events
+	sf::Event event;
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
 		{
 		case sf::Event::MouseButtonPressed:
-			// Left Mouse Click
 			if (event.mouseButton.button == sf::Mouse::Left && !lock_click)
 			{
 				lock_click = true;
-
-				for (auto b : m_buttons)
-				{
-					sf::Vector2f b_pos = b->getPosition();
-					sf::Vector2f b_diag_pos = b->getDiagonalPosition();
-
-					// Button Pressed
-					if (mousePosition.x >= b_pos.x && mousePosition.x <= b_diag_pos.x &&
-						mousePosition.y >= b_pos.y && mousePosition.y <= b_diag_pos.y)
-					{
-						std::string level;
-						switch (b->OnClick(a_rm))
-						{
-						case Press::LEVEL:
-							level = b->getText().getString().toAnsiString();
-							if (level.size() < 3)
-								break;
-							m_selectedLevel.setString(level);
-							m_isValid = true;
-							b->isSelected(true);
-							break;
-						case Press::BACK:
-							a_states.pop_back();
-							break;
-						case Press::NEXT:
-							nextPage();
-							break;
-						case Press::PREVIOUS:
-							previousPage();
-							break;
-						case Press::RELOAD:
-							loadFiles();
-							loadFirstPage();
-							break;
-						case Press::LOAD:
-							if (!m_isValid)
-							{
-								break;
-							}
-							if (!loadMap(a_rm, m_selectedLevel.getString().toAnsiString()))
-							{
-								break;
-							}
-							a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_tileMap, m_lives));
-							break;
-						default:
-							break;
-						}
-					}
-				}
+				handleButtonEvents(a_rm, a_window, a_states, mousePosition);
 			}
 			break;
 
@@ -105,8 +50,10 @@ void LoadMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, s
 }
 void LoadMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 {
+	// Update page number
 	m_pageNumber.setString(std::to_string(m_currentPage));
 
+	// Update backgrounds
 	m_background->setPosition(m_background->getPosition() + sf::Vector2f(0.25f, 0));
 	if (m_background->getPosition().x == 3200)
 	{
@@ -121,17 +68,19 @@ void LoadMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 void LoadMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
-
+	
+	// Render backgrounds
 	a_window.draw(*m_background);
 	a_window.draw(*m_background2);
 	a_window.draw(m_overlay);
 
+	// Render text objects
 	a_window.draw(m_pageNumber);
 	a_window.draw(m_levelText);
 	a_window.draw(m_selectedLevel);
 	a_window.draw(m_loadError);
 
-	// Render UI
+	// Render buttons
 	for (const auto& b : m_buttons)
 	{
 		a_window.draw(b->getShape());
@@ -145,22 +94,105 @@ void LoadMenu::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
+void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
+	const sf::Vector2f& a_mousePosition)
+{
+	for (auto b : m_buttons)
+	{
+		sf::Vector2f b_pos = b->getPosition();
+		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
+
+		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
+			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
+		{
+			std::string level;
+			switch (b->OnClick(a_rm))
+			{
+			case Press::LEVEL:
+				level = b->getText().getString().toAnsiString();
+				if (level.size() < 3)
+					break;
+				m_selectedLevel.setString(level);
+				m_isValid = true;
+				b->isSelected(true);
+				break;
+
+			case Press::BACK:
+				a_states.pop_back();
+				break;
+
+			case Press::NEXT:
+				nextPage();
+				break;
+
+			case Press::PREVIOUS:
+				previousPage();
+				break;
+
+			case Press::RELOAD:
+				m_loader.loadFiles(m_loadPath, m_levels);
+				m_maxPages = m_levels.size() / 5;
+				if (m_levels.size() % 5 != 0)
+					m_maxPages++;
+				loadFirstPage();
+				break;
+
+			case Press::LOAD:
+				if (!m_isValid)
+					break;
+
+				if (!m_loader.loadMap(a_rm, m_selectedLevel.getString().toAnsiString(), m_loadPath, m_tileMap, m_errorMsg))
+				{
+					m_loadError.setString(m_errorMsg);
+					break;
+				}
+
+				a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_tileMap, m_lives));
+				break;
+			default:
+				break;
+			}
+		}
+	}
+}
+LoadMenu::~LoadMenu()
+{
+	for (auto& b : m_buttons)
+	{
+		delete b;
+	}
+}
+void LoadMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
+{
+	for (auto& b : m_buttons)
+	{
+		sf::Vector2f b_pos = b->getPosition();
+		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
+
+		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
+			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
+		{
+			b->isSelected(true);
+		}
+		else
+			b->isSelected(false);
+	}
+}
 void LoadMenu::generateUI(ResourceManager& a_rm)
 {
-	// generate all buttons
+	// Generate buttons
 	Button* temp;
 
-	// > Next
+	// Generate page tick buttons
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) -150), Press::NEXT, ">", Sound::Button);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
-	// < Previous
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) -150), Press::PREVIOUS, "<", Sound::Button);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
-	// BACK
+	// Back
 	temp = new Button(a_rm, sf::Vector2f(75, 100),
 		Press::BACK, sf::Vector2f(4, 6), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
 	temp->setString("BACK");
@@ -174,32 +206,24 @@ void LoadMenu::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 50, temp->getShape().getPosition() + sf::Vector2f(40, 20));
 	m_buttons.push_back(temp);
 
-	// RELOAD
+	// Reload
 	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 100, (HEIGHT / 2) - 210),
 		Press::RELOAD, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "button_reload", "button_reload");
 	m_buttons.push_back(temp);
 
-	//UI
-	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
-	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
-
-	// Text
-	m_defaultFont = *a_rm.getFont("default");
-	// Page Number
+	// Generate text objects
 	setDefaultText(a_rm, m_pageNumber, 40, sf::Vector2f(WIDTH / 2 - 14, HEIGHT / 2 - 210));
 	m_pageNumber.setString(std::to_string(m_currentPage));
 
-	// Selected Level
 	setDefaultText(a_rm, m_selectedLevel, 25, sf::Vector2f(896, HEIGHT / 2 - 136));
 	m_selectedLevel.setString("");
 
-	// Level
 	setDefaultText(a_rm, m_levelText, 20, sf::Vector2f((WIDTH / 2) - 36, HEIGHT / 2 - 240));
 	m_levelText.setString("PAGE");
 
-	// Load Error
 	setDefaultText(a_rm, m_loadError, 20, sf::Vector2f(24, HEIGHT / 2 - 136), "default", sf::Color::Red);
 
+	// Generate level buttons
 	int posY = HEIGHT / 2 - 100;
 	for (int i = 0; i < 5; i++)
 	{
@@ -211,6 +235,9 @@ void LoadMenu::generateUI(ResourceManager& a_rm)
 		posY += 60;
 	}
 	
+	// Generate background
+	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
+	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 }
 void LoadMenu::loadFirstPage()
 {
@@ -263,75 +290,9 @@ void LoadMenu::loadPage(int start, int end)
 	for (int i = 0; i < 5; start++, i++)
 	{
 		if (!(start < end))
-		{
 			m_levelButtons[i]->setString("");
-		}
+		
 		else
 			m_levelButtons[i]->setString(m_levels[start]);
-	}
-}
-void LoadMenu::loadFiles()
-{
-	m_levels.clear();
-	std::string name;
-	std::string filePath;
-	std::string path = "SavedLevels/";
-
-	for (const auto& file : std::filesystem::directory_iterator(path))
-	{
-		filePath = file.path().string();
-
-		name = file.path().filename().string();
-		name = name.substr(0, name.length() - 4);
-
-		m_levels.push_back(name);
-	}
-	
-	m_maxPages = m_levels.size() / 5;
-	if (m_levels.size() % 5 != 0)
-		m_maxPages++;
-}
-bool LoadMenu::loadMap(ResourceManager& a_rm, std::string a_path)
-{
-	LevelLoader loader;
-	std::string line;
-	std::string path = "SavedLevels/" + a_path + ".csv";
-	std::ifstream inputFile(path);
-
-	int i = 1;
-	if (inputFile.is_open())
-	{
-		while (std::getline(inputFile, line))
-		{
-			if (!loader.parseTileData(a_rm, line, m_tileMap))
-			{
-				// Error Loading File
-				std::string temp = "Error reading file.\nLine (" + std::to_string(i) + ")\nLoad Canceled.";
-				m_loadError.setString(temp);
-				return false;
-			}
-			i++;
-		}
-		// Successful Load
-		m_loadError.setString("");
-		inputFile.close();
-	}
-	return true;
-}
-
-void LoadMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
-{
-	for (auto& b : m_buttons)
-	{
-		sf::Vector2f b_pos = b->getPosition();
-		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
-
-		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
-			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
-		{
-			b->isSelected(true);
-		}
-		else
-			b->isSelected(false);
 	}
 }

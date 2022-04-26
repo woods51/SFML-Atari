@@ -6,6 +6,7 @@
 #include "../Menus/GameOver.h"
 #include "../../GameObjects/Ball.h"
 #include "../../GameObjects/Paddle.h"
+#include "../../LevelLoader.h"
 
 class BreakoutState : public State
 {
@@ -46,14 +47,14 @@ private:
 	void resetLevel();
 	void handleBallPhysics(sf::Time a_dt, ResourceManager& a_rm);
 	void resetBalls(ResourceManager& a_rm);
-	void loadFiles();
-	bool loadLevel(ResourceManager& a_rm, std::string a_path);
+	void loadLevel(ResourceManager& a_rm, std::string a_path);
 
 	std::vector<std::string> m_levels;
 	std::vector<Tile*> m_tileMap;
 	std::vector<Button*> m_buttons;
 	std::vector<std::unique_ptr<Ball>> m_balls;
 
+	LevelLoader m_loader;
 	Paddle* m_paddle;
 	int m_livesRemaining;
 	sf::Text m_livesText;
@@ -73,4 +74,8 @@ private:
 	bool m_completeFlag = false;
 	bool m_isCustom = false;
 	int m_score = 0;
+
+	sf::Text m_loadError;
+	std::string m_errorMsg;
+	std::string m_loadPath = "BreakoutLevels/";
 };

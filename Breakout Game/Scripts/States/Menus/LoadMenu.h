@@ -18,15 +18,21 @@ public:
 	~LoadMenu();
 
 private:
+
 	////////////////////////////////////////////////////////////
-	/// \brief Generates user interfaces
+	/// \brief Handles and checks for any button events.
 	///
-	/// This function generates and initializes all
-	/// UI elements for its state.
+	/// This function works in part with the eventHandler to
+	/// compute whether the user has clicked a button when
+	/// a left mouse button is triggered.
 	/// 
-	/// \param a_rm	--> ResourceManager
+	/// \param a_rm		--> ResourceManager
+	/// \param a_window	--> RenderWindow
+	/// \param a_states		--> Vector of game states
+	/// \param a_mousePosition	--> Current mouse position
 	////////////////////////////////////////////////////////////
-	void generateUI(ResourceManager& a_rm);
+	void handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
+		const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Updates selected state of buttons
@@ -40,13 +46,22 @@ private:
 	////////////////////////////////////////////////////////////
 	void buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
+	////////////////////////////////////////////////////////////
+	/// \brief Generates user interfaces
+	///
+	/// This function generates and initializes all
+	/// UI elements for its state.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	////////////////////////////////////////////////////////////
+	void generateUI(ResourceManager& a_rm);
+
 	void loadPage(int start, int end);
 	void loadFirstPage();
 	void nextPage();
 	void previousPage();
-	void loadFiles();
-	bool loadMap(ResourceManager& a_rm, std::string a_path);
 
+	LevelLoader m_loader;
 	std::vector<Tile*> m_tileMap;
 	std::vector<Button*> m_buttons;
 	std::vector<Button*> m_levelButtons;
@@ -64,6 +79,8 @@ private:
 	sf::Sprite m_levelSelector;
 	sf::Text m_selectedLevel;
 	sf::Text m_loadError;
+	std::string m_errorMsg;
+	std::string m_loadPath = "SavedLevels/";
 
 	unsigned int m_lives;
 };

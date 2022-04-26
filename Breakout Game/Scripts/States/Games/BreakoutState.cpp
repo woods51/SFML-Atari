@@ -9,7 +9,7 @@ BreakoutState::BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, 
 	m_isCustom = false;
 
 	generateUI(a_rm);
-	loadFiles();
+	m_loader.loadFiles(m_loadPath, m_levels);
 	loadLevel(a_rm, m_levels[m_currentLevel]);
 }
 // Custom Level
@@ -329,6 +329,8 @@ void BreakoutState::generateUI(ResourceManager& a_rm)
 	setDefaultText(a_rm, m_level, 35, sf::Vector2f(WIDTH / 2 - 90, HEIGHT - 50));
 	m_level.setString("Level 1");
 
+	setDefaultText(a_rm, m_loadError, 20, sf::Vector2f(24, HEIGHT / 2 - 136), "default", sf::Color::Red);
+
 	// generate all sprite UI / text -> spriteUI
 	m_border.setTexture(*a_rm.getTexture("border"));
 	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
@@ -387,21 +389,7 @@ void BreakoutState::generateLevel(ResourceManager& a_rm, std::vector<Tile*>& a_t
 		m_tileMap.push_back(tile);
 	}
 }
-void BreakoutState::loadFiles()
-{
-	m_levels.clear();
-	std::string name;
-	std::string filePath;
-	std::string path = "BreakoutLevels/";
-
-	for (const auto& file : std::filesystem::directory_iterator(path))
-	{
-		filePath = file.path().string();
-
-		m_levels.push_back(filePath);
-	}
-}
-bool BreakoutState::loadLevel(ResourceManager& a_rm, std::string a_path)
+void BreakoutState::loadLevel(ResourceManager& a_rm, std::string a_levelName)
 {
 	for (auto& tile : m_tileMap)
 	{
@@ -409,28 +397,11 @@ bool BreakoutState::loadLevel(ResourceManager& a_rm, std::string a_path)
 	}
 	m_tileMap.clear();
 
-	LevelLoader loader;
-	std::string line;
-	std::ifstream inputFile(a_path);
-
-	int i = 1;
-	if (inputFile.is_open())
+	if (!m_loader.loadMap(a_rm, a_levelName, m_loadPath, m_tileMap, m_errorMsg))
 	{
-		while (std::getline(inputFile, line))
-		{
-			if (!loader.parseTileData(a_rm, line, m_tileMap))
-			{
-				// Error Loading File
-				std::string temp = "Error reading file.\nLine (" + std::to_string(i) + ")\nLoad Canceled.";
-				std::cout << temp << std::endl;
-				exit(EXIT_FAILURE);
-			}
-			i++;
-		}
-		// Successful Load
-		inputFile.close();
+		std::cout << m_errorMsg << std::endl;
 	}
-	return true;
+	m_loadError.setString(m_errorMsg);
 }
 
 BreakoutState::~BreakoutState()
