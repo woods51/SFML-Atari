@@ -47,7 +47,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Provides game updates.
 	///
-	/// This function is unused in the level editor.
+	/// This function is unused in the GameOver state.
 	/// 
 	/// \param a_rm	--> ResourceManager
 	/// \param a_dt	--> deltaTime

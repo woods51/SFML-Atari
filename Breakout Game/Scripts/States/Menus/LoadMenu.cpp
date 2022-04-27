@@ -12,11 +12,15 @@ LoadMenu::LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite
 	generateUI(a_rm);
 
 	m_loader.loadFiles(m_loadPath, m_levels);
+
+	// Compute max pages
 	m_maxPages = m_levels.size() / 5;
 	if (m_levels.size() % 5 != 0)
 		m_maxPages++;
+
 	loadFirstPage();
 }
+
 void LoadMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
@@ -48,7 +52,8 @@ void LoadMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, s
 		}
 	}
 }
-void LoadMenu::update(ResourceManager& a_rm, sf::Time a_dt)
+
+void LoadMenu::update(ResourceManager& a_rm, const sf::Time& a_dt)
 {
 	// Update page number
 	m_pageNumber.setString(std::to_string(m_currentPage));
@@ -59,12 +64,14 @@ void LoadMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 	{
 		m_background->setPosition(sf::Vector2f(-3200, 0));
 	}
+
 	m_background2->setPosition(m_background2->getPosition() + sf::Vector2f(0.25f, 0));
 	if (m_background2->getPosition().x == 3200)
 	{
 		m_background2->setPosition(sf::Vector2f(-3200, 0));
 	}
 }
+
 void LoadMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
@@ -94,6 +101,7 @@ void LoadMenu::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
+
 LoadMenu::~LoadMenu()
 {
 	for (auto& b : m_buttons)
@@ -101,6 +109,7 @@ LoadMenu::~LoadMenu()
 		delete b;
 	}
 }
+
 void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
@@ -137,10 +146,15 @@ void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 				break;
 
 			case Press::RELOAD:
+
+				// Reloads level files
 				m_loader.loadFiles(m_loadPath, m_levels);
+
+				// Compute max pages
 				m_maxPages = m_levels.size() / 5;
 				if (m_levels.size() % 5 != 0)
 					m_maxPages++;
+
 				loadFirstPage();
 				break;
 
@@ -156,12 +170,14 @@ void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 
 				a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_tileMap, m_lives));
 				break;
+
 			default:
 				break;
 			}
 		}
 	}
 }
+
 void LoadMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto& b : m_buttons)
@@ -178,38 +194,10 @@ void LoadMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a
 			b->isSelected(false);
 	}
 }
+
 void LoadMenu::generateUI(ResourceManager& a_rm)
 {
-	// Generate buttons
-	Button* temp;
-
-	// Generate page tick buttons
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) -150), Press::NEXT, ">", Sound::Button);
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
-	m_buttons.push_back(temp);
-
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) -150), Press::PREVIOUS, "<", Sound::Button);
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
-	m_buttons.push_back(temp);
-
-	// Back
-	temp = new Button(a_rm, sf::Vector2f(75, 100),
-		Press::BACK, sf::Vector2f(4, 6), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
-	temp->setString("BACK");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
-	m_buttons.push_back(temp);
-
-	// Load
-	temp = new Button(a_rm, sf::Vector2f(896, HEIGHT/2 -100),
-		Press::LOAD, sf::Vector2f(8, 12), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
-	temp->setString("LOAD");
-	temp->setDefaultText(a_rm, 50, temp->getShape().getPosition() + sf::Vector2f(40, 20));
-	m_buttons.push_back(temp);
-
-	// Reload
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 100, (HEIGHT / 2) - 210),
-		Press::RELOAD, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "button_reload", "button_reload");
-	m_buttons.push_back(temp);
+	generateButtons(a_rm);
 
 	// Generate text objects
 	setDefaultText(a_rm, m_pageNumber, 40, sf::Vector2f(WIDTH / 2 - 14, HEIGHT / 2 - 210));
@@ -223,6 +211,43 @@ void LoadMenu::generateUI(ResourceManager& a_rm)
 
 	setDefaultText(a_rm, m_loadError, 20, sf::Vector2f(24, HEIGHT / 2 - 136), "default", sf::Color::Red);
 
+	// Generate background
+	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
+	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
+}
+
+void LoadMenu::generateButtons(ResourceManager & a_rm)
+{
+	Button* temp;
+
+	// Generate Tick Buttons
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) - 150), Press::NEXT, ">", Sound::Button);
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
+	m_buttons.push_back(temp);
+
+	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) - 150), Press::PREVIOUS, "<", Sound::Button);
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
+	m_buttons.push_back(temp);
+
+	// Back
+	temp = new Button(a_rm, sf::Vector2f(75, 100),
+		Press::BACK, sf::Vector2f(4, 6), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
+	temp->setString("BACK");
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
+	m_buttons.push_back(temp);
+
+	// Load
+	temp = new Button(a_rm, sf::Vector2f(896, HEIGHT / 2 - 100),
+		Press::LOAD, sf::Vector2f(8, 12), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
+	temp->setString("LOAD");
+	temp->setDefaultText(a_rm, 50, temp->getShape().getPosition() + sf::Vector2f(40, 20));
+	m_buttons.push_back(temp);
+
+	// Reload
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 100, (HEIGHT / 2) - 210),
+		Press::RELOAD, sf::Vector2f(3, 3), sf::Vector2f(16, 16), "button_reload", "button_reload");
+	m_buttons.push_back(temp);
+
 	// Generate level buttons
 	int posY = HEIGHT / 2 - 100;
 	for (int i = 0; i < 5; i++)
@@ -230,25 +255,39 @@ void LoadMenu::generateUI(ResourceManager& a_rm)
 		temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - (32 * 4), posY), Press::LEVEL, sf::Vector2f(8, 8), sf::Vector2f(32, 6),
 			"loaded_level", "loaded_level_selected");
 		temp->setDefaultText(a_rm, 20, temp->getPosition() + sf::Vector2f(8, 10));
+
 		m_buttons.push_back(temp);
 		m_levelButtons.push_back(temp);
 		posY += 60;
 	}
-	
-	// Generate background
-	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
-	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 }
+
+void LoadMenu::loadPage(int start, int end)
+{
+	for (int i = 0; i < 5; start++, i++)
+	{
+		if (!(start < end))
+			m_levelButtons[i]->setString("");
+
+		else
+			m_levelButtons[i]->setString(m_levels[start]);
+	}
+}
+
 void LoadMenu::loadFirstPage()
 {
 	m_currentPage = 1;
+
+	// Reset level selection
 	m_selectedLevel.setString("");
 	m_isValid = false;
+
 	if (m_levels.size() > 5)
 		loadPage(0, 5);
 	else
 		loadPage(0, m_levels.size());
 }
+
 void LoadMenu::nextPage()
 {
 	if (m_currentPage == m_maxPages)
@@ -259,6 +298,7 @@ void LoadMenu::nextPage()
 	int start = (m_currentPage - 1) * 5;
 	int end;
 
+	// Compute remaining levels
 	if ((m_currentPage * 5) > m_levels.size())
 		end = (m_levels.size() - (m_currentPage - 1) * 5) + start;
 	else
@@ -266,6 +306,7 @@ void LoadMenu::nextPage()
 
 	loadPage(start, end);
 }
+
 void LoadMenu::previousPage()
 {
 	if (m_currentPage == 1)
@@ -278,21 +319,11 @@ void LoadMenu::previousPage()
 
 	start = (m_currentPage - 1) * 5;
 
+	// Compute remaining levels
 	if ((m_currentPage * 5) > m_levels.size())
 		end = m_levels.size() - (m_currentPage - 1) * 5;
 	else
 		end = m_currentPage * 5;
 
 	loadPage(start, end);
-}
-void LoadMenu::loadPage(int start, int end)
-{
-	for (int i = 0; i < 5; start++, i++)
-	{
-		if (!(start < end))
-			m_levelButtons[i]->setString("");
-		
-		else
-			m_levelButtons[i]->setString(m_levels[start]);
-	}
 }

@@ -21,7 +21,8 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Constructor for BreakoutMenu class
 	///
-	/// Constructs the BreakoutMenu and generates user interfaces.
+	/// Constructs the Breakout menu state UI elements and
+	/// generates animated background textures.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow

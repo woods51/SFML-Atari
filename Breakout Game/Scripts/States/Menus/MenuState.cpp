@@ -4,6 +4,7 @@ MenuState::MenuState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
 	generateUI(a_rm);
 }
+
 void MenuState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
@@ -36,7 +37,8 @@ void MenuState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, 
 		}
 	}
 }
-void MenuState::update(ResourceManager& a_rm, sf::Time a_dt)
+
+void MenuState::update(ResourceManager& a_rm, const sf::Time& a_dt)
 {
 	// Update background positions
 	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.25f, 0));
@@ -44,12 +46,14 @@ void MenuState::update(ResourceManager& a_rm, sf::Time a_dt)
 	{
 		m_background.setPosition(sf::Vector2f(-3200, 0));
 	}
+
 	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.25f, 0));
 	if (m_background2.getPosition().x == 3200)
 	{
 		m_background2.setPosition(sf::Vector2f(-3200, 0));
 	}
 }
+
 void MenuState::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
@@ -65,7 +69,7 @@ void MenuState::render(sf::RenderWindow& a_window)
 		a_window.draw(b->getText());
 	}
 
-	// Render titles
+	// Render title sprites
 	if (m_breakoutFlag)
 		a_window.draw(m_breakoutText);
 	else if (m_editorFlag)
@@ -77,6 +81,7 @@ void MenuState::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
+
 MenuState::~MenuState()
 {
 	for (auto& b : m_buttons)
@@ -84,6 +89,7 @@ MenuState::~MenuState()
 		delete b;
 	}
 }
+
 void MenuState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
@@ -100,24 +106,30 @@ void MenuState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_wi
 			case Press::BREAKOUT:
 				a_states.push_back(std::make_unique<BreakoutMenu>(a_rm, a_window));
 				break;
+
 			case Press::EDITOR:
 				a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
 				break;
+
 			case Press::PONG:
 				a_states.push_back(std::make_unique<PongState>(a_rm, a_window));
 				break;
+
 			case Press::OPTIONS:
 				a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, &m_background, &m_background2));
 				break;
+
 			case Press::QUIT:
 				a_window.close();
 				break;
+
 			default:
 				break;
 			}
 		}
 	}
 }
+
 void MenuState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_buttons)
@@ -138,16 +150,19 @@ void MenuState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_
 				m_editorFlag = false;
 				m_pongFlag = false;
 				break;
+
 			case Press::EDITOR:
 				m_breakoutFlag = false;
 				m_editorFlag = true;
 				m_pongFlag = false;
 				break;
+
 			case Press::PONG:
 				m_breakoutFlag = false;
 				m_editorFlag = false;
 				m_pongFlag = true;
 				break;
+
 			default:
 				m_breakoutFlag = m_editorFlag = m_pongFlag = false;
 				break;
@@ -157,9 +172,25 @@ void MenuState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_
 			b->isSelected(false);
 	}
 }
+
 void MenuState::generateUI(ResourceManager& a_rm)
 {
-	// Generate buttons
+	generateButtons(a_rm);
+
+	// Generate title sprites
+	generateSprites(a_rm);
+
+	// Generate backgrounds
+	m_frameTexture = *a_rm.getTexture("background_breakout_1");
+
+	m_background.setTexture(m_frameTexture);
+	m_background.setScale(40, 40);
+	m_background2 = m_background;
+	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
+}
+
+void MenuState::generateButtons(ResourceManager& a_rm)
+{
 	Button* temp;
 
 	// Breakout
@@ -168,7 +199,7 @@ void MenuState::generateUI(ResourceManager& a_rm)
 	m_buttons.push_back(temp);
 
 	// Editor
-	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 136, (HEIGHT/2) - 100),
+	temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) + 136, (HEIGHT / 2) - 100),
 		Press::EDITOR, sf::Vector2f(4, 4), sf::Vector2f(16, 16), "button_editor", "button_editor_selected");
 	m_buttons.push_back(temp);
 
@@ -186,8 +217,10 @@ void MenuState::generateUI(ResourceManager& a_rm)
 	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 116), Press::QUIT, "Quit");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64, 8));
 	m_buttons.push_back(temp);
+}
 
-	// Generate title sprites
+void MenuState::generateSprites(ResourceManager& a_rm)
+{
 	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
 	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title"));
 	m_breakoutText.setScale(sf::Vector2f(6, 6));
@@ -203,12 +236,4 @@ void MenuState::generateUI(ResourceManager& a_rm)
 	m_atariText.setPosition((WIDTH / 2) - 295, 140);
 	m_atariText.setTexture(*a_rm.getTexture("sfml_atari_title"));
 	m_atariText.setScale(sf::Vector2f(5, 5));
-
-	// Generate backgrounds
-	m_frameTexture = *a_rm.getTexture("background_breakout_1");
-
-	m_background.setTexture(m_frameTexture);
-	m_background.setScale(40, 40);
-	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
 }
