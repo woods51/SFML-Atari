@@ -3,7 +3,7 @@
 #include "../State.h"
 #include "../Games/BreakoutState.h"
 #include "../Games/LevelEditor.h"
-#include "../Menus/OptionsState.h"
+#include "../Menus/OptionsMenu.h"
 #include "../Menus/LoadMenu.h"
 #include "../../GameObjects/Button.h"
 
@@ -19,7 +19,7 @@ class BreakoutMenu : public State
 {
 public:
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for BreakoutMenu class
+	/// \brief Constructor for BreakoutMenu class.
 	///
 	/// Constructs the Breakout menu state UI elements and
 	/// generates animated background textures.
@@ -30,13 +30,11 @@ public:
 	BreakoutMenu(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events
+	/// \brief Handles sfml window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
 	/// including button selections and interactions.
-	/// This function is responsible for pushing new game states
-	/// and is called once every frame.
 	/// 
 	/// \param a_rm          --> ResourceManager
 	/// \param a_window --> RenderWindow
@@ -90,7 +88,7 @@ private:
 		const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Updates selected state of buttons
+	/// \brief Updates selected state of buttons.
 	///
 	/// This function updates the isSelected state of any button
 	/// that is within the bounds of the current mouse position.
@@ -101,7 +99,7 @@ private:
 	void buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Generates state user interfaces
+	/// \brief Generates state user interfaces.
 	///
 	/// This function generates and initializes all
 	/// UI elements for its state.

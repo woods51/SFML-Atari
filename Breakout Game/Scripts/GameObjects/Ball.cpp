@@ -88,7 +88,7 @@ void Ball::handleTile(enum class Surface a_surface)
 
 enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDiagPos) const
 {
-	// Get Positions
+	// Get positions
 	sf::Vector2f tile_pos = a_tilePos;
 	sf::Vector2f tile_diagonal_pos = a_tileDiagPos;
 
@@ -111,7 +111,7 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 	sf::Vector2i p3((int)tile_pos.x, (int)tile_diagonal_pos.y);
 	sf::Vector2i p4((int)tile_diagonal_pos.x, (int)tile_diagonal_pos.y);
 
-	// Generate Ball data points
+	// Generate ball data points
 	sf::Vector2i b_top((int)pos.x + ((int)diagonal_pos.x - (int)pos.x) / 2, (int)pos.y);
 	sf::Vector2i b_bottom((int)pos.x + ((int)diagonal_pos.x - (int)pos.x) / 2, (int)diagonal_pos.y);
 	sf::Vector2i b_left((int)pos.x, (int)pos.y + ((int)diagonal_pos.y - (int)pos.y) / 2);

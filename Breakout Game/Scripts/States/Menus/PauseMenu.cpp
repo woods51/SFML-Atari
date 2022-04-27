@@ -1,13 +1,14 @@
-#include "PauseState.h"
+#include "PauseMenu.h"
 
-PauseState::PauseState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
+PauseMenu::PauseMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
 {
 	m_frameTexture = a_frameTexture;
 	m_frameSprite.setTexture(m_frameTexture);
 
 	generateUI(a_rm);
 }
-void PauseState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
+
+void PauseMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
@@ -38,8 +39,10 @@ void PauseState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window,
 		}
 	}
 }
-void PauseState::update(ResourceManager& a_rm, sf::Time a_dt) {}
-void PauseState::render(sf::RenderWindow& a_window)
+
+void PauseMenu::update(ResourceManager& a_rm, const sf::Time& a_dt) {}
+
+void PauseMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 	
@@ -56,14 +59,16 @@ void PauseState::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
-PauseState::~PauseState()
+
+PauseMenu::~PauseMenu()
 {
 	for (auto& b : m_buttons)
 	{
 		delete b;
 	}
 }
-void PauseState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
+
+void PauseMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_buttons)
@@ -79,23 +84,28 @@ void PauseState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_w
 			case Press::RESUME:
 				a_states.pop_back();
 				break;
+
 			case Press::OPTIONS:
-				a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, m_frameTexture));
+				a_states.push_back(std::make_unique<OptionsMenu>(a_rm, a_window, m_frameTexture));
 				break;
+
 			case Press::MAINMENU:
 				for (unsigned int i = 0; i < a_states.size(); i++)
 					a_states.pop_back();
 				break;
+
 			case Press::QUIT:
 				a_window.close();
 				break;
+
 			default:
 				break;
 			}
 		}
 	}
 }
-void PauseState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
+
+void PauseMenu::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_buttons)
 	{
@@ -111,9 +121,18 @@ void PauseState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a
 			b->isSelected(false);
 	}
 }
-void PauseState::generateUI(ResourceManager& a_rm)
+
+void PauseMenu::generateUI(ResourceManager& a_rm)
 {
-	// Generate buttons
+	generateButtons(a_rm);
+
+	// Generate background
+	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
+	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
+}
+
+void PauseMenu::generateButtons(ResourceManager& a_rm)
+{
 	Button* temp;
 
 	// Resume
@@ -121,7 +140,7 @@ void PauseState::generateUI(ResourceManager& a_rm)
 		Press::RESUME, "Resume");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(29.0f, 8.0f));
 	m_buttons.push_back(temp);
-	
+
 	// Options
 	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 68),
 		Press::OPTIONS, "Options");
@@ -139,8 +158,4 @@ void PauseState::generateUI(ResourceManager& a_rm)
 		Press::QUIT, "Quit");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
-
-	// Generate background
-	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
-	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 }

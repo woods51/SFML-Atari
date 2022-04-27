@@ -27,7 +27,7 @@ public:
 	PongState(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events
+	/// \brief Handles sfml window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function calls the inputHandler
@@ -72,7 +72,7 @@ public:
 private:
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles keyboard inputs
+	/// \brief Handles keyboard inputs.
 	///
 	/// This function handles any keyboard inputs,
 	/// it will handle both key pressed down and released events.

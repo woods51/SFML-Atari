@@ -28,7 +28,7 @@ public:
 	LevelEditor(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events
+	/// \brief Handles sfml window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -98,7 +98,7 @@ private:
 	void handleTileButtonEvents(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles selection overlay for tiles
+	/// \brief Handles selection overlay for tiles.
 	///
 	/// This function works in part with the eventHandler to
 	/// change each tile on the tile map texture based on the current tool selected.

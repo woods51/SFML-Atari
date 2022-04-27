@@ -107,7 +107,7 @@ void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_
 			case Press::PAUSE:
 				m_frameTexture.create(windowSize.x, windowSize.y);
 				m_frameTexture.update(a_window);
-				a_states.push_back(std::make_unique<PauseState>(a_rm, a_window, m_frameTexture));
+				a_states.push_back(std::make_unique<PauseMenu>(a_rm, a_window, m_frameTexture));
 				break;
 
 			case Press::SAVE:

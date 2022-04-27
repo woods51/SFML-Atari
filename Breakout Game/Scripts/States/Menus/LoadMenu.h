@@ -1,7 +1,7 @@
 #pragma once
 #include "../../stdafx.h"
 #include "../State.h"
-#include "OptionsState.h"
+#include "OptionsMenu.h"
 #include "../../GameObjects/Tile.h"
 #include "../../GameObjects/Button.h"
 #include "../../LevelLoader.h"
@@ -19,27 +19,26 @@ class LoadMenu : public State
 public:
 
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for LoadMenu class
+	/// \brief Constructor for LoadMenu class.
 	///
 	/// Constructs and sets the chosen lives value, generates user interfaces,
-	/// loads level data and loads first page.
+	/// loads level data and loads first page.This constructor continues the
+	/// background sprite animations pointed to.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
-	/// \param a_background	--> Background texture
-	/// \param a_background2	--> Offset background texture
+	/// \param a_background	--> Background sprite
+	/// \param a_background2	--> Offset background sprite
 	/// \param a_lives		--> Breakout lives value
 	////////////////////////////////////////////////////////////
 	LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2, unsigned int a_lives);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events
+	/// \brief Handles sfml window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
 	/// including button selections and interactions.
-	/// This function is responsible for pushing new game states
-	/// and is called once every frame.
 	/// 
 	/// \param a_rm          --> ResourceManager
 	/// \param a_window --> RenderWindow
@@ -93,7 +92,7 @@ private:
 		const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Updates selected state of buttons
+	/// \brief Updates selected state of buttons.
 	///
 	/// This function updates the isSelected state of any button
 	/// that is within the bounds of the current mouse position.
@@ -105,7 +104,7 @@ private:
 	void buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Generates user interfaces
+	/// \brief Generates user interfaces.
 	///
 	/// This function generates and initializes all
 	/// UI elements for its state.

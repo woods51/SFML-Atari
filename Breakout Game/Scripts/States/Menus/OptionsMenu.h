@@ -4,20 +4,20 @@
 #include "../../GameObjects/Button.h"
 
 ////////////////////////////////////////////////////////////
-/// \brief OptionsState Class.
+/// \brief OptionsMenu Class.
 ///
-/// This class inherits members from the State Class. The OptionsState class
+/// This class inherits members from the State Class. The OptionsMenu class
 /// is a Menu State which provides an interface for the user to modify
 /// volume settings for any in-game audio.
 /// 
 ////////////////////////////////////////////////////////////
-class OptionsState : public State
+class OptionsMenu : public State
 {
 public:
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the Options State
+	/// \brief Constructor for the Options Menu
 	///
-	/// Constructs the options state UI elements and
+	/// Constructs the options menu UI elements and
 	/// sets background texture to frame texture.
 	/// This constructor should be used when the
 	/// background texture remains static.
@@ -26,22 +26,33 @@ public:
 	/// \param a_window	--> RenderWindow
 	/// \param a_frameTexture	--> Pause frame texture
 	////////////////////////////////////////////////////////////
-	OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture);
+	OptionsMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the Options State
+	/// \brief Constructor for the Options Menu
 	///
-	/// Constructs the options state UI elements and sets background textures.
+	/// Generates user interfaces and sets background sprites.
 	/// This constructor should be called from a state in which
 	/// background sprite animations are present and are to be continued.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
 	/// \param a_background	--> Background sprite
-	/// \param a_background2	--> Second background sprite
+	/// \param a_background2	--> Offset background sprite
 	////////////////////////////////////////////////////////////
-	OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2);
+	OptionsMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2);
 
+	////////////////////////////////////////////////////////////
+	/// \brief Handles sfml window events.
+	///
+	/// This function handles any window events that occur
+	/// in the render window. This function handles mouse events
+	/// including button selections and interactions.
+	/// 
+	/// \param a_rm          --> ResourceManager
+	/// \param a_window --> RenderWindow
+	/// \param a_states     --> Vector of game states
+	////////////////////////////////////////////////////////////
 	void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) override;
 
 	////////////////////////////////////////////////////////////
@@ -55,14 +66,22 @@ public:
 	////////////////////////////////////////////////////////////
 	void update(ResourceManager& a_rm, const sf::Time& a_dt) override;
 
+	////////////////////////////////////////////////////////////
+	/// \brief Draws objects to RenderWindow.
+	///
+	/// This function draws objects to the RenderWindow.
+	/// This function is called once every frame.
+	/// 
+	/// \param a_window --> RenderWindow
+	////////////////////////////////////////////////////////////
 	void render(sf::RenderWindow& a_window) override;
 
 	////////////////////////////////////////////////////////////
-	/// \brief Destructor for BreakoutMenu. 
+	/// \brief Destructor for OptionsMenu. 
 	///
 	///	Deconstructs and frees any dynmically allocated memory.
 	////////////////////////////////////////////////////////////
-	~OptionsState();
+	~OptionsMenu();
 
 private:
 
@@ -101,6 +120,26 @@ private:
 	/// \param a_rm	--> ResourceManager
 	////////////////////////////////////////////////////////////
 	void generateUI(ResourceManager& a_rm);
+
+	////////////////////////////////////////////////////////////
+	/// \brief Generates button objects.
+	///
+	/// This function generates and initializes all
+	/// button objects.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	////////////////////////////////////////////////////////////
+	void generateButtons(ResourceManager& a_rm);
+
+	////////////////////////////////////////////////////////////
+	/// \brief Generates text objects.
+	///
+	/// This function generates and initializes all
+	/// text objects.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	////////////////////////////////////////////////////////////
+	void generateText(ResourceManager& a_rm);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Adjust position of text object.

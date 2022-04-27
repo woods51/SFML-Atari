@@ -1,13 +1,15 @@
-#include "OptionsState.h"
+#include "OptionsMenu.h"
 
-OptionsState::OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
+OptionsMenu::OptionsMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
 {
 	m_background = new sf::Sprite(a_frameTexture);
 
 	generateUI(a_rm);
 }
-OptionsState::OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2)
+
+OptionsMenu::OptionsMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2)
 {
+	// Setup backgrounds
 	m_background = a_background;
 	m_background2 = a_background2;
 	m_background->setPosition(m_background->getPosition() + sf::Vector2f(0.25f, 0));
@@ -16,7 +18,7 @@ OptionsState::OptionsState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf
 	generateUI(a_rm);
 }
 
-void OptionsState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
+void OptionsMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
@@ -47,7 +49,8 @@ void OptionsState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_windo
 		}
 	}	
 }
-void OptionsState::update(ResourceManager& a_rm , sf::Time a_dt)
+
+void OptionsMenu::update(ResourceManager& a_rm , const sf::Time& a_dt)
 {
 	// Update volume values and text strings
 	int volume = a_rm.getVolume(Sound::Button);
@@ -82,7 +85,8 @@ void OptionsState::update(ResourceManager& a_rm , sf::Time a_dt)
 	}
 	
 }
-void OptionsState::render(sf::RenderWindow& a_window)
+
+void OptionsMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 
@@ -108,7 +112,7 @@ void OptionsState::render(sf::RenderWindow& a_window)
 
 	a_window.draw(m_volumeText);
 
-	// Render UI
+	// Render buttons
 	for (const auto& b : m_buttons)
 	{
 		a_window.draw(b->getShape());
@@ -117,7 +121,8 @@ void OptionsState::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
-OptionsState::~OptionsState()
+
+OptionsMenu::~OptionsMenu()
 {
 	for (auto& b : m_buttons)
 	{
@@ -128,7 +133,8 @@ OptionsState::~OptionsState()
 		delete m_background;
 	delete m_background2;
 }
-void OptionsState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
+
+void OptionsMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_buttons)
@@ -144,37 +150,47 @@ void OptionsState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a
 			case Press::BACK:
 				a_states.pop_back();
 				break;
+
 			case Press::BUTTON_UP:
 				a_rm.setVolume(Sound::Button, true);
 				break;
+
 			case Press::BUTTON_DOWN:
 				a_rm.setVolume(Sound::Button, false);
 				break;
+
 			case Press::BALL_UP:
 				a_rm.setVolume(Sound::Ball, true);
 				break;
+
 			case Press::BALL_DOWN:
 				a_rm.setVolume(Sound::Ball, false);
 				break;
+
 			case Press::GAME_UP:
 				a_rm.setVolume(Sound::GameOver, true);
 				break;
+
 			case Press::GAME_DOWN:
 				a_rm.setVolume(Sound::GameOver, false);
 				break;
+
 			case Press::LEVEL_UP:
 				a_rm.setVolume(Sound::LevelComplete, true);
 				break;
+
 			case Press::LEVEL_DOWN:
 				a_rm.setVolume(Sound::LevelComplete, false);
 				break;
+
 			default:
 				break;
 			}
 		}
 	}
 }
-void OptionsState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
+
+void OptionsMenu::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_buttons)
 	{
@@ -190,7 +206,19 @@ void OptionsState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f&
 			b->isSelected(false);
 	}
 }
-void OptionsState::generateUI(ResourceManager& a_rm)
+
+void OptionsMenu::generateUI(ResourceManager& a_rm)
+{
+	generateButtons(a_rm);
+
+	generateText(a_rm);
+	
+	// Generate background
+	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
+	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
+}
+
+void OptionsMenu::generateButtons(ResourceManager& a_rm)
 {
 	// Generate buttons
 	Button* temp;
@@ -202,8 +230,8 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 10));
 	m_buttons.push_back(temp);
 
-	// Generate tick buttons
-	// BUTTON
+	// Generate volume control buttons
+	// Button
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 - 100, (HEIGHT / 2) - 68), Press::BUTTON_UP, ">");
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
@@ -212,7 +240,7 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
-	// BALL
+	// Ball
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 - 100, (HEIGHT / 2) + 92), Press::BALL_UP, ">", Sound::Ball);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
@@ -221,7 +249,7 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
-	// GAME
+	// Game
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 + 100, (HEIGHT / 2) - 68), Press::GAME_UP, ">", Sound::GameOver);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
@@ -230,7 +258,7 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
-	// LEVEL
+	// Level
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 + 100, (HEIGHT / 2) + 92), Press::LEVEL_UP, ">", Sound::LevelComplete);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
@@ -238,12 +266,15 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 + 100, (HEIGHT / 2) + 92), Press::LEVEL_DOWN, "<", Sound::LevelComplete);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
+}
 
-	// Generate text
+void OptionsMenu::generateText(ResourceManager& a_rm)
+{
+	// Generate text objects
 	setDefaultText(a_rm, m_buttonVolume, 40, sf::Vector2f((WIDTH / 2) - 35 - 100, (HEIGHT / 2) - 130));
-	setDefaultText(a_rm, m_buttonText, 22, sf::Vector2f((WIDTH/2) - 55 - 100, 200));
+	setDefaultText(a_rm, m_buttonText, 22, sf::Vector2f((WIDTH / 2) - 55 - 100, 200));
 	m_buttonText.setString("Button");
-	
+
 	setDefaultText(a_rm, m_ballVolume, 40, sf::Vector2f((WIDTH / 2) - 50 - 100, (HEIGHT / 2) + 30));
 	setDefaultText(a_rm, m_ballText, 22, sf::Vector2f((WIDTH / 2) - 35 - 100, (HEIGHT / 2)));
 	m_ballText.setString("Ball");
@@ -258,26 +289,22 @@ void OptionsState::generateUI(ResourceManager& a_rm)
 
 	setDefaultText(a_rm, m_volumeText, 40, sf::Vector2f((WIDTH / 2) - 100, 100));
 	m_volumeText.setString("Volume");
-
-	// Generate Background
-	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
-	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 }
-void OptionsState::adjustVolumeText(int a_volume, sf::Text& a_text, bool a_isOnLeft)
+
+void OptionsMenu::adjustVolumeText(int a_volume, sf::Text& a_text, bool a_isOnLeft)
 {
-	// Reposition text offset
+	// Set text position offset
 	int offset = (WIDTH / 2) - 100;
 	if (!a_isOnLeft)
 		offset = (WIDTH / 2) + 100;
 
 	float posY = a_text.getPosition().y;
 
-	// Reposition by value
+	// Reposition text by value
 	if (a_volume == 100)
 		a_text.setPosition(offset - 50, posY);
 	else if (a_volume < 10)
 		a_text.setPosition(offset - 15, posY);
 	else
 		a_text.setPosition(offset - 35, posY);
-	return;
 }

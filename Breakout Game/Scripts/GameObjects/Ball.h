@@ -96,7 +96,7 @@ public:
 	enum class Surface collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDiagPos) const;
 	
 	////////////////////////////////////////////////////////////
-	/// \brief Changes color of ball
+	/// \brief Changes color of ball.
 	/// 
 	/// Increments m_colorIndex and switches ball color.
 	///

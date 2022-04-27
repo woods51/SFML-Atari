@@ -125,9 +125,12 @@ void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 			switch (b->OnClick(a_rm))
 			{
 			case Press::LEVEL:
+
+				// Checks for valid level name
 				level = b->getText().getString().toAnsiString();
 				if (level.size() < 3)
 					break;
+
 				m_selectedLevel.setString(level);
 				m_isValid = true;
 				b->isSelected(true);

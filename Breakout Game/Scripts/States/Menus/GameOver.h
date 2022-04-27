@@ -1,7 +1,7 @@
 #pragma once
 #include "../../stdafx.h"
 #include "../State.h"
-#include "OptionsState.h"
+#include "OptionsMenu.h"
 #include "../../GameObjects/Button.h"
 
 ////////////////////////////////////////////////////////////
@@ -18,7 +18,7 @@ class GameOver : public State
 public:
 
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for GameOver class
+	/// \brief Constructor for GameOver class.
 	///
 	/// Constructs and sets the score value and generates user interfaces.
 	/// 
@@ -30,13 +30,11 @@ public:
 	GameOver(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture, unsigned int a_score);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events
+	/// \brief Handles sfml window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
 	/// including button selections and interactions.
-	/// This function is responsible for pushing new game states
-	/// and is called once every frame.
 	/// 
 	/// \param a_rm          --> ResourceManager
 	/// \param a_window --> RenderWindow
@@ -89,7 +87,7 @@ private:
 		const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Updates selected state of buttons
+	/// \brief Updates selected state of buttons.
 	///
 	/// This function updates the isSelected state of any button
 	/// that is within the bounds of the current mouse position.
@@ -100,7 +98,7 @@ private:
 	void buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Generates state user interfaces
+	/// \brief Generates state user interfaces.
 	///
 	/// This function generates and initializes all
 	/// UI elements for its state.

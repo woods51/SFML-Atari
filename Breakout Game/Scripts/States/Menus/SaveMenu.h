@@ -1,17 +1,71 @@
 #pragma once
 #include "../../stdafx.h"
 #include "../State.h"
-#include "OptionsState.h"
+#include "OptionsMenu.h"
 
+////////////////////////////////////////////////////////////
+/// \brief SaveMenu Class.
+///
+/// This class inherits members from the State Class. The SaveMenu class
+/// is a Menu State which provides an interface for the user to save custom
+/// levels created in the LevelEditor state.
+/// 
+////////////////////////////////////////////////////////////
 class SaveMenu : public State
 {
 public:
+
+	////////////////////////////////////////////////////////////
+	/// \brief Constructor for the Save Menu
+	///
+	/// Constructs and sets background to frame texture, generates
+	/// user interfaces, and sets tile map.
+	/// 
+	/// \param a_rm		--> ResourceManager
+	/// \param a_window	--> RenderWindow
+	/// \param a_frameTexture	--> Pause frame texture
+	/// \param a_tileMap	--> Tile map to save
+	////////////////////////////////////////////////////////////
 	SaveMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture, const std::vector<Tile*> a_tileMap);
 
+	////////////////////////////////////////////////////////////
+	/// \brief Handles sfml window events.
+	///
+	/// This function handles any window events that occur
+	/// in the render window. This function handles mouse events
+	/// including button selections and interactions.
+	/// 
+	/// \param a_rm          --> ResourceManager
+	/// \param a_window --> RenderWindow
+	/// \param a_states     --> Vector of game states
+	////////////////////////////////////////////////////////////
 	void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) override;
-	void update(ResourceManager& a_rm, sf::Time a_dt) override;
+
+	////////////////////////////////////////////////////////////
+	/// \brief Updates user interfaces.
+	///
+	/// This function updates the file name validity icon texture.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	/// \param a_dt	--> deltaTime
+	////////////////////////////////////////////////////////////
+	void update(ResourceManager& a_rm, const sf::Time& a_dt) override;
+
+	////////////////////////////////////////////////////////////
+	/// \brief Draws objects to RenderWindow.
+	///
+	/// This function draws objects to the RenderWindow.
+	/// This function is called once every frame.
+	/// 
+	/// \param a_window --> RenderWindow
+	////////////////////////////////////////////////////////////
 	void render(sf::RenderWindow& a_window) override;
 
+	////////////////////////////////////////////////////////////
+	/// \brief Destructor for SaveMenu. 
+	///
+	///	Deconstructs and frees any dynmically allocated memory.
+	////////////////////////////////////////////////////////////
 	~SaveMenu();
 
 private:
@@ -40,6 +94,16 @@ private:
 	/// \param a_rm	--> ResourceManager
 	////////////////////////////////////////////////////////////
 	void generateUI(ResourceManager& a_rm);
+
+	////////////////////////////////////////////////////////////
+	/// \brief Generates button objects.
+	///
+	/// This function generates and initializes all
+	/// button objects.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	////////////////////////////////////////////////////////////
+	void generateButtons(ResourceManager& a_rm);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Handles text input from keyboard
@@ -102,4 +166,7 @@ private:
 	bool m_isTyping = false;
 	bool m_isSaving = false;
 	bool m_isFileValid = false;
+
+	// Data members
+	std::string m_savePath = "SavedLevels/";
 };

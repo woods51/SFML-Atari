@@ -41,7 +41,8 @@ void SaveMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, s
 		}
 	}
 }
-void SaveMenu::update(ResourceManager& a_rm, sf::Time a_dt)
+
+void SaveMenu::update(ResourceManager& a_rm, const sf::Time& a_dt)
 {
 	// Updates validity icon
 	if (m_isFileValid)
@@ -49,6 +50,7 @@ void SaveMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 	else
 		m_fileValid.setTexture(*a_rm.getTexture("icon_cross"));
 }
+
 void SaveMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
@@ -74,6 +76,7 @@ void SaveMenu::render(sf::RenderWindow& a_window)
 	
 	a_window.display();
 }
+
 SaveMenu::~SaveMenu()
 {
 	for (auto& b : m_buttons)
@@ -81,6 +84,7 @@ SaveMenu::~SaveMenu()
 		delete b;
 	}
 }
+
 void SaveMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
@@ -98,7 +102,7 @@ void SaveMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 				a_states.pop_back();
 				break;
 
-			// Enable text editing
+			// Enables text editing
 			case Press::EDIT:
 				m_isTyping = true;
 				b->isSelected(m_isTyping);
@@ -122,30 +126,10 @@ void SaveMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 		}
 	}
 }
+
 void SaveMenu::generateUI(ResourceManager& a_rm)
 {
-	// Generate buttons
-	Button* temp;
-
-	// Edit
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - (32 * 8) - 10, (HEIGHT / 2) + 64),
-		Press::EDIT, "EDIT");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
-	m_editButton = temp;
-	m_buttons.push_back(temp);
-
-	// Save
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) +10, (HEIGHT / 2) + 64),
-		Press::SAVE, "SAVE");
-	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(52.0f, 8.0f));
-	m_buttons.push_back(temp);
-
-	// Back
-	temp = new Button(a_rm, sf::Vector2f(75, 100),
-		Press::BACK, sf::Vector2f(4.0f, 6.0f), sf::Vector2f(32.0f, 8.0f), "button_menu", "button_menu_selected");
-	temp->setString("BACK");
-	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(16.0f, 10.0f));
-	m_buttons.push_back(temp);
+	generateButtons(a_rm);
 
 	// Generate Sprites
 	m_typeLine.setTexture(*a_rm.getTexture("type_line"));
@@ -164,6 +148,32 @@ void SaveMenu::generateUI(ResourceManager& a_rm)
 	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
 	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 }
+
+void SaveMenu::generateButtons(ResourceManager& a_rm)
+{
+	Button* temp;
+
+	// Edit
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - (32 * 8) - 10, (HEIGHT / 2) + 64),
+		Press::EDIT, "EDIT");
+	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
+	m_editButton = temp;
+	m_buttons.push_back(temp);
+
+	// Save
+	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) + 10, (HEIGHT / 2) + 64),
+		Press::SAVE, "SAVE");
+	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(52.0f, 8.0f));
+	m_buttons.push_back(temp);
+
+	// Back
+	temp = new Button(a_rm, sf::Vector2f(75, 100),
+		Press::BACK, sf::Vector2f(4.0f, 6.0f), sf::Vector2f(32.0f, 8.0f), "button_menu", "button_menu_selected");
+	temp->setString("BACK");
+	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(16.0f, 10.0f));
+	m_buttons.push_back(temp);
+}
+
 void SaveMenu::handleTextInput(sf::Uint32 a_unicode)
 {
 	if (!m_isTyping)
@@ -193,6 +203,7 @@ void SaveMenu::handleTextInput(sf::Uint32 a_unicode)
 	else
 		m_isFileValid = false;
 }
+
 void SaveMenu::saveMap()
 {
 	m_isSaving = true;
@@ -210,7 +221,7 @@ void SaveMenu::saveMap()
 	}
 
 	std::ofstream outputFile;
-	std::string fileName = "SavedLevels/" + levelName + ".csv";
+	std::string fileName = m_savePath + levelName + ".csv";
 	outputFile.open(fileName);
 
 	std::string fileBuffer;
@@ -250,12 +261,11 @@ bool SaveMenu::verifyFileName(std::string a_fileName)
 {
 	bool isValid = true;
 	std::string fileName = a_fileName + ".csv";
-	std::string path = "SavedLevels/";
 	std::string name;
 	std::string texturePath;
 
 	// Search directory for matching file name
-	for (const auto& file : std::filesystem::directory_iterator(path))
+	for (const auto& file : std::filesystem::directory_iterator(m_savePath))
 	{
 		texturePath = file.path().string();
 		name = file.path().filename().string();

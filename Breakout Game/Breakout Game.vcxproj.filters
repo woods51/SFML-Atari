@@ -72,10 +72,10 @@
     <ClCompile Include="Scripts\States\Games\BreakoutState.cpp">
       <Filter>Resource Files\States\Games</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\States\Menus\OptionsState.cpp">
+    <ClCompile Include="Scripts\States\Menus\OptionsMenu.cpp">
       <Filter>Resource Files\States\Menus</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\States\Menus\PauseState.cpp">
+    <ClCompile Include="Scripts\States\Menus\PauseMenu.cpp">
       <Filter>Resource Files\States\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Menus\SaveMenu.cpp">
@@ -90,7 +90,7 @@
     <ClCompile Include="Scripts\States\Menus\LoadMenu.cpp">
       <Filter>Resource Files\States\Menus</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\States\Menus\MenuState.cpp">
+    <ClCompile Include="Scripts\States\Menus\MainMenu.cpp">
       <Filter>Resource Files\States\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\LevelLoader.cpp">
@@ -134,13 +134,13 @@
     <ClInclude Include="Scripts\States\Games\BreakoutState.h">
       <Filter>Header Files\States\Games</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\States\Menus\MenuState.h">
+    <ClInclude Include="Scripts\States\Menus\MainMenu.h">
       <Filter>Header Files\States\Menus</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\States\Menus\OptionsState.h">
+    <ClInclude Include="Scripts\States\Menus\OptionsMenu.h">
       <Filter>Header Files\States\Menus</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\States\Menus\PauseState.h">
+    <ClInclude Include="Scripts\States\Menus\PauseMenu.h">
       <Filter>Header Files\States\Menus</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\States\Menus\SaveMenu.h">

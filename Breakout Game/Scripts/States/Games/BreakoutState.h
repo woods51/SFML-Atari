@@ -1,7 +1,7 @@
 #pragma once
 #include "../../stdafx.h"
 #include "../State.h"
-#include "../Menus/PauseState.h"
+#include "../Menus/PauseMenu.h"
 #include "../Menus/LoadMenu.h"
 #include "../Menus/GameOver.h"
 #include "../../GameObjects/Ball.h"
@@ -47,7 +47,7 @@ public:
 	BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<Tile*>& a_tileMap, unsigned int a_lives);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events
+	/// \brief Handles sfml window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function calls the inputHandler

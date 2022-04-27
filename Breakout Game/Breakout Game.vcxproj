@@ -162,9 +162,9 @@
     <ClCompile Include="Scripts\States\Menus\BreakoutMenu.cpp" />
     <ClCompile Include="Scripts\States\Menus\GameOver.cpp" />
     <ClCompile Include="Scripts\States\Menus\LoadMenu.cpp" />
-    <ClCompile Include="Scripts\States\Menus\MenuState.cpp" />
-    <ClCompile Include="Scripts\States\Menus\OptionsState.cpp" />
-    <ClCompile Include="Scripts\States\Menus\PauseState.cpp" />
+    <ClCompile Include="Scripts\States\Menus\MainMenu.cpp" />
+    <ClCompile Include="Scripts\States\Menus\OptionsMenu.cpp" />
+    <ClCompile Include="Scripts\States\Menus\PauseMenu.cpp" />
     <ClCompile Include="Scripts\States\Menus\SaveMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,9 +182,9 @@
     <ClInclude Include="Scripts\States\Menus\BreakoutMenu.h" />
     <ClInclude Include="Scripts\States\Menus\GameOver.h" />
     <ClInclude Include="Scripts\States\Menus\LoadMenu.h" />
-    <ClInclude Include="Scripts\States\Menus\MenuState.h" />
-    <ClInclude Include="Scripts\States\Menus\OptionsState.h" />
-    <ClInclude Include="Scripts\States\Menus\PauseState.h" />
+    <ClInclude Include="Scripts\States\Menus\MainMenu.h" />
+    <ClInclude Include="Scripts\States\Menus\OptionsMenu.h" />
+    <ClInclude Include="Scripts\States\Menus\PauseMenu.h" />
     <ClInclude Include="Scripts\States\Menus\SaveMenu.h" />
     <ClInclude Include="Scripts\States\State.h" />
     <ClInclude Include="Scripts\stdafx.h" />

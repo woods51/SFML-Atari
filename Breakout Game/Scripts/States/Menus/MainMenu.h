@@ -2,41 +2,39 @@
 #include "../../stdafx.h"
 #include "../State.h"
 #include "BreakoutMenu.h"
-#include "OptionsState.h"
+#include "OptionsMenu.h"
 #include "../Games/PongState.h"
 #include "../Games/LevelEditor.h"
 
 ////////////////////////////////////////////////////////////
-/// \brief MenuState Class.
+/// \brief MainMenu Class.
 ///
-/// This class inherits members from the State Class. The MenuState class
+/// This class inherits members from the State Class. The MainMenu class
 /// is a Menu State which provides a start menu interface allowing the user
 /// to interact with and access all the various games and features of SFML atari.
 /// 
 ////////////////////////////////////////////////////////////
-class MenuState : public State
+class MainMenu : public State
 {
 public:
 
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the Menu State
+	/// \brief Constructor for the Main Menu.
 	///
-	/// Constructs the menu state UI elements and
+	/// Constructs the main menu UI elements and
 	/// generates animated background textures.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
 	////////////////////////////////////////////////////////////
-	MenuState(ResourceManager& a_rm, sf::RenderWindow& a_window);
+	MainMenu(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events
+	/// \brief Handles sfml window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
 	/// including button selections and interactions.
-	/// This function is responsible for pushing new game states
-	/// and is called once every frame.
 	/// 
 	/// \param a_rm          --> ResourceManager
 	/// \param a_window --> RenderWindow
@@ -66,11 +64,11 @@ public:
 	void render(sf::RenderWindow& a_window) override;
 
 	////////////////////////////////////////////////////////////
-	/// \brief Destructor for MenuState. 
+	/// \brief Destructor for MainMenu. 
 	///
 	///	Deconstructs and frees any dynmically allocated memory.
 	////////////////////////////////////////////////////////////
-	~MenuState();
+	~MainMenu();
 
 private:
 
@@ -90,7 +88,7 @@ private:
 		const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Updates selected state of buttons
+	/// \brief Updates selected state of buttons.
 	///
 	/// This function updates the isSelected state of any button
 	/// that is within the bounds of the current mouse position.
@@ -103,7 +101,7 @@ private:
 	void buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Generates state user interfaces
+	/// \brief Generates state user interfaces.
 	///
 	/// This function generates and initializes all
 	/// UI elements for its state.

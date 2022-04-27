@@ -42,7 +42,7 @@ void GameOver::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, s
 	}
 }
 
-void GameOver::update(ResourceManager& a_rm, const sf::Time& a_dt) { }
+void GameOver::update(ResourceManager& a_rm, const sf::Time& a_dt) {}
 
 void GameOver::render(sf::RenderWindow& a_window)
 {
@@ -125,7 +125,7 @@ void GameOver::generateUI(ResourceManager& a_rm)
 	// Generate buttons
 	Button* temp;
 
-	// Main Menu
+	// MainMenu
 	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4),
 		Press::MAINMENU, "Menu");
 	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(64.0f, 12.0f));
@@ -137,10 +137,6 @@ void GameOver::generateUI(ResourceManager& a_rm)
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);
 
-	// Generate background
-	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
-	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
-
 	// Generate text objects
 	setDefaultText(a_rm, m_scoreText, 30, sf::Vector2f(WIDTH / 2 - 180, HEIGHT / 2 -60));
 	m_scoreText.setString("SCORE:");
@@ -150,4 +146,8 @@ void GameOver::generateUI(ResourceManager& a_rm)
 
 	setDefaultText(a_rm, m_gameText, 100, sf::Vector2f(WIDTH / 2 - 418, HEIGHT / 2 - 200), "default", sf::Color::Red);
 	m_gameText.setString("GAME OVER");
+
+	// Generate background
+	m_overlay.setTexture(*a_rm.getTexture("pause_menu"));
+	m_overlay.setScale(sf::Vector2f(80.0f, 80.0f));
 }

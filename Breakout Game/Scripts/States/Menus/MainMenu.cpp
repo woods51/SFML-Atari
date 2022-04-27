@@ -1,11 +1,11 @@
-#include "MenuState.h"
+#include "MainMenu.h"
 
-MenuState::MenuState(ResourceManager& a_rm, sf::RenderWindow& a_window)
+MainMenu::MainMenu(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
 	generateUI(a_rm);
 }
 
-void MenuState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
+void MainMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
@@ -13,7 +13,6 @@ void MenuState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, 
 	buttonSelectUpdate(a_rm, mousePosition);
 
 	sf::Event event;
-	sf::Vector2u winSize = a_window.getSize();
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
@@ -38,7 +37,7 @@ void MenuState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, 
 	}
 }
 
-void MenuState::update(ResourceManager& a_rm, const sf::Time& a_dt)
+void MainMenu::update(ResourceManager& a_rm, const sf::Time& a_dt)
 {
 	// Update background positions
 	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.25f, 0));
@@ -54,7 +53,7 @@ void MenuState::update(ResourceManager& a_rm, const sf::Time& a_dt)
 	}
 }
 
-void MenuState::render(sf::RenderWindow& a_window)
+void MainMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 
@@ -82,7 +81,7 @@ void MenuState::render(sf::RenderWindow& a_window)
 	a_window.display();
 }
 
-MenuState::~MenuState()
+MainMenu::~MainMenu()
 {
 	for (auto& b : m_buttons)
 	{
@@ -90,7 +89,7 @@ MenuState::~MenuState()
 	}
 }
 
-void MenuState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
+void MainMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_buttons)
@@ -116,7 +115,7 @@ void MenuState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_wi
 				break;
 
 			case Press::OPTIONS:
-				a_states.push_back(std::make_unique<OptionsState>(a_rm, a_window, &m_background, &m_background2));
+				a_states.push_back(std::make_unique<OptionsMenu>(a_rm, a_window, &m_background, &m_background2));
 				break;
 
 			case Press::QUIT:
@@ -130,7 +129,7 @@ void MenuState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_wi
 	}
 }
 
-void MenuState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
+void MainMenu::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_buttons)
 	{
@@ -173,7 +172,7 @@ void MenuState::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_
 	}
 }
 
-void MenuState::generateUI(ResourceManager& a_rm)
+void MainMenu::generateUI(ResourceManager& a_rm)
 {
 	generateButtons(a_rm);
 
@@ -189,7 +188,7 @@ void MenuState::generateUI(ResourceManager& a_rm)
 	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
 }
 
-void MenuState::generateButtons(ResourceManager& a_rm)
+void MainMenu::generateButtons(ResourceManager& a_rm)
 {
 	Button* temp;
 
@@ -219,7 +218,7 @@ void MenuState::generateButtons(ResourceManager& a_rm)
 	m_buttons.push_back(temp);
 }
 
-void MenuState::generateSprites(ResourceManager& a_rm)
+void MainMenu::generateSprites(ResourceManager& a_rm)
 {
 	m_breakoutText.setPosition((WIDTH / 2) - 324, 130);
 	m_breakoutText.setTexture(*a_rm.getTexture("breakout_title"));

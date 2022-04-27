@@ -1,42 +1,71 @@
 #pragma once
 #include "../../stdafx.h"
 #include "../State.h"
-#include "OptionsState.h"
+#include "OptionsMenu.h"
 #include "../../GameObjects/Button.h"
 
 ////////////////////////////////////////////////////////////
-/// \brief PauseState Class.
+/// \brief PauseMenu Class.
 ///
-/// This class inherits members from the State Class. The PauseState class
+/// This class inherits members from the State Class. The PauseMenu class
 /// is a Menu State which provides a menu interface allowing the user
 /// to switch between game states while in a paused state.
 /// 
 ////////////////////////////////////////////////////////////
-class PauseState : public State
+class PauseMenu : public State
 {
 public:
 
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the Pause State
+	/// \brief Constructor for the Pause Menu
 	///
-	/// Constructs the menu state UI elements and
-	/// generates background textures.
+	/// Constructs and sets background textures and generate
+	/// user interfaces.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
 	////////////////////////////////////////////////////////////
-	PauseState(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture);
+	PauseMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture);
 
+	////////////////////////////////////////////////////////////
+	/// \brief Handles sfml window events.
+	///
+	/// This function handles any window events that occur
+	/// in the render window. This function handles mouse events
+	/// including button selections and interactions.
+	/// 
+	/// \param a_rm          --> ResourceManager
+	/// \param a_window --> RenderWindow
+	/// \param a_states     --> Vector of game states
+	////////////////////////////////////////////////////////////
 	void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) override;
-	void update(ResourceManager& a_rm, sf::Time a_dt) override;
+
+	////////////////////////////////////////////////////////////
+	/// \brief Provides game updates.
+	///
+	/// This function is unused in the PauseMenu state.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	/// \param a_dt	--> deltaTime
+	////////////////////////////////////////////////////////////
+	void update(ResourceManager& a_rm, const sf::Time& a_dt) override;
+
+	////////////////////////////////////////////////////////////
+	/// \brief Draws objects to RenderWindow.
+	///
+	/// This function draws objects to the RenderWindow.
+	/// This function is called once every frame.
+	/// 
+	/// \param a_window --> RenderWindow
+	////////////////////////////////////////////////////////////
 	void render(sf::RenderWindow& a_window) override;
 
 	////////////////////////////////////////////////////////////
-	/// \brief Destructor for PauseState. 
+	/// \brief Destructor for PauseMenu. 
 	///
 	///	Deconstructs and frees any dynmically allocated memory.
 	////////////////////////////////////////////////////////////
-	~PauseState();
+	~PauseMenu();
 
 private:
 
@@ -78,6 +107,16 @@ private:
 	////////////////////////////////////////////////////////////
 	void generateUI(ResourceManager& a_rm);
 
+	////////////////////////////////////////////////////////////
+	/// \brief Generates button objects.
+	///
+	/// This function generates and initializes all
+	/// button objects.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	////////////////////////////////////////////////////////////
+	void generateButtons(ResourceManager& a_rm);
+
 	// Buttons
 	std::vector<Button*> m_buttons;
 
@@ -85,5 +124,4 @@ private:
 	sf::Texture m_frameTexture;
 	sf::Sprite m_frameSprite;
 	sf::Sprite m_overlay;
-
 };
