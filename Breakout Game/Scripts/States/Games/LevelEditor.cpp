@@ -8,9 +8,10 @@ LevelEditor::LevelEditor(ResourceManager& a_rm, sf::RenderWindow& a_window)
 
 void LevelEditor::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
-	sf::Event event;
 	static bool lockClick = false;
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
+
+	sf::Event event;
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
@@ -40,7 +41,8 @@ void LevelEditor::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window
 		handleTileSelection(a_rm, mousePosition, lockClick);
 	}
 }
-void LevelEditor::update(ResourceManager& a_rm, sf::Time a_dt) {}
+
+void LevelEditor::update(ResourceManager& a_rm, const sf::Time& a_dt) {}
 
 void LevelEditor::render(sf::RenderWindow& a_window)
 {
@@ -167,6 +169,7 @@ void LevelEditor::handleTileButtonEvents(ResourceManager& a_rm, const sf::Vector
 				m_selectorTile.setPosition(b->getPosition());
 				m_previewTile.setTexture(*a_rm.getTexture(b->getTextureKey()));
 				break;
+
 			default:
 				break;
 			}
@@ -177,6 +180,7 @@ void LevelEditor::handleTileSelection(ResourceManager& a_rm, const sf::Vector2f&
 {
 	if (a_lockClick && (m_erase->isSelected() || (m_pen->isSelected() && m_selectedTile != nullptr)))
 	{
+		// Draw on tile map
 		for (auto& tile : m_tileMap)
 		{
 			sf::Vector2f tile_pos = tile->getPosition();

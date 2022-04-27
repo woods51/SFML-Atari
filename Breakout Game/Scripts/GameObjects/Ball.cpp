@@ -1,6 +1,6 @@
 #include "./Ball.h"
 
-void Ball::move(ResourceManager& a_rm, sf::Time a_dt)
+void Ball::move(ResourceManager& a_rm, const sf::Time& a_dt)
 {
 	m_shape.move(m_velocity.x * a_dt.asSeconds() * MULTIPLIER, m_velocity.y * a_dt.asSeconds() * MULTIPLIER);
 	handleBorder(a_rm);

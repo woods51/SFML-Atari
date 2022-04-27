@@ -7,12 +7,12 @@ BreakoutMenu::BreakoutMenu(ResourceManager& a_rm, sf::RenderWindow& a_window)
 
 void BreakoutMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
-	sf::Event event;
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	static bool lock_click = false;
 
 	buttonSelectUpdate(a_rm, mousePosition);
 
+	sf::Event event;
 	while (a_window.pollEvent(event))
 	{
 		switch (event.type)
@@ -36,9 +36,10 @@ void BreakoutMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_windo
 		}
 	}
 }
-void BreakoutMenu::update(ResourceManager& a_rm, sf::Time a_dt)
+
+void BreakoutMenu::update(ResourceManager& a_rm, const sf::Time& a_dt)
 {
-	// Update level text position
+	// Re-align livesValue position based on value
 	m_livesValue.setString(std::to_string(m_lives[m_livesIndex]));
 	switch (m_livesIndex)
 	{
@@ -66,36 +67,39 @@ void BreakoutMenu::update(ResourceManager& a_rm, sf::Time a_dt)
 	{
 		m_background.setPosition(sf::Vector2f(-3200, 0));
 	}
+
 	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.25f, 0));
 	if (m_background2.getPosition().x == 3200)
 	{
 		m_background2.setPosition(sf::Vector2f(-3200, 0));
 	}
 }
+
 void BreakoutMenu::render(sf::RenderWindow& a_window)
 {
 	a_window.clear(sf::Color::Black);
 
-	// Render Backgrounds
+	// Render backgrounds
 	a_window.draw(m_background);
 	a_window.draw(m_background2);
 
-	// Render UI
+	// Render buttons
 	for (const auto& b : m_buttons)
 	{
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
 	}
 
-	// Render Title
+	// Render title sprite
 	a_window.draw(m_breakoutTitle);
 
-	// Render Text
+	// Render text objects
 	a_window.draw(m_livesText);
 	a_window.draw(m_livesValue);
 
 	a_window.display();
 }
+
 BreakoutMenu::~BreakoutMenu()
 {
 	for (auto& b : m_buttons)
@@ -103,6 +107,7 @@ BreakoutMenu::~BreakoutMenu()
 		delete b;
 	}
 }
+
 void BreakoutMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
@@ -119,29 +124,36 @@ void BreakoutMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a
 			case Press::BREAKOUT:
 				a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_lives[m_livesIndex]));
 				break;
+
 			case Press::EDITOR:
 				a_states.push_back(std::make_unique<LevelEditor>(a_rm, a_window));
 				break;
+
 			case Press::LOAD:
 				a_states.push_back(std::make_unique<LoadMenu>(a_rm, a_window, &m_background, &m_background2, m_lives[m_livesIndex]));
 				break;
+
 			case Press::BACK:
 				a_states.pop_back();
 				break;
+
 			case Press::BUTTON_UP:
 				if (++m_livesIndex > 5)
 					m_livesIndex = 0;
 				break;
+
 			case Press::BUTTON_DOWN:
 				if (--m_livesIndex < 0)
 					m_livesIndex = 5;
 				break;
+
 			default:
 				break;
 			}
 		}
 	}
 }
+
 void BreakoutMenu::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_buttons)
@@ -158,9 +170,35 @@ void BreakoutMenu::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f&
 			b->isSelected(false);
 	}
 }
+
 void BreakoutMenu::generateUI(ResourceManager& a_rm)
 {
 	// Generate menu buttons
+	generateButtons(a_rm);
+
+	// Generate text
+	setDefaultText(a_rm, m_livesValue, 40, sf::Vector2f(WIDTH/2 -16, HEIGHT/2 +120));
+	m_livesValue.setString(m_lives[m_livesIndex]);
+
+	setDefaultText(a_rm, m_livesText, 22, sf::Vector2f(WIDTH/2 - 46, HEIGHT/2 +100));
+	m_livesText.setString("LIVES");
+
+	// Generate title
+	m_breakoutTitle.setPosition((WIDTH / 2) - 324, 130);
+	m_breakoutTitle.setTexture(*a_rm.getTexture("breakout_title_1"));
+	m_breakoutTitle.setScale(sf::Vector2f(6, 6));
+
+	// Generate Backgrounds
+	m_frameTexture = *a_rm.getTexture("background_breakout");
+
+	m_background.setTexture(m_frameTexture);
+	m_background.setScale(40, 40);
+	m_background2 = m_background;
+	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
+}
+
+void BreakoutMenu::generateButtons(ResourceManager& a_rm)
+{
 	Button* temp;
 
 	// Play
@@ -186,31 +224,11 @@ void BreakoutMenu::generateUI(ResourceManager& a_rm)
 	m_buttons.push_back(temp);
 
 	// Generate tick buttons
-	temp = new TickButton(a_rm, sf::Vector2f(WIDTH/2 +6, (HEIGHT / 2) +170), Press::BUTTON_UP, ">");
+	temp = new TickButton(a_rm, sf::Vector2f(WIDTH / 2 + 6, (HEIGHT / 2) + 170), Press::BUTTON_UP, ">");
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
-	temp = new TickButton(a_rm, sf::Vector2f(WIDTH/2 -54, (HEIGHT / 2) +170), Press::BUTTON_DOWN, "<");
+	temp = new TickButton(a_rm, sf::Vector2f(WIDTH / 2 - 54, (HEIGHT / 2) + 170), Press::BUTTON_DOWN, "<");
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
-
-	// Generate text
-	setDefaultText(a_rm, m_livesValue, 40, sf::Vector2f(WIDTH/2 -16, HEIGHT/2 +120));
-	m_livesValue.setString(m_lives[m_livesIndex]);
-
-	setDefaultText(a_rm, m_livesText, 22, sf::Vector2f(WIDTH/2 - 46, HEIGHT/2 +100));
-	m_livesText.setString("LIVES");
-
-	// Generate title
-	m_breakoutTitle.setPosition((WIDTH / 2) - 324, 130);
-	m_breakoutTitle.setTexture(*a_rm.getTexture("breakout_title_1"));
-	m_breakoutTitle.setScale(sf::Vector2f(6, 6));
-
-	// Generate Backgrounds
-	m_frameTexture = *a_rm.getTexture("background_breakout");
-
-	m_background.setTexture(m_frameTexture);
-	m_background.setScale(40, 40);
-	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
 }

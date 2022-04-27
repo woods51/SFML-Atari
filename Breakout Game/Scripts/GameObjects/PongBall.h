@@ -41,7 +41,7 @@ public:
 	/// \param a_rm	--> ResourceManager
 	/// \param a_dt	--> deltaTime
 	////////////////////////////////////////////////////////////
-	void move(ResourceManager& a_rm, sf::Time a_dt) override;
+	void move(ResourceManager& a_rm, const sf::Time& a_dt) override;
 
 	////////////////////////////////////////////////////////////
 	/// \brief Handles collision with screen bounds.

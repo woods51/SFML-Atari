@@ -94,6 +94,13 @@ void LoadMenu::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
+LoadMenu::~LoadMenu()
+{
+	for (auto& b : m_buttons)
+	{
+		delete b;
+	}
+}
 void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
@@ -153,13 +160,6 @@ void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 				break;
 			}
 		}
-	}
-}
-LoadMenu::~LoadMenu()
-{
-	for (auto& b : m_buttons)
-	{
-		delete b;
 	}
 }
 void LoadMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)

@@ -53,7 +53,7 @@ public:
 	/// \param a_rm	--> ResourceManager
 	/// \param a_dt	--> deltaTime
 	////////////////////////////////////////////////////////////
-	void update(ResourceManager& a_rm, sf::Time a_dt) override;
+	void update(ResourceManager& a_rm, const sf::Time& a_dt) override;
 
 	void render(sf::RenderWindow& a_window) override;
 

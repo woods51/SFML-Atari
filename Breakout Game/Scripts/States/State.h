@@ -14,9 +14,7 @@ public:
     /// \brief Handles sfml window events
     ///
     /// This function handles any window events that occur
-    /// in the render window. This function calls the inputHandler
-    /// and also handles any mouse events.
-    /// This function is called every frame.
+    /// in the render window. This function is called once every frame.
     /// 
     /// \param a_rm          --> ResourceManager
     /// \param a_window --> RenderWindow
@@ -33,13 +31,13 @@ public:
     /// \param a_rm --> ResourceManager
     /// \param a_dt  --> deltaTime
     ////////////////////////////////////////////////////////////
-	virtual void update(ResourceManager& a_rm, sf::Time a_dt) = 0;
+	virtual void update(ResourceManager& a_rm, const sf::Time& a_dt) = 0;
 
     ////////////////////////////////////////////////////////////
     /// \brief Draws objects to RenderWindow.
     ///
     /// This function draws objects to the RenderWindow.
-    /// This function is called every frame.
+    /// This function is once called every frame.
     /// 
     /// \param a_window --> RenderWindow
     ////////////////////////////////////////////////////////////

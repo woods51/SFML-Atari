@@ -27,8 +27,38 @@ public:
 	////////////////////////////////////////////////////////////
 	LevelEditor(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
+	////////////////////////////////////////////////////////////
+	/// \brief Handles sfml window events
+	///
+	/// This function handles any window events that occur
+	/// in the render window. This function handles mouse events
+	/// including button selections and interactions. This function
+	/// is responsible for pushing new game states and is called once every frame.
+	/// 
+	/// \param a_rm          --> ResourceManager
+	/// \param a_window --> RenderWindow
+	/// \param a_states     --> Vector of game states
+	////////////////////////////////////////////////////////////
 	void eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states) override;
-	void update(ResourceManager& a_rm, sf::Time dt) override;
+
+	////////////////////////////////////////////////////////////
+	/// \brief Provides game updates.
+	///
+	/// This function is unused in the level editor.
+	/// 
+	/// \param a_rm	--> ResourceManager
+	/// \param a_dt	--> deltaTime
+	////////////////////////////////////////////////////////////
+	void update(ResourceManager& a_rm, const sf::Time& a_dt) override;
+
+	////////////////////////////////////////////////////////////
+	/// \brief Draws objects to RenderWindow.
+	///
+	/// This function draws objects to the RenderWindow.
+	/// This function is called once every frame.
+	/// 
+	/// \param a_window --> RenderWindow
+	////////////////////////////////////////////////////////////
 	void render(sf::RenderWindow& a_window) override;
 
 	////////////////////////////////////////////////////////////
@@ -122,7 +152,7 @@ private:
 	// Tile map
 	std::vector<Tile*> m_tileMap;
 	
-	// Buttons & UI
+	// Buttons & Tile UI
 	std::vector<Button*> m_buttons;
 	std::vector<TileButton*> m_tileButtons;
 	Button* m_pen;

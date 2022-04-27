@@ -1,6 +1,6 @@
 #include "Paddle.h"
 
-void Paddle::move(sf::Time a_dt)
+void Paddle::move(const sf::Time& a_dt)
 {
 	if (m_IsMovingLeft)
 	{

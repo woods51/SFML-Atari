@@ -44,7 +44,7 @@ public:
 	/// \param a_rm	--> ResourceManager
 	/// \param a_dt	--> deltaTime
 	////////////////////////////////////////////////////////////
-	virtual void move(ResourceManager& a_rm, sf::Time a_dt);
+	virtual void move(ResourceManager& a_rm, const sf::Time& a_dt);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Handles collision with screen bounds.

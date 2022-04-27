@@ -205,6 +205,7 @@ void SaveMenu::saveMap()
 		m_saveResult.setString("Save Failed: File already exists.");
 		m_saveResult.setPosition(WIDTH / 2 -314, HEIGHT / 2 -160);
 		m_saveResult.setFillColor(sf::Color::Red);
+		m_isSaving = false;
 		return;
 	}
 

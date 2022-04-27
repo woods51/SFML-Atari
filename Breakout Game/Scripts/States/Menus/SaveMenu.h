@@ -57,7 +57,7 @@ private:
 	/// This function parses tile data from m_tileMap into an output buffer,
 	/// this buffer is written to the output file, which name is specified by m_fileName.
 	/// Data outputted in a csv format and written to a
-	/// file in the /SavedLevels/ directory.
+	/// file in the SavedLevels/ directory.
 	/// 
 	////////////////////////////////////////////////////////////
 	void saveMap();
@@ -66,7 +66,7 @@ private:
 	/// \brief Verifies that file name doesn't exist.
 	///
 	/// This function verifies that the given file name doesn't
-	///	exist already in the /SavedLevels/ directory. A file name is
+	///	exist already in the SavedLevels/ directory. A file name is
 	/// considered valid as long as a file with same name doesn't exist.
 	/// 
 	/// \param a_fileName	--> Ansi string file name
