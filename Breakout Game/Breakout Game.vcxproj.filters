@@ -16,14 +16,8 @@
     <Filter Include="Header Files\GameObjects">
       <UniqueIdentifier>{8fe66923-cc91-497d-9595-50feaf0fe152}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\GameObjects">
-      <UniqueIdentifier>{8e4e9f6a-ba01-4f5d-91ff-1d563d3ffa8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\States">
       <UniqueIdentifier>{8abf02b3-c7f6-46b1-a403-8557bca185da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\States">
-      <UniqueIdentifier>{5b790dc5-0d4b-4733-8e35-ebb9849daa51}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\States\Menus">
       <UniqueIdentifier>{b32f21a9-e949-4d7e-bacf-82ff57e0a8e3}</UniqueIdentifier>
@@ -31,70 +25,76 @@
     <Filter Include="Header Files\States\Games">
       <UniqueIdentifier>{526e61e3-d69c-40ed-914a-0753186a9f3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\States\Games">
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{8e4e9f6a-ba01-4f5d-91ff-1d563d3ffa8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{5b790dc5-0d4b-4733-8e35-ebb9849daa51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\Games">
       <UniqueIdentifier>{58228740-5139-4397-9d4d-78c1a61c3e50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\States\Menus">
+    <Filter Include="Source Files\States\Menus">
       <UniqueIdentifier>{ae70eab8-c875-482e-afd9-b96aa9000a48}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\GameObjects\Button.cpp">
-      <Filter>Resource Files\GameObjects</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\GameObjects\Paddle.cpp">
-      <Filter>Resource Files\GameObjects</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\GameObjects\PongBall.cpp">
-      <Filter>Resource Files\GameObjects</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\GameObjects\Ball.cpp">
-      <Filter>Resource Files\GameObjects</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\GameObjects\Tile.cpp">
-      <Filter>Resource Files\GameObjects</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\Game.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\ResourceManager.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scripts\States\Games\LevelEditor.cpp">
-      <Filter>Resource Files\States\Games</Filter>
+      <Filter>Source Files\States\Games</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Games\PongState.cpp">
-      <Filter>Resource Files\States\Games</Filter>
+      <Filter>Source Files\States\Games</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Games\BreakoutState.cpp">
-      <Filter>Resource Files\States\Games</Filter>
+      <Filter>Source Files\States\Games</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Menus\OptionsMenu.cpp">
-      <Filter>Resource Files\States\Menus</Filter>
+      <Filter>Source Files\States\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Menus\PauseMenu.cpp">
-      <Filter>Resource Files\States\Menus</Filter>
+      <Filter>Source Files\States\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Menus\SaveMenu.cpp">
-      <Filter>Resource Files\States\Menus</Filter>
+      <Filter>Source Files\States\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Menus\BreakoutMenu.cpp">
-      <Filter>Resource Files\States\Menus</Filter>
+      <Filter>Source Files\States\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Menus\GameOver.cpp">
-      <Filter>Resource Files\States\Menus</Filter>
+      <Filter>Source Files\States\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Menus\LoadMenu.cpp">
-      <Filter>Resource Files\States\Menus</Filter>
+      <Filter>Source Files\States\Menus</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\States\Menus\MainMenu.cpp">
-      <Filter>Resource Files\States\Menus</Filter>
+      <Filter>Source Files\States\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Game.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\LevelLoader.cpp">
-      <Filter>Resource Files</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\ResourceManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
