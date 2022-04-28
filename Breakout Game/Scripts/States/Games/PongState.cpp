@@ -2,8 +2,13 @@
 
 PongState::PongState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 {
-	m_paddleP1 = new Paddle(a_rm, sf::Vector2f(100, HEIGHT/2 - 80), sf::Vector2f(4, 32), sf::Vector2f(5,5), "paddle_pong_02");
-	m_paddleP2 = new Paddle(a_rm, sf::Vector2f(WIDTH - 120, HEIGHT/2 - 80), sf::Vector2f(4, 32), sf::Vector2f(5, 5), "paddle_pong_03");
+	// Generate Pong Paddles
+	m_paddleP1 = new Paddle(a_rm, sf::Vector2f(100, HEIGHT/2 - 100), sf::Vector2f(4, 32), sf::Vector2f(5,5), "paddle_pong_02");
+	m_paddleP2 = new Paddle(a_rm, sf::Vector2f(WIDTH - 120, HEIGHT / 2 - 100), sf::Vector2f(4, 32), sf::Vector2f(5, 5), "paddle_pong_03");
+	m_paddleP1->setSpeed(20);
+	m_paddleP1->setBorderOffset(80);
+	m_paddleP2->setSpeed(20);
+	m_paddleP2->setBorderOffset(80);
 	m_paddles.push_back(m_paddleP1);
 	m_paddles.push_back(m_paddleP2);
 
@@ -15,7 +20,7 @@ PongState::PongState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 
 void PongState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
-	static bool lock_click = false;
+	bool lock_click = false;
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 
 	sf::Event event;
@@ -67,7 +72,7 @@ void PongState::render(sf::RenderWindow& a_window)
 	a_window.clear(sf::Color::Black);
 
 	// Render background
-	a_window.draw(m_border);
+	a_window.draw(m_background);
 
 	// Render game objects
 	a_window.draw(m_ball->getShape());
@@ -148,7 +153,7 @@ void PongState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_wi
 			case Press::PAUSE:
 				m_frameTexture.create(windowSize.x, windowSize.y);
 				m_frameTexture.update(a_window);
-				a_states.push_back(std::make_unique<PauseState>(a_rm, a_window, m_frameTexture));
+				a_states.push_back(std::make_unique<PauseMenu>(a_rm, a_window, m_frameTexture));
 				break;
 
 			default:
@@ -171,7 +176,7 @@ void PongState::generateUI(ResourceManager& a_rm)
 	// Generate buttons
 	Button* temp;
 
-	temp = new Button(a_rm, sf::Vector2f(WIDTH/2 - 24, HEIGHT - 55),
+	temp = new Button(a_rm, sf::Vector2f(WIDTH/2 - 24, HEIGHT - 64),
 		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "button_pause", "button_pause_selected");
 	m_buttons.push_back(temp);
 
@@ -179,8 +184,8 @@ void PongState::generateUI(ResourceManager& a_rm)
 	generateText(a_rm);
 
 	// Generate background
-	m_border.setTexture(*a_rm.getTexture("border"));
-	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
+	m_background.setTexture(*a_rm.getTexture("background_pong"));
+	m_background.setScale(40, 40);
 }
 
 void PongState::generateText(ResourceManager& a_rm)
@@ -192,10 +197,10 @@ void PongState::generateText(ResourceManager& a_rm)
 	setDefaultText(a_rm, m_startText, 30, sf::Vector2f(WIDTH / 2 - 250, 500));
 	m_startText.setString("Press space to start.");
 
-	setDefaultText(a_rm, m_player1, 12, sf::Vector2f(10, 662), "default", sf::Color::Yellow);
+	setDefaultText(a_rm, m_player1, 12, sf::Vector2f(10, 656), "default", sf::Color::Yellow);
 	m_player1.setString("Player 1");
 
-	setDefaultText(a_rm, m_player2, 12, sf::Vector2f(1190, 662), "default", sf::Color::Yellow);
+	setDefaultText(a_rm, m_player2, 12, sf::Vector2f(1190, 656), "default", sf::Color::Yellow);
 	m_player2.setString("Player 2");
 }
 

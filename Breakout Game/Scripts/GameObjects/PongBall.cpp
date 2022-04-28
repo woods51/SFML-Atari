@@ -35,9 +35,9 @@ void PongBall::handleBorder(ResourceManager& a_rm)
 		m_velocity.y = -m_velocity.y;
 		hitFlag = true;
 	}
-	else if (getDiagonalPosition().y >= HEIGHT - 60)
+	else if (getDiagonalPosition().y >= HEIGHT - 80)
 	{
-		m_shape.setPosition(m_shape.getPosition().x, HEIGHT - 60 - offset);
+		m_shape.setPosition(m_shape.getPosition().x, HEIGHT - 80 - offset);
 		m_velocity.y = -m_velocity.y;
 		hitFlag = true;
 	}
@@ -45,6 +45,7 @@ void PongBall::handleBorder(ResourceManager& a_rm)
 	if (hitFlag)
 		a_rm.playSound(Sound::Ball);
 }
+
 void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir)
 {
 	if (a_surface == Surface::Top || a_surface == Surface::Bottom)
@@ -54,15 +55,15 @@ void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a
 	{
 		// Paddle same direction
 		if (m_direction == a_paddleDir)
-			m_velocity = sf::Vector2f(-m_velocity.x * m_scalar, m_velocity.y * m_scalar);
+			m_velocity = sf::Vector2f(-m_velocity.x * m_scalar * m_pongScalar, m_velocity.y * m_scalar);
 
 		// Paddle Idle
 		else if (a_paddleDir == Direction::Idle)
-			m_velocity.x = -m_velocity.x;
+			m_velocity.x = -m_velocity.x * m_pongScalar;
 
 		// Paddle opposite direction
 		else
-			m_velocity = sf::Vector2f(-m_velocity.x, -m_velocity.y * m_scalar);
+			m_velocity = sf::Vector2f(-m_velocity.x * m_pongScalar, -m_velocity.y * m_scalar);
 	}
 
 	else if (a_surface == Surface::Corner)

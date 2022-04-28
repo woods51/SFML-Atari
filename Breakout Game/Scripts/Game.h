@@ -7,10 +7,10 @@
 #include "./States/Games/BreakoutState.h"
 #include "./States/Games/PongState.h"
 #include "./States/Games/LevelEditor.h"
-#include "./States/Menus/MenuState.h"
+#include "./States/Menus/MainMenu.h"
 #include "./States/Menus/BreakoutMenu.h"
-#include "./States/Menus/OptionsState.h"
-#include "./States/Menus/PauseState.h"
+#include "./States/Menus/OptionsMenu.h"
+#include "./States/Menus/PauseMenu.h"
 #include "./States/Menus/SaveMenu.h"
 #include "./States/Menus/LoadMenu.h"
 
@@ -20,17 +20,33 @@
 #include "./GameObjects/Paddle.h"
 #include "./GameObjects/Button.h"
 
+////////////////////////////////////////////////////////////
+/// \brief Game Class.
+///
+/// The Game class represents the origin or base class for the
+/// SFML Atari Game.
+/// 
+////////////////////////////////////////////////////////////
 class Game
 {
 public:
-	Game() {
-		
-	};
-	void run();
+	Game() {};
+
+	////////////////////////////////////////////////////////////
+	/// \brief Start SFML Atari Game
+	///
+	/// This function hosts the main game loop along with creating
+	/// and setting up instances of the ResourceManager, RenderWindow,
+	/// and Delta time. This function also initalizes the game states vector
+	/// with the inital MainMenu state.
+	/// 
+	/// \param a_rm		--> ResourceManager
+	/// \param a_window	--> RenderWindow
+	////////////////////////////////////////////////////////////
+	void start();
 
 private:
-	void exit();
 
-	// Vector of smart pointers to game states
+	// Game States
 	std::vector<std::unique_ptr<State>> m_states;
 };

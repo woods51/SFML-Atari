@@ -3,15 +3,20 @@
 SaveMenu::SaveMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture, const std::vector<Tile*> a_tileMap)
 {
 	m_tileMap = a_tileMap;
+
+	// Setup background
 	m_frameTexture = a_frameTexture;
 	m_frameSprite.setTexture(m_frameTexture);
+
+	sf::Vector2u windowSize = a_window.getSize();
+	m_frameSprite.setScale((float)WIDTH / windowSize.x, (float)HEIGHT / windowSize.y);
 
 	generateUI(a_rm);
 }
 void SaveMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
-	static bool lock_click = false;
+	bool lock_click = false;
 
 	sf::Event event;
 	while (a_window.pollEvent(event))

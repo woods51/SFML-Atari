@@ -86,6 +86,24 @@ void LevelEditor::render(sf::RenderWindow& a_window)
 
 	a_window.display();
 }
+
+LevelEditor::~LevelEditor()
+{
+	for (auto& t : m_tileMap)
+	{
+		delete t;
+	}
+	for (auto& b : m_buttons)
+	{
+		delete b;
+	}
+	for (auto& b : m_tileButtons)
+	{
+		delete b;
+	}
+	delete m_selectedTile;
+}
+
 void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
@@ -117,6 +135,7 @@ void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_
 				break;
 
 			case Press::DESELECT:
+				// Reset tile selections
 				delete m_selectedTile;
 				m_selectedTile = nullptr;
 				m_selectorTile.setPosition(WIDTH, HEIGHT);
@@ -149,6 +168,7 @@ void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_
 		}
 	}
 }
+
 void LevelEditor::handleTileButtonEvents(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto b : m_tileButtons)
@@ -176,6 +196,7 @@ void LevelEditor::handleTileButtonEvents(ResourceManager& a_rm, const sf::Vector
 		}
 	}
 }
+
 void LevelEditor::handleTileSelection(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition, const bool& a_lockClick)
 {
 	if (a_lockClick && (m_erase->isSelected() || (m_pen->isSelected() && m_selectedTile != nullptr)))
@@ -200,6 +221,7 @@ void LevelEditor::handleTileSelection(ResourceManager& a_rm, const sf::Vector2f&
 		}
 	}
 }
+
 void LevelEditor::generateUI(ResourceManager& a_rm)
 {
 	// Generate border
@@ -234,6 +256,7 @@ void LevelEditor::generateUI(ResourceManager& a_rm)
 	// Generate tile buttons
 	generateTileButtons(a_rm);
 }
+
 void LevelEditor::generateButtons(ResourceManager& a_rm)
 {
 	Button* temp;
@@ -259,6 +282,7 @@ void LevelEditor::generateButtons(ResourceManager& a_rm)
 		Press::SAVE, sf::Vector2f(3.0f, 3.0f), sf::Vector2f(16, 16), "button_save", "button_save_selected");
 	m_buttons.push_back(temp);
 }
+
 void LevelEditor::generateTileButtons(ResourceManager& a_rm)
 {
 	int i = 1;
@@ -287,7 +311,7 @@ void LevelEditor::generateTileButtons(ResourceManager& a_rm)
 	for (const auto& key : {"tile_09_lock", "tile_10_lock", "tile_11_lock",
 							"tile_09_lock2", "tile_10_lock2", "tile_11_lock2"})
 	{
-		if (i > 3)
+		if (i <= 3)
 			temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::Lock, key);
 		else
 			temp = new TileButton(a_rm, sf::Vector2f(posX_offset, HEIGHT - posY_offset), TileType::Lock2, key);
@@ -330,6 +354,7 @@ void LevelEditor::generateTileButtons(ResourceManager& a_rm)
 		posX_offset += 128;
 	}
 }
+
 void LevelEditor::generateTileMap(ResourceManager& a_rm)
 {
 	float posX = 0;
@@ -344,21 +369,4 @@ void LevelEditor::generateTileMap(ResourceManager& a_rm)
 		posX = 0;
 		posY += 64.0f;
 	}
-}
-
-LevelEditor::~LevelEditor()
-{
-	for (auto& t : m_tileMap)
-	{
-		delete t;
-	}
-	for (auto& b : m_buttons)
-	{
-		delete b;
-	}
-	for (auto& b : m_tileButtons)
-	{
-		delete b;
-	}
-	delete m_selectedTile;
 }

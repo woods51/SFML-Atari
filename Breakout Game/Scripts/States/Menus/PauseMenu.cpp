@@ -2,8 +2,12 @@
 
 PauseMenu::PauseMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
 {
+	// Setup background
 	m_frameTexture = a_frameTexture;
 	m_frameSprite.setTexture(m_frameTexture);
+
+	sf::Vector2u windowSize = a_window.getSize();
+	m_frameSprite.setScale((float)WIDTH/windowSize.x, (float)HEIGHT/windowSize.y);
 
 	generateUI(a_rm);
 }
@@ -11,7 +15,7 @@ PauseMenu::PauseMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Text
 void PauseMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
-	static bool lock_click = false;
+	bool lock_click = false;
 
 	buttonSelectUpdate(a_rm, mousePosition);
 

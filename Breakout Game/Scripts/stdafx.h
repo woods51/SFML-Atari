@@ -11,10 +11,22 @@
 #include <fstream>
 #include <sstream>
 
+// Width of window
 #define WIDTH 1280
+
+// Height of window
 #define HEIGHT 720
+
+// Multiplier for speed
 #define MULTIPLIER 25
 
+////////////////////////////////////////////////////////////
+/// \brief TileType Enum Class.
+///
+/// The TileType enum class holds every possible tile type used
+/// in the LevelEditor and BreakoutGame.
+/// 
+////////////////////////////////////////////////////////////
 enum class TileType
 {
 	Default,
@@ -27,6 +39,13 @@ enum class TileType
 	Blank,
 	None
 };
+
+////////////////////////////////////////////////////////////
+/// \brief Direction Enum Class.
+///
+/// The Direction enum class stores all direction types.
+/// 
+////////////////////////////////////////////////////////////
 enum class Direction
 {
 	Left,
@@ -35,6 +54,14 @@ enum class Direction
 	Down,
 	Idle
 };
+
+////////////////////////////////////////////////////////////
+/// \brief Surface Enum Class.
+///
+/// The Surface enum class stores each potential surface of contact.
+/// This class mainly used for computing and handling collisions.
+/// 
+////////////////////////////////////////////////////////////
 enum class Surface
 {
 	Top,
@@ -44,7 +71,17 @@ enum class Surface
 	Corner,
 	None
 };
-enum class Press {
+
+////////////////////////////////////////////////////////////
+/// \brief Press Enum Class.
+///
+/// The Press enum class stores every possible button press type.
+/// Press types are typically returned by a buttons OnClick function
+/// and may certain events.
+/// 
+////////////////////////////////////////////////////////////
+enum class Press
+{
 	DEFAULT,
 	OTHER,
 	START,
@@ -86,7 +123,16 @@ enum class Press {
 	ERASE,
 	DESELECT
 };
-enum class Sound {
+
+////////////////////////////////////////////////////////////
+/// \brief Sound Enum Class.
+///
+/// The Sound enum class stores the types of in-game sounds
+/// that are supported by the ResourceManager.
+/// 
+////////////////////////////////////////////////////////////
+enum class Sound
+{
 	Button,
 	Ball,
 	GameOver,

@@ -10,6 +10,7 @@ sf::Vector2f Tile::getDiagonalPosition() const
 	return sf::Vector2f(m_shape.getPosition().x + m_shape.getGlobalBounds().width,
 		m_shape.getPosition().y + m_shape.getGlobalBounds().height);
 }
+
 void Tile::handleBall()
 {
 	m_durability--;
@@ -34,6 +35,7 @@ void Tile::handleBall()
 
 	return;
 }
+
 void Tile::updateTile(ResourceManager& a_rm, TileType a_type, std::string a_textureKey)
 {
 	m_type = a_type;
@@ -44,6 +46,7 @@ void Tile::updateTile(ResourceManager& a_rm, TileType a_type, std::string a_text
 	isActive(true);
 	return;
 }
+
 void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_textureKey)
 {
 	// Default Tile Setup
@@ -55,7 +58,7 @@ void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_texture
 	m_firstTexture = a_rm.getTexture(a_textureKey);
 	sf::Texture* texture = m_firstTexture;
 
-	// Handles durabbility and texture values based on TileType
+	// Handles durability and texture values based on TileType
 	switch (a_type)
 	{
 	case TileType::Default:
@@ -102,6 +105,7 @@ void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_texture
 	}
 	m_shape.setTexture(texture);
 }
+
 void Tile::reset()
 {
 	isActive(true);

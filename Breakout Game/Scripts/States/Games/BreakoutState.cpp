@@ -72,7 +72,7 @@ void BreakoutState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_wind
 
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	sf::Vector2u windowSize = a_window.getSize();
-	static bool lock_click = false;
+	bool lock_click = false;
 
 	// Push GameOver state
 	if (m_gameOver)
@@ -178,7 +178,7 @@ void BreakoutState::render(sf::RenderWindow& a_window)
 			a_window.draw(m_specialLevelText);
 			break;
 
-		case 4:
+		case 5:
 			a_window.draw(m_lockedLevelText);
 			break;
 
@@ -245,7 +245,7 @@ void BreakoutState::generateUI(ResourceManager& a_rm)
 
 	// Generate background
 	m_border.setTexture(*a_rm.getTexture("border"));
-	m_border.setScale(sf::Vector2f((WIDTH / 32), (HEIGHT / 24)));
+	m_border.setScale(sf::Vector2f(40, 30));
 }
 
 void BreakoutState::generateText(ResourceManager& a_rm)
@@ -454,12 +454,6 @@ void BreakoutState::copyLevelMap(ResourceManager& a_rm, std::vector<Tile*>& a_ti
 
 void BreakoutState::loadLevel(ResourceManager& a_rm, std::string a_levelName)
 {
-	for (auto& tile : m_tileMap)
-	{
-		delete tile;
-	}
-	m_tileMap.clear();
-
 	if (!m_loader.loadMap(a_rm, a_levelName, m_loadPath, m_tileMap, m_errorMsg))
 	{
 		m_errorFlag = true;

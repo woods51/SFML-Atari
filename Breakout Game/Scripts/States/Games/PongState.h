@@ -1,7 +1,7 @@
 #pragma once
 #include "../../stdafx.h"
 #include "../State.h"
-#include "../Menus/PauseState.h"
+#include "../Menus/PauseMenu.h"
 #include "../../GameObjects/PongBall.h"
 #include "../../GameObjects/Paddle.h"
 
@@ -19,7 +19,8 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Constructor for the Pong State.
 	///
-	/// Constructs ball and paddle game objects and generates user interfaces.
+	/// Constructs ball and paddle game objects and generates user interfaces
+	/// and the background.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
@@ -32,8 +33,6 @@ public:
 	/// This function handles any window events that occur
 	/// in the render window. This function calls the inputHandler
 	/// and also handles any mouse events including button interactions.
-	/// This function is responsible for pushing new game states
-	/// and is called once every frame.
 	/// 
 	/// \param a_rm          --> ResourceManager
 	/// \param a_window --> RenderWindow
@@ -149,7 +148,7 @@ private:
 	PongBall* m_ball;
 
 	// Background
-	sf::Sprite m_border;
+	sf::Sprite m_background;
 	sf::Texture m_frameTexture;
 
 	// Text objects
@@ -161,5 +160,4 @@ private:
 
 	// Scores
 	sf::Vector2i m_pScores = sf::Vector2i(0, 0);
-	
 };

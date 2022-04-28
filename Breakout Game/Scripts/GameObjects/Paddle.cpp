@@ -27,6 +27,7 @@ void Paddle::move(const sf::Time& a_dt)
 
 	handleBorder();
 }
+
 void Paddle::handleBorder()
 {
 	if (getPosition().x < 0)
@@ -41,8 +42,8 @@ void Paddle::handleBorder()
 	{
 		m_shape.setPosition(sf::Vector2f(getPosition().x, 0));
 	}
-	if (getDiagonalPosition().y > HEIGHT-60)
+	if (getDiagonalPosition().y > HEIGHT - m_borderOffset)
 	{
-		m_shape.setPosition(sf::Vector2f(getPosition().x, HEIGHT-60 - (m_shape.getSize().y * m_shape.getScale().y)));
+		m_shape.setPosition(sf::Vector2f(getPosition().x, HEIGHT - m_borderOffset - (m_shape.getSize().y * m_shape.getScale().y)));
 	}
 }

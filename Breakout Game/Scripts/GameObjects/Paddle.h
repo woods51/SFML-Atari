@@ -60,6 +60,20 @@ public:
 	void reset() { m_shape.setPosition(m_defaultPos); }
 
 	////////////////////////////////////////////////////////////
+	/// \brief Sets Speed
+	///
+	/// \param a_speed --> Speed
+	////////////////////////////////////////////////////////////
+	void setSpeed(float a_speed) { m_speed = a_speed; }
+
+	////////////////////////////////////////////////////////////
+	/// \brief Sets Border Offset
+	///
+	/// \param a_offset --> Offset
+	////////////////////////////////////////////////////////////
+	void setBorderOffset(int a_offset) { m_borderOffset = a_offset; }
+
+	////////////////////////////////////////////////////////////
 	/// \brief Sets Direction
 	///
 	/// \param a_direction --> Direction
@@ -83,10 +97,11 @@ protected:
 	////////////////////////////////////////////////////////////
 	void handleBorder();
 	
-	// Properties
+	// Data members
 	sf::Vector2f m_defaultPos;
 	enum class Direction m_currentDir;
 	float m_speed = 16.0f;
+	int m_borderOffset = 60;
 
 	// States
 	bool m_isColliding = false;

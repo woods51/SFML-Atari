@@ -126,7 +126,7 @@ public:
 
 protected:
 
-	// Properties
+	// Data members
 	TileType m_type;
 	sf::RectangleShape m_shape;
 	int m_durability = 1;

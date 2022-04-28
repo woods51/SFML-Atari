@@ -1,7 +1,7 @@
 #pragma once
 #include "../../stdafx.h"
 #include "../State.h"
-#include "../Menus/PauseState.h"
+#include "../Menus/PauseMenu.h"
 #include "../Menus/SaveMenu.h"
 #include "../../GameObjects/Tile.h"
 #include "../../GameObjects/Button.h"

@@ -6,6 +6,7 @@ Press Button::OnClick(ResourceManager& a_rm)
 
 	return m_buttonType;
 }
+
 sf::Vector2f Button::getDiagonalPosition() const
 {
 	return sf::Vector2f(m_shape.getPosition().x + m_shape.getGlobalBounds().width,
@@ -30,6 +31,7 @@ void Button::isSelected(bool a_isSelected)
 		return;
 	}
 }
+
 void Button::setDefaultText(ResourceManager& a_rm, unsigned int a_charSize,
 	sf::Vector2f a_pos)
 {

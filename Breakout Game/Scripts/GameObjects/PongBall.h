@@ -24,7 +24,7 @@ public:
 	/// \param a_scale		--> Scale
 	/// \param a_textureKey	--> Key for texture
 	////////////////////////////////////////////////////////////
-	PongBall(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH / 2 - 12, HEIGHT / 2), float a_radius = 12.0f,
+	PongBall(ResourceManager& a_rm, sf::Vector2f a_pos = sf::Vector2f(WIDTH / 2 - 12, HEIGHT / 2 - 32), float a_radius = 12.0f,
 		sf::Vector2f a_scale = sf::Vector2f(1.0f, 1.0f), std::string a_textureKey = "ball_01")
 		: Ball(a_rm, a_pos, a_radius, a_scale, a_textureKey)
 	{
@@ -71,6 +71,9 @@ public:
 	sf::Vector2i getScores() const { return sf::Vector2i(m_scoreP1, m_scoreP2); };
 
 protected:
+
+	// Data members
+	float m_pongScalar = 1.02f;
 
 	// Player Scores
 	int m_scoreP1 = 0;

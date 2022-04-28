@@ -200,11 +200,10 @@ protected:
 	////////////////////////////////////////////////////////////
 	float velocityRNG();
 
-	// Properties
+	// Data members
 	sf::CircleShape m_shape;
 	enum class Direction m_direction = Direction::Idle;
 
-	// Position and Velocity
 	sf::Vector2f m_startPos;
 	sf::Vector2f m_startVel;
 	sf::Vector2f m_velocity;
@@ -215,7 +214,7 @@ protected:
 	bool m_isActive = false;
 	bool m_isColliding = false;
 	
-	// Color Change Variables
+	// Color properties
 	std::string m_colors[6] = { "ball_01", "ball_02", "ball_03", "ball_04", "ball_05", "ball_06" };
 	int m_colorIndex = 0;
 	

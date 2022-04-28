@@ -107,7 +107,7 @@ public:
 
 protected:
 
-	// Properties
+	// Data members
 	sf::RectangleShape m_shape;
 	sf::Text m_text;
 	Press m_buttonType = Press::DEFAULT;
@@ -209,7 +209,7 @@ public:
 	/// \param a_type		--> OnClick Press type
 	/// \param a_textureKey	--> String key for texture
 	////////////////////////////////////////////////////////////
-	TileButton(ResourceManager& a_rm, sf::Vector2f a_pos, TileType a_type, std::string a_textureKey = "0")
+	TileButton(ResourceManager& a_rm, sf::Vector2f a_pos, TileType a_type, std::string a_textureKey = "")
 		: Button(a_rm, a_pos, Press::TILE, sf::Vector2f(4, 4), sf::Vector2f(32, 16), a_textureKey, a_textureKey, Sound::None)
 	{
 		m_tileType = a_type;

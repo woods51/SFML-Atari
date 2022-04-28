@@ -94,7 +94,6 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 
 	sf::Vector2f pos = m_shape.getPosition();
 	sf::Vector2f diagonal_pos = getDiagonalPosition();
-
 	/*
 	Data point visualization
 	
@@ -102,9 +101,7 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 	p1	p2		       b_top
 			    b_left	     b_right
 	p3	p4            b_bottom
-
 	*/
-
 	// Generate tile data points
 	sf::Vector2i p1((int)tile_pos.x, (int)tile_pos.y);
 	sf::Vector2i p2((int)tile_diagonal_pos.x, (int)tile_pos.y);

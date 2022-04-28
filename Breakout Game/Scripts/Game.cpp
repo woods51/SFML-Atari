@@ -1,7 +1,10 @@
 #include "Game.h"
 
-void Game::run()
+void Game::start()
 {
+	// Turning off console errors
+	sf::err().rdbuf(NULL);
+
 	// Setup RenderWindow, View and FPS
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "SFML Atari");
 	sf::View view(sf::Vector2f(WIDTH / 2, HEIGHT / 2), sf::Vector2f(WIDTH, HEIGHT));
@@ -10,10 +13,7 @@ void Game::run()
 
 	// Initialize Game States
 	ResourceManager rm;
-	m_states.push_back(std::make_unique<MenuState>(rm, window));
-
-	// Turning off console errors
-	sf::err().rdbuf(NULL);
+	m_states.push_back(std::make_unique<MainMenu>(rm, window));
 	
 	// Delta Time
 	sf::Clock deltaClock;
@@ -33,9 +33,4 @@ void Game::run()
 
 		m_states.at(m_states.size() - 1)->render(window);
 	}
-	exit();
-}
-void Game::exit()
-{
-	m_states.clear();
 }

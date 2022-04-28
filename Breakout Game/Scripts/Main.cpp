@@ -3,10 +3,14 @@
 
 int main()
 {
-	srand(time(NULL));
+	// Set random seed
+	srand((unsigned int)time(NULL));
 
+	// Create game object
 	Game game;
-	game.run();
+
+	// Launch SFML Atari Game
+	game.start();
 
 	return 0;
 }

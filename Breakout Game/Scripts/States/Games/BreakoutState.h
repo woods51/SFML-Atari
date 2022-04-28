@@ -217,7 +217,7 @@ private:
 	///
 	/// This function loads a level into the tile map from the file
 	/// directory defined under the member m_loadPath. This function
-	/// will clear the current tile map and replace with the contents of the file.
+	/// will replace with the m_tileMap with the contents of the file.
 	/// This function may set the m_errorFlag if an error occurs while loading.
 	/// 
 	/// \param a_rm		--> ResourceManager

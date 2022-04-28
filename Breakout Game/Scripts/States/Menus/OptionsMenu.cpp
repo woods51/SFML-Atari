@@ -2,7 +2,11 @@
 
 OptionsMenu::OptionsMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture)
 {
+	// Setup background
 	m_background = new sf::Sprite(a_frameTexture);
+
+	sf::Vector2u windowSize = a_window.getSize();
+	m_background->setScale((float)WIDTH / windowSize.x, (float)HEIGHT / windowSize.y);
 
 	generateUI(a_rm);
 }
@@ -77,13 +81,13 @@ void OptionsMenu::update(ResourceManager& a_rm , const sf::Time& a_dt)
 		{
 			m_background->setPosition(sf::Vector2f(-3200, 0));
 		}
+
 		m_background2->setPosition(m_background2->getPosition() + sf::Vector2f(0.25f, 0));
 		if (m_background2->getPosition().x == 3200)
 		{
 			m_background2->setPosition(sf::Vector2f(-3200, 0));
 		}
 	}
-	
 }
 
 void OptionsMenu::render(sf::RenderWindow& a_window)
@@ -294,7 +298,7 @@ void OptionsMenu::generateText(ResourceManager& a_rm)
 void OptionsMenu::adjustVolumeText(int a_volume, sf::Text& a_text, bool a_isOnLeft)
 {
 	// Set text position offset
-	int offset = (WIDTH / 2) - 100;
+	float offset = (WIDTH / 2) - 100;
 	if (!a_isOnLeft)
 		offset = (WIDTH / 2) + 100;
 

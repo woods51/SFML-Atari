@@ -24,7 +24,7 @@ LoadMenu::LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite
 void LoadMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
-	static bool lock_click = false;
+	bool lock_click = false;
 
 	buttonSelectUpdate(a_window, a_rm, mousePosition);
 
@@ -252,7 +252,7 @@ void LoadMenu::generateButtons(ResourceManager & a_rm)
 	m_buttons.push_back(temp);
 
 	// Generate level buttons
-	int posY = HEIGHT / 2 - 100;
+	float posY = HEIGHT / 2 - 100;
 	for (int i = 0; i < 5; i++)
 	{
 		temp = new Button(a_rm, sf::Vector2f((WIDTH / 2) - (32 * 4), posY), Press::LEVEL, sf::Vector2f(8, 8), sf::Vector2f(32, 6),

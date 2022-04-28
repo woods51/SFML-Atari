@@ -8,7 +8,7 @@ BreakoutMenu::BreakoutMenu(ResourceManager& a_rm, sf::RenderWindow& a_window)
 void BreakoutMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
 {
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
-	static bool lock_click = false;
+	bool lock_click = false;
 
 	buttonSelectUpdate(a_rm, mousePosition);
 

@@ -2,15 +2,30 @@
 
 ResourceManager::ResourceManager()
 {
+	// Load assets
 	loadTextures();
 	loadFonts();
 	loadSounds();
 }
+
+ResourceManager::~ResourceManager()
+{
+	for (auto& t : m_textures)
+		delete t.second;
+
+	for (auto& f : m_fonts)
+		delete f.second;
+
+	for (auto& s : m_sounds)
+		delete s.second;
+}
+
 void ResourceManager::loadTextures()
 {
 	std::string name;
 	std::string texturePath;
 	std::string path = "Assets/";
+
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
 		texturePath = file.path().string();
@@ -21,21 +36,21 @@ void ResourceManager::loadTextures()
 
 		if (!temp->loadFromFile(texturePath))
 		{
-			printf("Error loading texture: %s\n", texturePath.c_str());
-
-			temp->loadFromFile(m_defaultTexture);
+			delete temp;
+			continue;
 		}
 
 		// Texture is copied to map
 		m_textures[name] = temp;
-		printf("Added %s at textures[%s].\n", texturePath.c_str(), name.c_str());
 	}
 }
+
 void ResourceManager::loadFonts()
 {
 	std::string name;
 	std::string fontPath;
 	std::string path = "Fonts/";
+
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
 		fontPath = file.path().string();
@@ -46,21 +61,21 @@ void ResourceManager::loadFonts()
 
 		if (!temp->loadFromFile(fontPath))
 		{
-			printf("Error loading font: %s\n", fontPath.c_str());
-
-			temp->loadFromFile(m_defaultFont);
+			delete temp;
+			continue;
 		}
 
 		// Font is copied to map
 		m_fonts[name] = temp;
-		printf("Added %s at fonts[%s].\n", fontPath.c_str(), name.c_str());
 	}
 }
+
 void ResourceManager::loadSounds()
 {
 	std::string name;
 	std::string soundPath;
 	std::string path = "Sounds/";
+
 	for (const auto& file : std::filesystem::directory_iterator(path))
 	{
 		soundPath = file.path().string();
@@ -71,39 +86,41 @@ void ResourceManager::loadSounds()
 
 		if (!temp->loadFromFile(soundPath))
 		{
-			printf("Error loading font: %s\n", soundPath.c_str());
-			return;
+			delete temp;
+			continue;
 		}
 
 		// Sound is copied to map
 		m_sounds[name] = temp;
-		printf("Added %s at sounds[%s].\n", soundPath.c_str(), name.c_str());
 	}
 
 	generateSounds();
 }
 
-sf::Texture* ResourceManager::getTexture(std::string textureKey)
+sf::Texture* ResourceManager::getTexture(std::string a_textureKey)
 {
-	if (m_textures.find(textureKey) == m_textures.end())
-		return m_textures["0"];
+	if (m_textures.find(a_textureKey) == m_textures.end())
+		return m_textures["default"];
 
-	return m_textures[textureKey];
+	return m_textures[a_textureKey];
 }
-sf::Font* ResourceManager::getFont(std::string fontKey)
+
+sf::Font* ResourceManager::getFont(std::string a_fontKey)
 {
-	if (m_fonts.find(fontKey) == m_fonts.end())
+	if (m_fonts.find(a_fontKey) == m_fonts.end())
 		return m_fonts["default"];
 
-	return m_fonts[fontKey];
+	return m_fonts[a_fontKey];
 }
-sf::SoundBuffer* ResourceManager::getSound(std::string soundKey)
+
+sf::SoundBuffer* ResourceManager::getSound(std::string a_soundKey)
 {
-	if (m_sounds.find(soundKey) == m_sounds.end())
+	if (m_sounds.find(a_soundKey) == m_sounds.end())
 		return m_sounds["button_click"];
 
-	return m_sounds[soundKey];
+	return m_sounds[a_soundKey];
 }
+
 unsigned int ResourceManager::getVolume(enum class Sound a_sound)
 {
 	unsigned int volume = 0;
@@ -112,20 +129,25 @@ unsigned int ResourceManager::getVolume(enum class Sound a_sound)
 	case Sound::Button:
 		volume = (unsigned int)m_buttonPress.getVolume();
 		break;
+
 	case Sound::Ball:
 		volume = (unsigned int)m_ballBounce.getVolume();
 		break;
+
 	case Sound::GameOver:
 		volume = (unsigned int)m_gameOver.getVolume();
 		break;
+
 	case Sound::LevelComplete:
 		volume = (unsigned int)m_levelComplete.getVolume();
 		break;
+
 	default:
 		break;
 	}
 	return volume;
 }
+
 void ResourceManager::playSound(enum class Sound a_sound)
 {
 	switch (a_sound)
@@ -133,20 +155,25 @@ void ResourceManager::playSound(enum class Sound a_sound)
 	case Sound::Button:
 		m_buttonPress.play();
 		break;
+
 	case Sound::Ball:
 		m_ballBounce.play();
 		break;
+
 	case Sound::GameOver:
 		m_gameOver.play();
 		break;
+
 	case Sound::LevelComplete:
 		m_levelComplete.play();
 		break;
+
 	default:
 		break;
 	}
 	return;
 }
+
 void ResourceManager::generateSounds()
 {
 	m_buttonPress.setBuffer(*getSound("button_click"));
@@ -161,8 +188,10 @@ void ResourceManager::generateSounds()
 	m_levelComplete.setBuffer(*getSound("level_complete"));
 	m_levelComplete.setVolume(50);
 }
+
 void ResourceManager::setVolume(enum class Sound a_sound, bool a_increase)
 {
+	// Prevents unintended volume incrementation
 	float value = 10.001f;
 	if (!a_increase)
 		value = -9.901f;
@@ -172,20 +201,25 @@ void ResourceManager::setVolume(enum class Sound a_sound, bool a_increase)
 	case Sound::Button:
 		adjustVolume(m_buttonPress, value);
 		break;
+
 	case Sound::Ball:
 		adjustVolume(m_ballBounce, value);
 		break;
+
 	case Sound::GameOver:
 		adjustVolume(m_gameOver, value);
 		break;
+
 	case Sound::LevelComplete:
 		adjustVolume(m_levelComplete, value);
 		break;
+
 	default:
 		break;
 	}
 	return;
 }
+
 void ResourceManager::adjustVolume(sf::Sound& a_sound, float a_value)
 {
 	float volume = a_sound.getVolume();
@@ -200,12 +234,4 @@ void ResourceManager::adjustVolume(sf::Sound& a_sound, float a_value)
 		volume += a_value;
 
 	a_sound.setVolume(volume);
-}
-ResourceManager::~ResourceManager()
-{
-	for (const auto& t : m_textures)
-		delete t.second;
-
-	for (const auto& f : m_fonts)
-		delete f.second;
 }
