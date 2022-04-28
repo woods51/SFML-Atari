@@ -168,6 +168,7 @@
     <ClCompile Include="Scripts\States\Menus\SaveMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scripts\Game.h" />
     <ClInclude Include="Scripts\GameObjects\Ball.h" />
     <ClInclude Include="Scripts\GameObjects\Button.h" />
@@ -188,6 +189,12 @@
     <ClInclude Include="Scripts\States\Menus\SaveMenu.h" />
     <ClInclude Include="Scripts\States\State.h" />
     <ClInclude Include="Scripts\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Breakout Game.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

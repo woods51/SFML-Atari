@@ -15,6 +15,11 @@ void Game::start()
 	ResourceManager rm;
 	m_states.push_back(std::make_unique<MainMenu>(rm, window));
 	
+	// Set Window Icon
+	sf::Image image;
+	image.loadFromFile("Assets/icon.png");
+	window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+
 	// Delta Time
 	sf::Clock deltaClock;
 	sf::Time deltaTime;
