@@ -132,14 +132,14 @@ public:
 	inline bool isColliding() const { return m_isColliding; }
 
 	////////////////////////////////////////////////////////////
-	/// \brief Sets isColliding state
+	/// \brief Sets isColliding state.
 	///
 	/// \param a_isColliding	--> State
 	////////////////////////////////////////////////////////////
 	inline void isColliding(bool a_isColliding) { m_isColliding = a_isColliding; }
 
 	////////////////////////////////////////////////////////////
-	/// \brief Sets isActive state
+	/// \brief Sets isActive state.
 	///
 	/// This function sets isActive state and makes adjustments
 	/// to velocity and position according to state.
@@ -149,25 +149,35 @@ public:
 	void isActive(bool a_isActive);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Sets velocity scalar
+	/// \brief Sets velocity scalar.
 	///
 	/// \param a_scalar	--> Scalar
 	////////////////////////////////////////////////////////////
 	void setScalar(float a_scalar) { m_scalar = a_scalar; }
 
 	////////////////////////////////////////////////////////////
-	/// \brief Sets position
+	/// \brief Sets position.
 	///
 	/// \param a_pos	--> Position
 	////////////////////////////////////////////////////////////
 	void setPosition(sf::Vector2f a_position) { m_shape.setPosition(a_position); }
 
 	////////////////////////////////////////////////////////////
-	/// \brief Sets velocity
+	/// \brief Sets velocity.
 	///
 	/// \param a_vel	--> Velocity
 	////////////////////////////////////////////////////////////
 	void setVelocity(sf::Vector2f a_velocity) { m_velocity = a_velocity; }
+
+	////////////////////////////////////////////////////////////
+	/// \brief Random velocity number generator.
+	/// 
+	/// This function computes a random floating
+	/// point number between prespecified values.
+	///
+	/// \return Velocity as floating point number
+	////////////////////////////////////////////////////////////
+	virtual float velocityRNG();
 
 protected:
 
@@ -189,16 +199,6 @@ protected:
 	/// and generates random velocity.
 	////////////////////////////////////////////////////////////
 	void reset();
-
-	////////////////////////////////////////////////////////////
-	/// \brief Random velocity number generator
-	/// 
-	/// This function computes a random floating
-	/// point number between prespecified values
-	///
-	/// \return Velocity as floating point number
-	////////////////////////////////////////////////////////////
-	float velocityRNG();
 
 	// Data members
 	sf::CircleShape m_shape;

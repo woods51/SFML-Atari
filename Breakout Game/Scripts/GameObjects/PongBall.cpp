@@ -69,3 +69,12 @@ void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a
 	else if (a_surface == Surface::Corner)
 		m_velocity.x = -m_velocity.x;
 }
+
+float PongBall::velocityRNG()
+{
+	int num = rand() % 15 + 5;
+	int sign = rand() % 2 + 1;
+	if (sign == 2)
+		num = -num;
+	return (float)num;
+}

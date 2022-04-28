@@ -148,8 +148,12 @@ private:
 	PongBall* m_ball;
 
 	// Background
-	sf::Sprite m_background;
+	bool m_backgroundFlag = true;
+	sf::Sprite m_border;
+	sf::Texture m_backgroundTexture;
 	sf::Texture m_frameTexture;
+	sf::Sprite m_background;
+	sf::Sprite m_background2;
 
 	// Text objects
 	sf::Text m_startText;

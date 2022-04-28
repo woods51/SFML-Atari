@@ -72,8 +72,13 @@ void PongState::render(sf::RenderWindow& a_window)
 	a_window.clear(sf::Color::Black);
 
 	// Render background
-	a_window.draw(m_background);
-
+	if (m_backgroundFlag)
+	{
+		a_window.draw(m_background);
+		a_window.draw(m_background2);
+	}
+	a_window.draw(m_border);
+	
 	// Render game objects
 	a_window.draw(m_ball->getShape());
 	a_window.draw(m_paddleP1->getShape());
@@ -156,6 +161,10 @@ void PongState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_wi
 				a_states.push_back(std::make_unique<PauseMenu>(a_rm, a_window, m_frameTexture));
 				break;
 
+			case Press::BACKGROUND:
+				m_backgroundFlag = !m_backgroundFlag;
+				break;
+
 			default:
 				break;
 			}
@@ -169,6 +178,19 @@ void PongState::updateUI()
 	m_pScores = m_ball->getScores();
 	m_scoreP1Text.setString("Score: " + std::to_string(m_pScores.x));
 	m_scoreP2Text.setString("Score: " + std::to_string(m_pScores.y));
+
+	// Update backgrounds
+	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.1f, 0));
+	if (m_background.getPosition().x == 3960)
+	{
+		m_background.setPosition(sf::Vector2f(-3960, 0));
+	}
+
+	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.1f, 0));
+	if (m_background2.getPosition().x == 3960)
+	{
+		m_background2.setPosition(sf::Vector2f(-3960, 0));
+	}
 }
 
 void PongState::generateUI(ResourceManager& a_rm)
@@ -176,16 +198,27 @@ void PongState::generateUI(ResourceManager& a_rm)
 	// Generate buttons
 	Button* temp;
 
-	temp = new Button(a_rm, sf::Vector2f(WIDTH/2 - 24, HEIGHT - 64),
+	temp = new Button(a_rm, sf::Vector2f(WIDTH/2 - 52, HEIGHT - 64),
 		Press::PAUSE, sf::Vector2f(6.0f, 6.0f), sf::Vector2f(8.0f, 8.0f), "button_pause", "button_pause_selected");
+	m_buttons.push_back(temp);
+
+	temp = new Button(a_rm, sf::Vector2f(WIDTH/2 + 7, HEIGHT - 64), Press::BACKGROUND, sf::Vector2f(3, 3),
+		sf::Vector2f(16, 16), "button_background", "button_background");
 	m_buttons.push_back(temp);
 
 	// Generate text objects
 	generateText(a_rm);
 
-	// Generate background
-	m_background.setTexture(*a_rm.getTexture("background_pong"));
+	// Generate backgrounds
+
+	m_border.setTexture(*a_rm.getTexture("border_pong"));
+	m_border.setScale(sf::Vector2f(40, 40));
+
+	m_backgroundTexture = *a_rm.getTexture("background_game");
+	m_background.setTexture(m_backgroundTexture);
 	m_background.setScale(40, 40);
+	m_background2 = m_background;
+	m_background2.setPosition(m_background.getPosition().x - 3960, 0);
 }
 
 void PongState::generateText(ResourceManager& a_rm)

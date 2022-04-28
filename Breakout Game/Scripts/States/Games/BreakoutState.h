@@ -253,6 +253,9 @@ private:
 	// Backgrounds
 	sf::Sprite m_border;
 	sf::Texture m_frameTexture;
+	sf::Texture m_backgroundTexture;
+	sf::Sprite m_background;
+	sf::Sprite m_background2;
 
 	// Flags
 	bool m_gameStarted = false;
@@ -261,6 +264,7 @@ private:
 	bool m_isCustom = false;
 	bool m_freePlay = false;
 	bool m_errorFlag = false;
+	bool m_backgroundFlag = true;
 	
 	// Data members
 	std::string m_errorMsg;

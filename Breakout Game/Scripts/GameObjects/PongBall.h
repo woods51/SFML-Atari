@@ -67,10 +67,21 @@ public:
 	////////////////////////////////////////////////////////////
 	void handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir) override;
 
+	////////////////////////////////////////////////////////////
+	/// \brief Random velocity number generator
+	/// 
+	/// This function computes a random floating
+	/// point number between prespecified values.
+	/// This function is set specifically for Pong gameplay.
+	///
+	/// \return Velocity as floating point number
+	////////////////////////////////////////////////////////////
+	float velocityRNG() override;
+
 	// Returns player scores as sf::Vector2i (p1_score, p2_score)
 	sf::Vector2i getScores() const { return sf::Vector2i(m_scoreP1, m_scoreP2); };
 
-protected:
+protected:	
 
 	// Data members
 	float m_pongScalar = 1.02f;

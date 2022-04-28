@@ -5,7 +5,7 @@
 int main()
 {
 	// Hide console
-	FreeConsole();
+	//FreeConsole();
 
 	// Set random seed
 	srand((unsigned int)time(NULL));

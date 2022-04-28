@@ -129,6 +129,11 @@ void BreakoutState::render(sf::RenderWindow& a_window)
 	a_window.clear(sf::Color::Black);
 
 	// Render background
+	if (m_backgroundFlag)
+	{
+		a_window.draw(m_background);
+		a_window.draw(m_background2);
+	}
 	a_window.draw(m_border);
 
 	// Render tile map
@@ -222,9 +227,23 @@ void BreakoutState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 
 void BreakoutState::updateUI()
 {
+	// Update general UI
 	m_scoreText.setString("Score: " + std::to_string(m_score));
 	m_level.setString("Level " + std::to_string(m_currentLevel + 1));
 	m_livesText.setString("Lives: " + std::to_string(m_livesRemaining));
+
+	// Update backgrounds
+	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.1f, 0));
+	if (m_background.getPosition().x == 3960)
+	{
+		m_background.setPosition(sf::Vector2f(-3960, 0));
+	}
+
+	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.1f, 0));
+	if (m_background2.getPosition().x == 3960)
+	{
+		m_background2.setPosition(sf::Vector2f(-3960, 0));
+	}
 }
 
 void BreakoutState::generateUI(ResourceManager& a_rm)
@@ -240,18 +259,29 @@ void BreakoutState::generateUI(ResourceManager& a_rm)
 		sf::Vector2f(16, 16), "button_pause", "button_pause_selected");
 	m_buttons.push_back(temp);
 
+	temp = new Button(a_rm, sf::Vector2f(WIDTH - 165, HEIGHT - 55), Press::BACKGROUND, sf::Vector2f(3, 3),
+		sf::Vector2f(16, 16), "button_background", "button_background");
+	m_buttons.push_back(temp);
+
 	// Generate text objects
 	generateText(a_rm);
 
 	// Generate background
 	m_border.setTexture(*a_rm.getTexture("border"));
 	m_border.setScale(sf::Vector2f(40, 30));
+
+	m_backgroundTexture = *a_rm.getTexture("background_game");
+
+	m_background.setTexture(m_backgroundTexture);
+	m_background.setScale(40, 40);
+	m_background2 = m_background;
+	m_background2.setPosition(m_background.getPosition().x - 3960, 0);
 }
 
 void BreakoutState::generateText(ResourceManager& a_rm)
 {
 	setDefaultText(a_rm, m_scoreText, 35, sf::Vector2f(16, 670));
-	setDefaultText(a_rm, m_livesText, 25, sf::Vector2f(WIDTH - 284, 675));
+	setDefaultText(a_rm, m_livesText, 25, sf::Vector2f(WIDTH - 340, 675));
 
 	setDefaultText(a_rm, m_startText, 30, sf::Vector2f(WIDTH / 2 - 250, 500));
 	m_startText.setString("Press space to start.");
@@ -393,6 +423,11 @@ void BreakoutState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& 
 				m_frameTexture.update(a_window);
 				a_states.push_back(std::make_unique<PauseMenu>(a_rm, a_window, m_frameTexture));
 				break;
+
+			case Press::BACKGROUND:
+				m_backgroundFlag = !m_backgroundFlag;
+				break;
+
 			default:
 				break;
 			}

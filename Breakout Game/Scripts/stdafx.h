@@ -103,6 +103,7 @@ enum class Press
 	PREVIOUS,
 	LEVEL,
 	RELOAD,
+	BACKGROUND,
 
 	BUTTON_UP,
 	BUTTON_DOWN,
