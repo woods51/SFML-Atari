@@ -1,8 +1,12 @@
 #include "stdafx.h"
 #include "Game.h"
 
+#include <windows.h>
 int main()
 {
+	// Hide console
+	FreeConsole();
+
 	// Set random seed
 	srand((unsigned int)time(NULL));
 
