@@ -64,7 +64,7 @@ void PongState::update(ResourceManager& a_rm, const sf::Time& a_dt)
 	m_paddleP2->move(a_dt);
 	m_ball->move(a_rm, a_dt);
 
-	updateUI();
+	updateUI(a_rm, a_dt);
 }
 
 void PongState::render(sf::RenderWindow& a_window)
@@ -172,7 +172,7 @@ void PongState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_wi
 	}
 }
 
-void PongState::updateUI()
+void PongState::updateUI(ResourceManager& a_rm, const sf::Time& a_dt)
 {
 	// Update scores
 	m_pScores = m_ball->getScores();
@@ -180,16 +180,16 @@ void PongState::updateUI()
 	m_scoreP2Text.setString("Score: " + std::to_string(m_pScores.y));
 
 	// Update backgrounds
-	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.1f, 0));
-	if (m_background.getPosition().x == 3960)
+	m_background.setPosition(m_background.getPosition() + sf::Vector2f(23.5f * a_dt.asSeconds(), 0));
+	if (m_background.getPosition().x >= 3920)
 	{
-		m_background.setPosition(sf::Vector2f(-3960, 0));
+		m_background.setPosition(sf::Vector2f(-3920, 0));
 	}
 
-	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.1f, 0));
-	if (m_background2.getPosition().x == 3960)
+	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(23.5f * a_dt.asSeconds(), 0));
+	if (m_background2.getPosition().x >= 3920)
 	{
-		m_background2.setPosition(sf::Vector2f(-3960, 0));
+		m_background2.setPosition(sf::Vector2f(-3920, 0));
 	}
 }
 
@@ -218,7 +218,7 @@ void PongState::generateUI(ResourceManager& a_rm)
 	m_background.setTexture(m_backgroundTexture);
 	m_background.setScale(40, 40);
 	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3960, 0);
+	m_background2.setPosition(m_background.getPosition().x - 3920, 0);
 }
 
 void PongState::generateText(ResourceManager& a_rm)

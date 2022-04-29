@@ -9,7 +9,7 @@ void Game::start()
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "SFML Atari");
 	sf::View view(sf::Vector2f(WIDTH / 2, HEIGHT / 2), sf::Vector2f(WIDTH, HEIGHT));
 	window.setView(view);
-	window.setFramerateLimit(240);
+	window.setFramerateLimit(144);
 
 	// Initialize Game States
 	ResourceManager rm;

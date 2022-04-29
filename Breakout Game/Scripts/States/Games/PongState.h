@@ -103,8 +103,9 @@ private:
 	/// This function updates user interfaces.
 	/// 
 	/// \param a_rm	--> ResourceManager
+	/// \param a_dt	--> deltaTime
 	////////////////////////////////////////////////////////////
-	void updateUI();
+	void updateUI(ResourceManager& a_rm, const sf::Time& a_dt);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Generates state user interfaces.

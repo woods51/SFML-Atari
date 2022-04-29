@@ -62,7 +62,7 @@ void BreakoutState::update(ResourceManager& a_rm, const sf::Time& a_dt)
 	{
 		levelComplete(a_rm);
 	}
-	updateUI();
+	updateUI(a_rm, a_dt);
 }
 
 void BreakoutState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
@@ -225,7 +225,7 @@ void BreakoutState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 	}
 }
 
-void BreakoutState::updateUI()
+void BreakoutState::updateUI(ResourceManager& a_rm, const sf::Time& a_dt)
 {
 	// Update general UI
 	m_scoreText.setString("Score: " + std::to_string(m_score));
@@ -233,16 +233,16 @@ void BreakoutState::updateUI()
 	m_livesText.setString("Lives: " + std::to_string(m_livesRemaining));
 
 	// Update backgrounds
-	m_background.setPosition(m_background.getPosition() + sf::Vector2f(0.1f, 0));
-	if (m_background.getPosition().x == 3960)
+	m_background.setPosition(m_background.getPosition() + sf::Vector2f(23.5f * a_dt.asSeconds(), 0));
+	if (m_background.getPosition().x >= 3920)
 	{
-		m_background.setPosition(sf::Vector2f(-3960, 0));
+		m_background.setPosition(sf::Vector2f(-3920, 0));
 	}
 
-	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(0.1f, 0));
-	if (m_background2.getPosition().x == 3960)
+	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(23.5f * a_dt.asSeconds(), 0));
+	if (m_background2.getPosition().x >= 3920)
 	{
-		m_background2.setPosition(sf::Vector2f(-3960, 0));
+		m_background2.setPosition(sf::Vector2f(-3920, 0));
 	}
 }
 
@@ -275,7 +275,7 @@ void BreakoutState::generateUI(ResourceManager& a_rm)
 	m_background.setTexture(m_backgroundTexture);
 	m_background.setScale(40, 40);
 	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3960, 0);
+	m_background2.setPosition(m_background.getPosition().x - 3920, 0);
 }
 
 void BreakoutState::generateText(ResourceManager& a_rm)
