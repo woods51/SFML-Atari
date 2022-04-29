@@ -104,7 +104,6 @@ void BreakoutState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_wind
 		case sf::Event::KeyPressed:
 
 			// Keybind for stepping through levels,
-			// primarily used for testing purposes.
 			if (event.key.code == sf::Keyboard::B)
 			{
 				levelComplete(a_rm);
