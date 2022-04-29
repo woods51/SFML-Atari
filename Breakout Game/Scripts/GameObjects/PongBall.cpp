@@ -70,11 +70,8 @@ void PongBall::handlePaddle(enum class Surface a_surface, enum class Direction a
 		m_velocity.x = -m_velocity.x;
 }
 
-float PongBall::velocityRNG()
+void PongBall::reset()
 {
-	int num = rand() % 15 + 5;
-	int sign = rand() % 2 + 1;
-	if (sign == 2)
-		num = -num;
-	return (float)num;
+	m_shape.setPosition(m_startPos);
+	m_velocity = sf::Vector2f(velocityRNG(sf::Vector2i(9, 13)), velocityRNG(sf::Vector2i(6, 8)));
 }

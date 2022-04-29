@@ -2,6 +2,9 @@
 
 void Ball::move(ResourceManager& a_rm, const sf::Time& a_dt)
 {
+	if (!m_isActive)
+		return;
+
 	m_shape.move(m_velocity.x * a_dt.asSeconds() * MULTIPLIER, m_velocity.y * a_dt.asSeconds() * MULTIPLIER);
 	handleBorder(a_rm);
 
@@ -40,7 +43,6 @@ void Ball::handleBorder(ResourceManager& a_rm)
 	// Ball falls out of playable area
 	else if (getDiagonalPosition().y >= HEIGHT)
 	{
-		m_velocity = sf::Vector2f(0, 0);
 		isActive(false);
 	}
 		
@@ -166,14 +168,8 @@ sf::Vector2f Ball::getDiagonalPosition() const
 }
 void Ball::isActive(bool a_isActive)
 {
-	if (a_isActive || !a_isActive)
-		m_velocity = m_startVel;
-
-	else if (!a_isActive)
-	{
-		m_shape.setPosition(m_startPos);
-		m_velocity = sf::Vector2f(0, 0);
-	}
+	if (!a_isActive)
+		reset();
 
 	m_isActive = a_isActive;
 }
@@ -185,12 +181,12 @@ double Ball::vectorDistance(const sf::Vector2i& a_p1, const sf::Vector2i& a_p2) 
 void Ball::reset()
 {
 	m_shape.setPosition(m_startPos);
-	m_velocity = sf::Vector2f(velocityRNG(), -m_speed);
+	m_velocity = sf::Vector2f(velocityRNG(sf::Vector2i(6, 8)), -std::abs(velocityRNG(sf::Vector2i(6, 8))));
 }
 
-float Ball::velocityRNG()
+float Ball::velocityRNG(sf::Vector2i a_range)
 {
-	int num = rand() % 8 + 6;
+	int num = rand() % a_range.y + a_range.x;
 	int sign = rand() % 2 + 1;
 	if (sign == 2)
 		num = -num;

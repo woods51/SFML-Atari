@@ -149,7 +149,6 @@ private:
 	PongBall* m_ball;
 
 	// Background
-	bool m_backgroundFlag = true;
 	sf::Sprite m_border;
 	sf::Texture m_backgroundTexture;
 	sf::Texture m_frameTexture;
@@ -165,4 +164,8 @@ private:
 
 	// Scores
 	sf::Vector2i m_pScores = sf::Vector2i(0, 0);
+
+	// Flags
+	bool m_backgroundFlag = true;
+	bool m_gameStarted = false;
 };

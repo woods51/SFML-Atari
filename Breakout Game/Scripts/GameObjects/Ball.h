@@ -28,7 +28,7 @@ public:
 		sf::Vector2f a_scale = sf::Vector2f(1, 1), std::string a_textureKey = "ball_01")
 	{
 		m_startPos = a_pos;
-		m_startVel = sf::Vector2f(velocityRNG(), -m_speed);
+		m_velocity = sf::Vector2f(velocityRNG(sf::Vector2i(5, 7)), -std::abs(velocityRNG(sf::Vector2i(6, 9))));
 		m_shape.setPosition(a_pos);
 		m_shape.setRadius(a_radius);
 		m_shape.setScale(a_scale);
@@ -113,6 +113,9 @@ public:
 	// Returns position
 	inline sf::Vector2f getPosition() const { return m_shape.getPosition(); }
 
+	// Returns velocity
+	inline sf::Vector2f getVelocity() const { return m_velocity; }
+
 	// Computes and returns diagonal position
 	sf::Vector2f getDiagonalPosition() const;
 
@@ -121,9 +124,6 @@ public:
 
 	// Returns radius
 	float getRadius() const { return m_shape.getRadius(); }
-
-	// Returns velocity
-	sf::Vector2f getVelocity() const { return m_velocity; }
 
 	// Returns isActive state
 	inline bool isActive() const { return m_isActive; }
@@ -173,11 +173,13 @@ public:
 	/// \brief Random velocity number generator.
 	/// 
 	/// This function computes a random floating
-	/// point number between prespecified values.
+	/// point number within range.
+	/// 
+	/// \param a_range	-> x to y
 	///
 	/// \return Velocity as floating point number
 	////////////////////////////////////////////////////////////
-	virtual float velocityRNG();
+	virtual float velocityRNG(sf::Vector2i a_range);
 
 protected:
 
@@ -198,16 +200,14 @@ protected:
 	/// This function sets the position to its default value
 	/// and generates random velocity.
 	////////////////////////////////////////////////////////////
-	void reset();
+	virtual void reset();
 
 	// Data members
 	sf::CircleShape m_shape;
 	enum class Direction m_direction = Direction::Idle;
 
 	sf::Vector2f m_startPos;
-	sf::Vector2f m_startVel;
 	sf::Vector2f m_velocity;
-	float m_speed = 8;
 	float m_scalar = 1.01f;
 
 	// States

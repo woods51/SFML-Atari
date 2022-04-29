@@ -28,7 +28,7 @@ public:
 		sf::Vector2f a_scale = sf::Vector2f(1.0f, 1.0f), std::string a_textureKey = "ball_01")
 		: Ball(a_rm, a_pos, a_radius, a_scale, a_textureKey)
 	{
-
+		m_velocity = sf::Vector2f(velocityRNG(sf::Vector2i(6, 9)), velocityRNG(sf::Vector2i(2, 5)));
 	};
 
 	////////////////////////////////////////////////////////////
@@ -68,15 +68,13 @@ public:
 	void handlePaddle(enum class Surface a_surface, enum class Direction a_paddleDir) override;
 
 	////////////////////////////////////////////////////////////
-	/// \brief Random velocity number generator
-	/// 
-	/// This function computes a random floating
-	/// point number between prespecified values.
-	/// This function is set specifically for Pong gameplay.
+	/// \brief Resets ball.
 	///
-	/// \return Velocity as floating point number
+	/// This function sets the position to its default value
+	/// and generates random velocity. This function is set
+	/// specifically for Pong gameplay.
 	////////////////////////////////////////////////////////////
-	float velocityRNG() override;
+	void reset() override;
 
 	// Returns player scores as sf::Vector2i (p1_score, p2_score)
 	sf::Vector2i getScores() const { return sf::Vector2i(m_scoreP1, m_scoreP2); };

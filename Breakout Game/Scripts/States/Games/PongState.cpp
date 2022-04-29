@@ -13,6 +13,7 @@ PongState::PongState(ResourceManager& a_rm, sf::RenderWindow& a_window)
 	m_paddles.push_back(m_paddleP2);
 
 	m_ball = new PongBall(a_rm);
+	m_ball->isActive(false);
 	m_ball->setScalar(1.25f);
 
 	generateUI(a_rm);
@@ -58,11 +59,14 @@ void PongState::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, 
 
 void PongState::update(ResourceManager& a_rm, const sf::Time& a_dt)
 {
-	// Update game objects
-	handleBallPhysics(a_rm, a_dt);
-	m_paddleP1->move(a_dt);
-	m_paddleP2->move(a_dt);
-	m_ball->move(a_rm, a_dt);
+	if (m_gameStarted)
+	{
+		// Update game objects
+		handleBallPhysics(a_rm, a_dt);
+		m_paddleP1->move(a_dt);
+		m_paddleP2->move(a_dt);
+		m_ball->move(a_rm, a_dt);
+	}
 
 	updateUI(a_rm, a_dt);
 }
@@ -130,7 +134,10 @@ void PongState::inputHandler(sf::Keyboard::Key a_key, bool a_isPressed)
 
 	// Start game
 	if (a_key == sf::Keyboard::Space)
+	{
 		m_ball->isActive(true);
+		m_gameStarted = true;
+	}
 }
 
 void PongState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
