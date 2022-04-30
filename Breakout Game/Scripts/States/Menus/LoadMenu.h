@@ -97,11 +97,10 @@ private:
 	/// This function updates the isSelected state of any button
 	/// that is within the bounds of the current mouse position.
 	/// 
-	/// \param a_window	-->	RenderWindow
 	/// \param a_rm		-->	ResourceManager
 	/// \param a_mousePosition	-->	Mouse position
 	////////////////////////////////////////////////////////////
-	void buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
+	void buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
 	/// \brief Generates user interfaces.

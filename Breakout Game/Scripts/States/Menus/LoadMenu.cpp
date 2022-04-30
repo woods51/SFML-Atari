@@ -26,7 +26,7 @@ void LoadMenu::eventHandler(ResourceManager& a_rm, sf::RenderWindow& a_window, s
 	sf::Vector2f mousePosition = a_window.mapPixelToCoords(sf::Mouse::getPosition(a_window));
 	bool lock_click = false;
 
-	buttonSelectUpdate(a_window, a_rm, mousePosition);
+	buttonSelectUpdate(a_rm, mousePosition);
 
 	sf::Event event;
 	while (a_window.pollEvent(event))
@@ -181,7 +181,7 @@ void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 	}
 }
 
-void LoadMenu::buttonSelectUpdate(sf::RenderWindow& a_window, ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
+void LoadMenu::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
 	for (auto& b : m_buttons)
 	{
