@@ -194,7 +194,7 @@ void BreakoutMenu::generateUI(ResourceManager& a_rm)
 	m_background.setTexture(m_frameTexture);
 	m_background.setScale(40, 40);
 	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3195, 0);
+	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
 }
 
 void BreakoutMenu::generateButtons(ResourceManager& a_rm)

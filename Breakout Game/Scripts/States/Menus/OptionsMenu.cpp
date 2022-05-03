@@ -77,15 +77,15 @@ void OptionsMenu::update(ResourceManager& a_rm , const sf::Time& a_dt)
 	if (m_background2 != nullptr)
 	{
 		m_background->setPosition(m_background->getPosition() + sf::Vector2f(62.5f * a_dt.asSeconds(), 0));
-		if (m_background->getPosition().x >= 3200)
+		if (m_background->getPosition().x >= 3195)
 		{
-			m_background->setPosition(sf::Vector2f(-3200, 0));
+			m_background->setPosition(sf::Vector2f(-3195, 0));
 		}
 
 		m_background2->setPosition(m_background2->getPosition() + sf::Vector2f(62.5f * a_dt.asSeconds(), 0));
-		if (m_background2->getPosition().x >= 3200)
+		if (m_background2->getPosition().x >= 3195)
 		{
-			m_background2->setPosition(sf::Vector2f(-3200, 0));
+			m_background2->setPosition(sf::Vector2f(-3195, 0));
 		}
 	}
 }
