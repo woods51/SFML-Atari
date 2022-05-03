@@ -318,7 +318,7 @@ void BreakoutState::handleBallPhysics(ResourceManager& a_rm, const sf::Time& a_d
 		for (const auto& tile : m_tileMap)
 		{
 			sf::Vector2f tileDiagPos = tile->getDiagonalPosition();
-			if (tile->isActive() && tile->isDestructable())
+			if (tile->isActive() && tile->isDestructible())
 				m_completeFlag = false;
 
 			if (!tile->isActive() || tileDiagPos.y < m_balls[i]->getPosition().y)
@@ -330,7 +330,7 @@ void BreakoutState::handleBallPhysics(ResourceManager& a_rm, const sf::Time& a_d
 			{
 				m_balls[i]->handleTile(contact);
 
-				if (tile->isDestructable())
+				if (tile->isDestructible())
 				{
 					tile->handleBall();
 					handleSpecialTiles(a_rm, tile->getTileType(), m_balls[i]->getPosition());

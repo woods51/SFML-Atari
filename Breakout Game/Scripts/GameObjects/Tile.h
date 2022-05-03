@@ -111,8 +111,8 @@ public:
 	////////////////////////////////////////////////////////////
 	void isActive(bool a_isActive) { m_isActive = a_isActive; }
 
-	// Returns isDestructable
-	bool isDestructable() const { return m_isDestructable; }
+	// Returns isDestructible
+	bool isDestructible() const { return m_isDestructible; }
 	
 	// Returns isColliding state
 	bool isColliding() const { return m_isColliding; }
@@ -138,7 +138,7 @@ protected:
 	sf::Texture* m_thirdTexture;
 
 	// States
-	bool m_isDestructable = true;
+	bool m_isDestructible = true;
 	bool m_isActive = true;
 	bool m_isColliding = false;
 };

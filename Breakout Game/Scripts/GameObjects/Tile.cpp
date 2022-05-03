@@ -52,7 +52,7 @@ void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_texture
 	// Default Tile Setup
 	m_type = a_type;
 	m_durability = 1;
-	m_isDestructable = true;
+	m_isDestructible = true;
 
 	m_defaultTexture = a_textureKey;
 	m_firstTexture = a_rm.getTexture(a_textureKey);
@@ -93,7 +93,7 @@ void Tile::setTile(ResourceManager& a_rm, TileType a_type, std::string a_texture
 		m_defaultTexture = a_textureKey;
 		m_firstTexture = a_rm.getTexture(m_defaultTexture);
 		texture = m_firstTexture;
-		m_isDestructable = false;
+		m_isDestructible = false;
 		break;
 	case TileType::Blank:
 		m_defaultTexture = "tile_08";
@@ -110,7 +110,7 @@ void Tile::reset()
 {
 	isActive(true);
 	m_durability = 1;
-	m_isDestructable = true;
+	m_isDestructible = true;
 
 	sf::Texture* texture = m_firstTexture;
 
@@ -118,7 +118,7 @@ void Tile::reset()
 	switch (m_type)
 	{
 	case TileType::Wall:
-		m_isDestructable = false;
+		m_isDestructible = false;
 		break;
 	case TileType::Lock:
 		m_durability = 2;
