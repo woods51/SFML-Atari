@@ -113,7 +113,7 @@ LoadMenu::~LoadMenu()
 void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
-	for (auto b : m_buttons)
+	for (auto& b : m_buttons)
 	{
 		sf::Vector2f b_pos = b->getPosition();
 		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
@@ -121,19 +121,10 @@ void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 		if (a_mousePosition.x >= b_pos.x && a_mousePosition.x <= b_diag_pos.x &&
 			a_mousePosition.y >= b_pos.y && a_mousePosition.y <= b_diag_pos.y)
 		{
-			std::string level;
 			switch (b->OnClick(a_rm))
 			{
 			case Press::LEVEL:
-
-				// Checks for valid level name
-				level = b->getText().getString().toAnsiString();
-				if (level.size() < 3)
-					break;
-
-				m_selectedLevel.setString(level);
-				m_isValid = true;
-				b->isSelected(true);
+				handleLevel(b);
 				break;
 
 			case Press::BACK:
@@ -149,29 +140,14 @@ void LoadMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_win
 				break;
 
 			case Press::RELOAD:
-
-				// Reloads level files
-				m_loader.loadFiles(m_loadPath, m_levels);
-
-				// Compute max pages
-				m_maxPages = m_levels.size() / 5;
-				if (m_levels.size() % 5 != 0)
-					m_maxPages++;
-
-				loadFirstPage();
+				reload();
 				break;
 
 			case Press::LOAD:
 				if (!m_isValid)
 					break;
 
-				if (!m_loader.loadMap(a_rm, m_selectedLevel.getString().toAnsiString(), m_loadPath, m_tileMap, m_errorMsg))
-				{
-					m_loadError.setString(m_errorMsg);
-					break;
-				}
-
-				a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_tileMap, m_lives));
+				loadLevel(a_rm, a_window, a_states);
 				break;
 
 			default:
@@ -329,4 +305,40 @@ void LoadMenu::previousPage()
 		end = m_currentPage * 5;
 
 	loadPage(start, end);
+}
+
+void LoadMenu::reload()
+{
+	// Reloads level files
+	m_loader.loadFiles(m_loadPath, m_levels);
+
+	// Compute max pages
+	m_maxPages = m_levels.size() / 5;
+	if (m_levels.size() % 5 != 0)
+		m_maxPages++;
+
+	loadFirstPage();
+}
+
+void LoadMenu::handleLevel(Button*& a_button)
+{
+	// Checks for valid level name
+	std::string level = a_button->getText().getString().toAnsiString();
+	if (level.size() < 3)
+		return;
+
+	m_selectedLevel.setString(level);
+	m_isValid = true;
+	a_button->isSelected(true);
+}
+
+void LoadMenu::loadLevel(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states)
+{
+	if (!m_loader.loadMap(a_rm, m_selectedLevel.getString().toAnsiString(), m_loadPath, m_tileMap, m_errorMsg))
+	{
+		m_loadError.setString(m_errorMsg);
+		return;
+	}
+
+	a_states.push_back(std::make_unique<BreakoutState>(a_rm, a_window, m_tileMap, m_lives));
 }

@@ -160,6 +160,39 @@ private:
 	////////////////////////////////////////////////////////////
 	void previousPage();
 
+	////////////////////////////////////////////////////////////
+	/// \brief Reloads level pages.
+	///
+	/// This function reloads m_levels and loads pages.
+	/// 
+	////////////////////////////////////////////////////////////
+	void reload();
+
+	////////////////////////////////////////////////////////////
+	/// \brief Handles Level Button Press.
+	///
+	/// This function handles a level button selection. This
+	/// function validates level name of selection and sets
+	/// selected level.
+	/// 
+	/// \param a_button	--> Pointer to button object
+	/// 
+	////////////////////////////////////////////////////////////
+	void handleLevel(Button*& a_button);
+
+	////////////////////////////////////////////////////////////
+	/// \brief Loads selected level.
+	///
+	/// This function tries to load selected level. This function sets
+	/// m_loadError and pushes breakout state.
+	/// 
+	/// \param a_rm		--> ResourceManager
+	/// \param a_window	--> RenderWindow
+	/// \param a_states		--> Vector of game states
+	/// 
+	////////////////////////////////////////////////////////////
+	void loadLevel(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states);
+
 	// Levels
 	std::vector<Tile*> m_tileMap;
 	std::vector<std::string> m_levels;

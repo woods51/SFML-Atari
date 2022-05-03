@@ -109,7 +109,7 @@ void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_
 {
 	sf::Vector2u windowSize = a_window.getSize();
 
-	for (auto b : m_buttons)
+	for (auto& b : m_buttons)
 	{
 		sf::Vector2f b_pos = b->getPosition();
 		sf::Vector2f b_diag_pos = b->getDiagonalPosition();

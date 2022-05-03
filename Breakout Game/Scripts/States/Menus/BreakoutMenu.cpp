@@ -63,15 +63,15 @@ void BreakoutMenu::update(ResourceManager& a_rm, const sf::Time& a_dt)
 
 	// Update backgrounds
 	m_background.setPosition(m_background.getPosition() + sf::Vector2f(62.5f * a_dt.asSeconds(), 0));
-	if (m_background.getPosition().x >= 3200)
+	if (m_background.getPosition().x >= 3195)
 	{
-		m_background.setPosition(sf::Vector2f(-3200, 0));
+		m_background.setPosition(sf::Vector2f(-3195, 0));
 	}
 
 	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(62.5f * a_dt.asSeconds(), 0));
-	if (m_background2.getPosition().x >= 3200)
+	if (m_background2.getPosition().x >= 3195)
 	{
-		m_background2.setPosition(sf::Vector2f(-3200, 0));
+		m_background2.setPosition(sf::Vector2f(-3195, 0));
 	}
 }
 
@@ -111,7 +111,7 @@ BreakoutMenu::~BreakoutMenu()
 void BreakoutMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<std::unique_ptr<State>>& a_states,
 	const sf::Vector2f& a_mousePosition)
 {
-	for (auto b : m_buttons)
+	for (auto& b : m_buttons)
 	{
 		sf::Vector2f b_pos = b->getPosition();
 		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
@@ -194,7 +194,7 @@ void BreakoutMenu::generateUI(ResourceManager& a_rm)
 	m_background.setTexture(m_frameTexture);
 	m_background.setScale(40, 40);
 	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3200, 0);
+	m_background2.setPosition(m_background.getPosition().x - 3195, 0);
 }
 
 void BreakoutMenu::generateButtons(ResourceManager& a_rm)

@@ -233,15 +233,15 @@ void BreakoutState::updateUI(ResourceManager& a_rm, const sf::Time& a_dt)
 
 	// Update backgrounds
 	m_background.setPosition(m_background.getPosition() + sf::Vector2f(23.5f * a_dt.asSeconds(), 0));
-	if (m_background.getPosition().x >= 3920)
+	if (m_background.getPosition().x >= 3915)
 	{
-		m_background.setPosition(sf::Vector2f(-3920, 0));
+		m_background.setPosition(sf::Vector2f(-3915, 0));
 	}
 
 	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(23.5f * a_dt.asSeconds(), 0));
-	if (m_background2.getPosition().x >= 3920)
+	if (m_background2.getPosition().x >= 3915)
 	{
-		m_background2.setPosition(sf::Vector2f(-3920, 0));
+		m_background2.setPosition(sf::Vector2f(-3915, 0));
 	}
 }
 
@@ -268,13 +268,12 @@ void BreakoutState::generateUI(ResourceManager& a_rm)
 	// Generate background
 	m_border.setTexture(*a_rm.getTexture("border"));
 	m_border.setScale(sf::Vector2f(40, 30));
-
 	m_backgroundTexture = *a_rm.getTexture("background_game");
 
 	m_background.setTexture(m_backgroundTexture);
 	m_background.setScale(40, 40);
 	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3920, 0);
+	m_background2.setPosition(m_background.getPosition().x - 3915, 0);
 }
 
 void BreakoutState::generateText(ResourceManager& a_rm)
@@ -307,9 +306,6 @@ void BreakoutState::generateText(ResourceManager& a_rm)
 void BreakoutState::handleBallPhysics(ResourceManager& a_rm, const sf::Time& a_dt)
 {
 	m_completeFlag = true;
-
-	sf::Vector2f paddlePos = m_paddle->getPosition();
-	sf::Vector2f paddleDiagPos = m_paddle->getDiagonalPosition();
 
 	Surface contact = Surface::None;
 	for (unsigned int i = 0; i < m_balls.size(); i++)
@@ -347,7 +343,7 @@ void BreakoutState::handleBallPhysics(ResourceManager& a_rm, const sf::Time& a_d
 			}
 		}
 		// Check for collision with paddle
-		contact = m_balls[i]->collision(paddlePos, paddleDiagPos);
+		contact = m_balls[i]->collision(m_paddle->getPosition(), m_paddle->getDiagonalPosition());
 		if (contact != Surface::None)
 		{
 			hasCollided = true;
@@ -399,7 +395,7 @@ void BreakoutState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& 
 {
 	sf::Vector2u windowSize = a_window.getSize();
 
-	for (auto b : m_buttons)
+	for (auto& b : m_buttons)
 	{
 		sf::Vector2f b_pos = b->getPosition();
 		sf::Vector2f b_diag_pos = b->getDiagonalPosition();

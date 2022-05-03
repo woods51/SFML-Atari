@@ -145,7 +145,7 @@ void PongState::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_wi
 {
 	sf::Vector2u windowSize = a_window.getSize();
 
-	for (auto b : m_buttons)
+	for (auto& b : m_buttons)
 	{
 		sf::Vector2f b_pos = b->getPosition();
 		sf::Vector2f b_diag_pos = b->getDiagonalPosition();
@@ -188,15 +188,15 @@ void PongState::updateUI(ResourceManager& a_rm, const sf::Time& a_dt)
 
 	// Update backgrounds
 	m_background.setPosition(m_background.getPosition() + sf::Vector2f(23.5f * a_dt.asSeconds(), 0));
-	if (m_background.getPosition().x >= 3920)
+	if (m_background.getPosition().x >= 3915)
 	{
-		m_background.setPosition(sf::Vector2f(-3920, 0));
+		m_background.setPosition(sf::Vector2f(-3915, 0));
 	}
 
 	m_background2.setPosition(m_background2.getPosition() + sf::Vector2f(23.5f * a_dt.asSeconds(), 0));
-	if (m_background2.getPosition().x >= 3920)
+	if (m_background2.getPosition().x >= 3915)
 	{
-		m_background2.setPosition(sf::Vector2f(-3920, 0));
+		m_background2.setPosition(sf::Vector2f(-3915, 0));
 	}
 }
 
@@ -225,7 +225,7 @@ void PongState::generateUI(ResourceManager& a_rm)
 	m_background.setTexture(m_backgroundTexture);
 	m_background.setScale(40, 40);
 	m_background2 = m_background;
-	m_background2.setPosition(m_background.getPosition().x - 3920, 0);
+	m_background2.setPosition(m_background.getPosition().x - 3915, 0);
 }
 
 void PongState::generateText(ResourceManager& a_rm)
@@ -246,17 +246,11 @@ void PongState::generateText(ResourceManager& a_rm)
 
 void PongState::handleBallPhysics(ResourceManager& a_rm, const sf::Time& a_dt)
 {
-	sf::Vector2f ballPos = m_ball->getPosition();
-	sf::Vector2f ballDiagPos = m_ball->getDiagonalPosition();
-
 	// Check for collision with paddles
 	Surface contact = Surface::None;
 	for (const auto& paddle : m_paddles)
 	{
-		sf::Vector2f paddlePos = paddle->getPosition();
-		sf::Vector2f paddleDiagPos = paddle->getDiagonalPosition();
-
-		contact = m_ball->collision(paddlePos, paddleDiagPos);
+		contact = m_ball->collision(paddle->getPosition(), paddle->getDiagonalPosition());
 		if (contact != Surface::None)
 		{
 			if (!paddle->isColliding())
