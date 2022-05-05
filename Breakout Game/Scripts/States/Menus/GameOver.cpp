@@ -131,13 +131,13 @@ void GameOver::generateUI(ResourceManager& a_rm)
 	Button* temp;
 
 	// MainMenu
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4),
+	temp = createMenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4),
 		Press::MAINMENU, "Menu");
 	temp->setDefaultText(a_rm, 35, temp->getShape().getPosition() + sf::Vector2f(64.0f, 12.0f));
 	m_buttons.push_back(temp);
 
 	// Quit
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 76),
+	temp = createMenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 76),
 		Press::QUIT, "Quit");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_buttons.push_back(temp);

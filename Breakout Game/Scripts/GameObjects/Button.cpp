@@ -39,3 +39,18 @@ void Button::setDefaultText(ResourceManager& a_rm, unsigned int a_charSize,
 	m_text.setCharacterSize(a_charSize);
 	m_text.setPosition(a_pos);
 }
+
+Button* createMenuButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type, std::string a_text)
+{
+	Button* temp = new Button(a_rm, a_pos, a_type, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "button_menu", "button_menu_selected");
+	temp->setString(a_text);
+	return temp;
+}
+
+Button* createTickButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type,
+	std::string a_text, Sound a_sound)
+{
+	Button* temp = new Button(a_rm, a_pos, a_type, sf::Vector2f(3, 3), sf::Vector2f(16, 12), "button_options", "button_options_selected", a_sound);
+	temp->setString(a_text);
+	return temp;
+}

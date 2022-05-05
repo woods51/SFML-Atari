@@ -202,12 +202,12 @@ void BreakoutMenu::generateButtons(ResourceManager& a_rm)
 	Button* temp;
 
 	// Play
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 68), Press::BREAKOUT, "Play Game");
+	temp = createMenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) - 68), Press::BREAKOUT, "Play Game");
 	temp->setDefaultText(a_rm, 30, temp->getShape().getPosition() + sf::Vector2f(13, 13));
 	m_buttons.push_back(temp);
 
 	// Load
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4), Press::LOAD, "Load Level");
+	temp = createMenuButton(a_rm, sf::Vector2f((WIDTH / 2) - 128, (HEIGHT / 2) + 4), Press::LOAD, "Load Level");
 	temp->setDefaultText(a_rm, 28, temp->getShape().getPosition() + sf::Vector2f(14, 14));
 	m_buttons.push_back(temp);
 
@@ -224,11 +224,11 @@ void BreakoutMenu::generateButtons(ResourceManager& a_rm)
 	m_buttons.push_back(temp);
 
 	// Generate tick buttons
-	temp = new TickButton(a_rm, sf::Vector2f(WIDTH / 2 + 6, (HEIGHT / 2) + 170), Press::BUTTON_UP, ">");
+	temp = createTickButton(a_rm, sf::Vector2f(WIDTH / 2 + 6, (HEIGHT / 2) + 170), Press::BUTTON_UP, ">", Sound::Button);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
-	temp = new TickButton(a_rm, sf::Vector2f(WIDTH / 2 - 54, (HEIGHT / 2) + 170), Press::BUTTON_DOWN, "<");
+	temp = createTickButton(a_rm, sf::Vector2f(WIDTH / 2 - 54, (HEIGHT / 2) + 170), Press::BUTTON_DOWN, "<", Sound::Button);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 }

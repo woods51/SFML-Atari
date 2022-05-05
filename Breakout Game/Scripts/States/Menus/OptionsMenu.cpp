@@ -236,38 +236,38 @@ void OptionsMenu::generateButtons(ResourceManager& a_rm)
 
 	// Generate volume control buttons
 	// Button
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 - 100, (HEIGHT / 2) - 68), Press::BUTTON_UP, ">");
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 - 100, (HEIGHT / 2) - 68), Press::BUTTON_UP, ">", Sound::Button);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 - 100, (HEIGHT / 2) - 68), Press::BUTTON_DOWN, "<");
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 - 100, (HEIGHT / 2) - 68), Press::BUTTON_DOWN, "<", Sound::Button);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
 	// Ball
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 - 100, (HEIGHT / 2) + 92), Press::BALL_UP, ">", Sound::Ball);
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 - 100, (HEIGHT / 2) + 92), Press::BALL_UP, ">", Sound::Ball);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 - 100, (HEIGHT / 2) + 92), Press::BALL_DOWN, "<", Sound::Ball);
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 - 100, (HEIGHT / 2) + 92), Press::BALL_DOWN, "<", Sound::Ball);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
 	// Game
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 + 100, (HEIGHT / 2) - 68), Press::GAME_UP, ">", Sound::GameOver);
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 + 100, (HEIGHT / 2) - 68), Press::GAME_UP, ">", Sound::GameOver);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 + 100, (HEIGHT / 2) - 68), Press::GAME_DOWN, "<", Sound::GameOver);
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 + 100, (HEIGHT / 2) - 68), Press::GAME_DOWN, "<", Sound::GameOver);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18, 4));
 	m_buttons.push_back(temp);
 
 	// Level
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 + 100, (HEIGHT / 2) + 92), Press::LEVEL_UP, ">", Sound::LevelComplete);
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6 + 100, (HEIGHT / 2) + 92), Press::LEVEL_UP, ">", Sound::LevelComplete);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 + 100, (HEIGHT / 2) + 92), Press::LEVEL_DOWN, "<", Sound::LevelComplete);
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54 + 100, (HEIGHT / 2) + 92), Press::LEVEL_DOWN, "<", Sound::LevelComplete);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 }

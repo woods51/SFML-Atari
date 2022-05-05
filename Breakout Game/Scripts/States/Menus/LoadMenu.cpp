@@ -200,11 +200,11 @@ void LoadMenu::generateButtons(ResourceManager & a_rm)
 	Button* temp;
 
 	// Generate Tick Buttons
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) - 150), Press::NEXT, ">", Sound::Button);
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) + 6, (HEIGHT / 2) - 150), Press::NEXT, ">", Sound::Button);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 
-	temp = new TickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) - 150), Press::PREVIOUS, "<", Sound::Button);
+	temp = createTickButton(a_rm, sf::Vector2f((WIDTH / 2) - 54, (HEIGHT / 2) - 150), Press::PREVIOUS, "<", Sound::Button);
 	temp->setDefaultText(a_rm, 25, temp->getShape().getPosition() + sf::Vector2f(18.0f, 4.0f));
 	m_buttons.push_back(temp);
 

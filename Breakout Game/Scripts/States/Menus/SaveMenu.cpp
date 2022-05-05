@@ -159,14 +159,14 @@ void SaveMenu::generateButtons(ResourceManager& a_rm)
 	Button* temp;
 
 	// Edit
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) - (32 * 8) - 10, (HEIGHT / 2) + 64),
+	temp = createMenuButton(a_rm, sf::Vector2f((WIDTH / 2) - (32 * 8) - 10, (HEIGHT / 2) + 64),
 		Press::EDIT, "EDIT");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(64.0f, 8.0f));
 	m_editButton = temp;
 	m_buttons.push_back(temp);
 
 	// Save
-	temp = new MenuButton(a_rm, sf::Vector2f((WIDTH / 2) + 10, (HEIGHT / 2) + 64),
+	temp = createMenuButton(a_rm, sf::Vector2f((WIDTH / 2) + 10, (HEIGHT / 2) + 64),
 		Press::SAVE, "SAVE");
 	temp->setDefaultText(a_rm, 40, temp->getShape().getPosition() + sf::Vector2f(52.0f, 8.0f));
 	m_buttons.push_back(temp);

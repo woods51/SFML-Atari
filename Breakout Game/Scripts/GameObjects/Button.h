@@ -124,68 +124,6 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////
-/// \brief MenuButton Class.
-///
-/// This class inherits the members of the Button class,
-/// it is primarily used to easily construct menu buttons for menu states.
-/// 
-////////////////////////////////////////////////////////////
-class MenuButton : public Button
-{
-public:
-
-	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the MenuButton class.
-	///
-	/// Constructs a menu button object using provided parameters.
-	/// Calls Button constructor with predetermined scale, size and texture values.
-	/// Sets string text for button.
-	/// 
-	/// \param a_rm		--> ResourceManager
-	/// \param a_pos		--> Position
-	/// \param a_type		--> OnClick Press type
-	/// \param a_text		--> String text
-	////////////////////////////////////////////////////////////
-	MenuButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT, std::string a_text = "enter text")
-		: Button(a_rm, a_pos, a_type, sf::Vector2f(8, 8), sf::Vector2f(32, 8), "button_menu", "button_menu_selected")
-	{
-		m_text.setString(a_text);
-	}
-};
-
-////////////////////////////////////////////////////////////
-/// \brief TickButton Class.
-///
-/// This class inherits the members of the Button class,
-/// it is primarily used as increment and decrement buttons in options and menu states.
-/// 
-////////////////////////////////////////////////////////////
-class TickButton : public Button
-{
-public:
-
-	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the TickButton class.
-	///
-	/// Constructs a tick button object using provided parameters.
-	/// Calls Button constructor with predetermined scale, size and texture values.
-	/// Sets string text for button.
-	/// 
-	/// \param a_rm		--> ResourceManager
-	/// \param a_pos		--> Position
-	/// \param a_type		--> OnClick Press type
-	/// \param a_text		--> String text
-	/// \param a_sound		--> Button Sound
-	////////////////////////////////////////////////////////////
-	TickButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type = Press::DEFAULT,
-		std::string a_text = "enter text", Sound a_sound = Sound::Button)
-		: Button(a_rm, a_pos, a_type, sf::Vector2f(3, 3), sf::Vector2f(16, 12), "button_options", "button_options_selected", a_sound)
-	{
-		m_text.setString(a_text);
-	}
-};
-
-////////////////////////////////////////////////////////////
 /// \brief TileButton Class.
 ///
 /// This class inherits the members of the Button class,
@@ -229,3 +167,37 @@ protected:
 
 	TileType m_tileType = TileType::None;
 };
+
+////////////////////////////////////////////////////////////
+/// \brief Creates buttons objects for menus.
+/// 
+/// Constructs a button object using provided parameters.
+/// Creates Button with predetermined scale, size, and texture values.
+/// Sets string text for button.
+/// 
+/// \param a_rm		--> ResourceManager
+/// \param a_pos		--> Position
+/// \param a_type		--> OnClick Press type
+/// \param a_text		--> String text
+/// 
+/// \returns Pointer to button object.
+////////////////////////////////////////////////////////////
+Button* createMenuButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type, std::string a_text);
+
+////////////////////////////////////////////////////////////
+/// \brief Creates button objects for increment buttons.
+///
+/// Constructs a tick button primarily used as increment and decrement 
+/// buttons in options and menu states using provided parameters.
+/// Calls Button constructor with predetermined scale, size and texture values.
+/// Sets string text for button.
+/// 
+/// \param a_rm		--> ResourceManager
+/// \param a_pos		--> Position
+/// \param a_type		--> OnClick Press type
+/// \param a_text		--> String text
+/// \param a_sound		--> Button Sound
+/// 
+/// \returns Pointer to button object
+////////////////////////////////////////////////////////////
+Button* createTickButton(ResourceManager& a_rm, sf::Vector2f a_pos, Press a_type, std::string a_text, Sound a_sound);
