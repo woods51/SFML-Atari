@@ -6,8 +6,8 @@
 /// \brief Paddle Class.
 ///
 /// This class inherits from the members of the Tile Class,
-/// it is used to create a instance of a rectangular paddle object.
-/// Paddles and supports basic horizontal and vertical movement
+/// it is used to create an instance of a rectangular paddle object.
+/// The Paddle class support basic horizontal and vertical movement
 /// and tracks direction for tiles.
 /// 
 ////////////////////////////////////////////////////////////
