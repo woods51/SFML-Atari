@@ -38,7 +38,7 @@ public:
 	/// This function hosts the main game loop along with creating
 	/// and setting up instances of the ResourceManager, RenderWindow,
 	/// and Delta time. This function also initializes the game states vector
-	/// with the initial MainMenu state.
+	/// with the MainMenu state.
 	/// 
 	////////////////////////////////////////////////////////////
 	void start();
