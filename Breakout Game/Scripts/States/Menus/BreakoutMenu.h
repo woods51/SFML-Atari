@@ -30,7 +30,7 @@ public:
 	BreakoutMenu(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -66,7 +66,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for BreakoutMenu. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~BreakoutMenu();
 

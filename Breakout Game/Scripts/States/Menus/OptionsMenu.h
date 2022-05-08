@@ -15,7 +15,7 @@ class OptionsMenu : public State
 {
 public:
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the Options Menu
+	/// \brief Constructor for the Options Menu.
 	///
 	/// Constructs the options menu UI elements and
 	/// sets background texture to frame texture.
@@ -24,12 +24,12 @@ public:
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
-	/// \param a_frameTexture	--> Pause frame texture
+	/// \param a_frameTexture	--> Paused frame texture
 	////////////////////////////////////////////////////////////
 	OptionsMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the Options Menu
+	/// \brief Constructor for the Options Menu.
 	///
 	/// Generates user interfaces and sets background sprites.
 	/// This constructor should be called from a state in which
@@ -43,7 +43,7 @@ public:
 	OptionsMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -79,7 +79,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for OptionsMenu. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~OptionsMenu();
 
@@ -146,7 +146,7 @@ private:
 	///
 	/// This is a helper function used to update the text positions for volume text.
 	/// This function adjust the position of the given text object
-	/// based on interger value and location in screen coordinates.
+	/// based on integer value and location in screen coordinates.
 	/// 
 	/// \param a_volume	--> Volume value
 	/// \param a_text	--> Volume text object

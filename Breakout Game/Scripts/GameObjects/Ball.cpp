@@ -142,7 +142,7 @@ enum class Surface Ball::collision(sf::Vector2f a_tilePos, sf::Vector2f a_tileDi
 	}
 
 	// Check for corner collision
-	for (auto p : { p1, p2, p3, p4 })
+	for (auto& p : { p1, p2, p3, p4 })
 	{
 		double dist = vectorDistance(p, vertex);
 

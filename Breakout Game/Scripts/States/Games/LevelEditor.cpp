@@ -62,12 +62,12 @@ void LevelEditor::render(sf::RenderWindow& a_window)
 	}
 
 	// Draw buttons
-	for (auto b : m_buttons)
+	for (const auto& b : m_buttons)
 	{
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
 	}
-	for (auto b : m_tileButtons)
+	for (const auto& b : m_tileButtons)
 	{
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());
@@ -171,7 +171,7 @@ void LevelEditor::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a_
 
 void LevelEditor::handleTileButtonEvents(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
-	for (auto b : m_tileButtons)
+	for (auto& b : m_tileButtons)
 	{
 		sf::Vector2f b_pos = b->getPosition();
 		sf::Vector2f b_diag_pos = b->getDiagonalPosition();

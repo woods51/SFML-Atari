@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////
 /// \brief Tile Class.
 ///
-/// This class is used to create rectangular shaped tile objects.
+/// This class is used to create rectangular-shaped tile objects.
 /// Tile objects are primarily used by the BreakoutState and LevelEditor.
 /// 
 ////////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Setup for tile objects.
 	///
-	/// Helper function used to alter or construct an tile object.
+	/// Helper function used to alter or construct a tile object.
 	/// Makes changes to first, second, and third texture
 	/// values as well as durability based on TileType.
 	/// 
@@ -74,7 +74,7 @@ public:
 	/// \brief Resets tile object back to its original state
 	///
 	/// This function resets the tiles isActive state, durability,
-	/// default textures, and destructable state.
+	/// default textures, and destructible state.
 	/// 
 	////////////////////////////////////////////////////////////
 	void reset();

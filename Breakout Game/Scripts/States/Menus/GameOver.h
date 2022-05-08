@@ -9,7 +9,7 @@
 ///
 /// This class inherits members from the State Class. The GameOver class
 /// is a Menu State which provides an interface for the user to view
-/// their final breakout score. The user can either return to a prior menu state
+/// the final breakout score. The user can either return to a prior menu state
 /// or exit the game.
 /// 
 ////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ public:
 	GameOver(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture, unsigned int a_score);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -65,7 +65,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for GameOver. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~GameOver();
 

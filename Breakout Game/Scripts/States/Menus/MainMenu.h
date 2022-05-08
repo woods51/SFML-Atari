@@ -11,7 +11,7 @@
 ///
 /// This class inherits members from the State Class. The MainMenu class
 /// is a Menu State which provides a start menu interface allowing the user
-/// to interact with and access all the various games and features of SFML atari.
+/// to interact with and access all the various games and features of SFML Atari.
 /// 
 ////////////////////////////////////////////////////////////
 class MainMenu : public State
@@ -30,7 +30,7 @@ public:
 	MainMenu(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -66,7 +66,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for MainMenu. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~MainMenu();
 

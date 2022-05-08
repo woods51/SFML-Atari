@@ -28,7 +28,7 @@ public:
 	PongState(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function calls the inputHandler
@@ -65,7 +65,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for PongState. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~PongState();
 private:

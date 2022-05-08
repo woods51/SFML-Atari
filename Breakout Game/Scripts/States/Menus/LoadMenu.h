@@ -11,7 +11,7 @@
 ///
 /// This class inherits members from the State Class. The LoadMenu class
 /// is a Menu State which provides an interface for the user to view custom
-/// created levels. The user can them load them into the Breakout game state.
+/// created levels. The user can then load them into the Breakout game state.
 /// 
 ////////////////////////////////////////////////////////////
 class LoadMenu : public State
@@ -22,7 +22,7 @@ public:
 	/// \brief Constructor for LoadMenu class.
 	///
 	/// Constructs and sets the chosen lives value, generates user interfaces,
-	/// loads level data and loads first page.This constructor continues the
+	/// loads level data and loads first page. This constructor continues the
 	/// background sprite animations pointed to.
 	/// 
 	/// \param a_rm		--> ResourceManager
@@ -34,7 +34,7 @@ public:
 	LoadMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Sprite* a_background, sf::Sprite* a_background2, unsigned int a_lives);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -70,7 +70,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for LoadMenu. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~LoadMenu();
 

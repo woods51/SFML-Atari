@@ -22,7 +22,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Constructor for the Default Breakout State.
 	///
-	/// Constructs the default breakout state by initalizing game objects,
+	/// Constructs the default breakout state by initializing game objects,
 	/// generating user interfaces, loading default levels, and starting
 	/// the game.
 	/// 
@@ -35,7 +35,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Constructor for Custom Breakout States.
 	///
-	/// Constructs the custom breakout state by initalizing game objects,
+	/// Constructs the custom breakout state by initializing game objects,
 	/// generating user interfaces, loading the custom level map provided,
 	/// and starting the game.
 	/// 
@@ -47,11 +47,11 @@ public:
 	BreakoutState(ResourceManager& a_rm, sf::RenderWindow& a_window, std::vector<Tile*>& a_tileMap, unsigned int a_lives);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function calls the inputHandler
-	/// and also handles any mouse events including button interactions.
+	/// and handles any mouse events including button interactions.
 	/// This function is responsible for pushing new game states
 	/// and is called once every frame.
 	/// 
@@ -86,7 +86,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for BreakoutState. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~BreakoutState();
 private:
@@ -139,7 +139,7 @@ private:
 	/// This function computes and handles collisions for the balls
 	/// and paddle objects. This function handles collisions between
 	/// the balls and paddle as well as between the balls and tiles.
-	/// This function may also set the completeFlag if every tile is deactive.
+	/// This function may also set the completeFlag if no tiles are active.
 	/// 
 	/// \param a_rm	--> ResourceManager
 	/// \param a_dt	--> deltaTime
@@ -174,7 +174,7 @@ private:
 		const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Resets balls vector to inital state.
+	/// \brief Resets balls vector to initial state.
 	///
 	/// This function clears the balls vector and creates
 	/// a new single ball instance.

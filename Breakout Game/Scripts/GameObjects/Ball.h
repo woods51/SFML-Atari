@@ -73,7 +73,7 @@ public:
 	/// \brief Handles collision with tile.
 	///
 	/// This function adjusts the velocity of the ball
-	/// according to surface of contact.
+	/// according to the surface of contact.
 	/// 
 	/// \param a_surface	--> Surface of contact
 	////////////////////////////////////////////////////////////
@@ -158,14 +158,14 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Sets position.
 	///
-	/// \param a_pos	--> Position
+	/// \param a_position	--> Position
 	////////////////////////////////////////////////////////////
 	void setPosition(sf::Vector2f a_position) { m_shape.setPosition(a_position); }
 
 	////////////////////////////////////////////////////////////
 	/// \brief Sets velocity.
 	///
-	/// \param a_vel	--> Velocity
+	/// \param a_velocity	--> Velocity
 	////////////////////////////////////////////////////////////
 	void setVelocity(sf::Vector2f a_velocity) { m_velocity = a_velocity; }
 
@@ -177,7 +177,7 @@ public:
 	/// 
 	/// \param a_range	-> x to y
 	///
-	/// \return Velocity as floating point number
+	/// \return Velocity as float
 	////////////////////////////////////////////////////////////
 	virtual float velocityRNG(sf::Vector2i a_range);
 

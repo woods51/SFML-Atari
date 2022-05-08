@@ -156,7 +156,7 @@ void BreakoutMenu::handleButtonEvents(ResourceManager& a_rm, sf::RenderWindow& a
 
 void BreakoutMenu::buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition)
 {
-	for (auto b : m_buttons)
+	for (auto& b : m_buttons)
 	{
 		sf::Vector2f b_pos = b->getPosition();
 		sf::Vector2f b_diag_pos = b->getDiagonalPosition();

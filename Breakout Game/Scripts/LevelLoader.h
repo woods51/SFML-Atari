@@ -67,7 +67,7 @@ private:
 	bool parseTileData(ResourceManager& a_rm, std::string a_line, std::vector<Tile*>& a_tileMap);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Determines corresponding TileType based on integer respresentation.
+	/// \brief Determines corresponding TileType based on integer representation.
 	///
 	/// \param a_type	--> Number of associated with TileType
 	/// 

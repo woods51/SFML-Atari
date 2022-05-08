@@ -59,7 +59,7 @@ enum class Direction
 /// \brief Surface Enum Class.
 ///
 /// The Surface enum class stores each potential surface of contact.
-/// This class mainly used for computing and handling collisions.
+/// This class is mainly used for computing and handling collisions.
 /// 
 ////////////////////////////////////////////////////////////
 enum class Surface
@@ -76,8 +76,8 @@ enum class Surface
 /// \brief Press Enum Class.
 ///
 /// The Press enum class stores every possible button press type.
-/// Press types are typically returned by a buttons OnClick function
-/// and may certain events.
+/// Press types are typically returned by a Button objects OnClick function
+/// and may trigger certain events.
 /// 
 ////////////////////////////////////////////////////////////
 enum class Press

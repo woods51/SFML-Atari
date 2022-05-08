@@ -119,7 +119,7 @@ private:
 	void loadSounds();
 
 	////////////////////////////////////////////////////////////
-	/// \brief Returns sound pointer from sound map.
+	/// \brief Returns corresponding sound pointer.
 	///
 	/// This function searches the sound map for the
 	/// soundKey and returns the sound pointer at that location.

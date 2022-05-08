@@ -19,7 +19,7 @@ public:
 	/// \brief Constructor for the Save Menu
 	///
 	/// Constructs and sets background to frame texture, generates
-	/// user interfaces, and sets tile map.
+	/// user interfaces and sets tile map.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
@@ -29,7 +29,7 @@ public:
 	SaveMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture, const std::vector<Tile*> a_tileMap);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -64,7 +64,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for SaveMenu. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~SaveMenu();
 

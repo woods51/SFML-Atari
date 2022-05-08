@@ -157,7 +157,7 @@ void BreakoutState::render(sf::RenderWindow& a_window)
 	a_window.draw(m_level);
 
 	// Render buttons
-	for (auto b : m_buttons)
+	for (const auto& b : m_buttons)
 	{
 		a_window.draw(b->getShape());
 		a_window.draw(b->getText());

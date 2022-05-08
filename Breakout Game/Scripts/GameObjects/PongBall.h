@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 /// \brief PongBall Class.
 ///
-/// This class is inherites members from the Pong Class.
+/// This class inherits members from the Pong Class.
 /// This class create Pong Balls which handles movement,
 /// collisions and the screen border in unique ways.
 /// 
@@ -16,7 +16,7 @@ public:
 	/// \brief Constructor for the PongBall class.
 	///
 	/// Constructs PongBall object using provided parameters.
-	/// Calls Ball construtor.
+	/// Calls Ball constructor.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_pos		--> Position

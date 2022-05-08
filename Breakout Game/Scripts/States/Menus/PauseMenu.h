@@ -17,18 +17,19 @@ class PauseMenu : public State
 public:
 
 	////////////////////////////////////////////////////////////
-	/// \brief Constructor for the Pause Menu
+	/// \brief Constructor for the Pause Menu.
 	///
 	/// Constructs and sets background textures and generate
 	/// user interfaces.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
+	/// \param a_frameTexture	--> Paused frame texture
 	////////////////////////////////////////////////////////////
 	PauseMenu(ResourceManager& a_rm, sf::RenderWindow& a_window, sf::Texture& a_frameTexture);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -63,7 +64,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for PauseMenu. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~PauseMenu();
 
@@ -85,7 +86,7 @@ private:
 		const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Updates selected state of buttons
+	/// \brief Updates selected state of buttons.
 	///
 	/// This function updates the isSelected state of any button
 	/// that is within the bounds of the current mouse position.
@@ -98,7 +99,7 @@ private:
 	void buttonSelectUpdate(ResourceManager& a_rm, const sf::Vector2f& a_mousePosition);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Generates state user interfaces
+	/// \brief Generates state user interfaces.
 	///
 	/// This function generates and initializes all
 	/// UI elements for its state.

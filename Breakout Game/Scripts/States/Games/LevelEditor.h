@@ -20,7 +20,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Constructor for the level editor class.
 	///
-	/// Constructs intial tile map and generates user interfaces.
+	/// Constructs initial tile map and generates user interfaces.
 	/// 
 	/// \param a_rm		--> ResourceManager
 	/// \param a_window	--> RenderWindow
@@ -28,7 +28,7 @@ public:
 	LevelEditor(ResourceManager& a_rm, sf::RenderWindow& a_window);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Handles sfml window events.
+	/// \brief Handles SFML window events.
 	///
 	/// This function handles any window events that occur
 	/// in the render window. This function handles mouse events
@@ -64,7 +64,7 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Destructor for LevelEditor. 
 	///
-	///	Deconstructs and frees any dynmically allocated memory.
+	///	Deconstructs and frees any allocated memory.
 	////////////////////////////////////////////////////////////
 	~LevelEditor();
 private:

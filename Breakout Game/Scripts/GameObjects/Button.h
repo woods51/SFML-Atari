@@ -6,7 +6,7 @@
 /// \brief Button Class.
 ///
 /// This class is used to create rectangular shaped button objects
-/// which handle OnClick events.
+/// which handles OnClick events.
 /// 
 ////////////////////////////////////////////////////////////
 class Button

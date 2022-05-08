@@ -7,7 +7,7 @@
 ///
 /// This class inherits from the members of the Tile Class,
 /// it is used to create an instance of a rectangular paddle object.
-/// The Paddle class support basic horizontal and vertical movement
+/// The Paddle class supports basic horizontal and vertical movement
 /// and tracks direction for tiles.
 /// 
 ////////////////////////////////////////////////////////////
@@ -45,14 +45,14 @@ public:
 	////////////////////////////////////////////////////////////
 	/// \brief Handles basic paddle movement
 	///
-	/// This functions handles paddle movement using the public isMoving variables,
+	/// This function handles paddle movement using the public isMoving variables,
 	/// this function also calls handlerBorder.
 	/// 
 	////////////////////////////////////////////////////////////
 	void move(const sf::Time& dt);
 
 	////////////////////////////////////////////////////////////
-	/// \brief Returns paddle to inital state
+	/// \brief Returns paddle to initial state
 	///
 	/// This functions returns paddle to its initial position.
 	/// 
@@ -91,7 +91,7 @@ protected:
 	////////////////////////////////////////////////////////////
 	/// \brief Handles border collision
 	///
-	/// This functions handles paddle collision with the window borders
+	/// This function handles paddle collision with the window borders
 	/// defined under WIDTH and HEIGHT. Prevents paddle from leaving viewable area.
 	/// 
 	////////////////////////////////////////////////////////////
